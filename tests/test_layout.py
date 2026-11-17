@@ -74,3 +74,10 @@ def test_render_is_ascii():
 
 def test_golden_fireball():
     assert render(layout(CARD, 32)) == GOLDEN.read_text()
+
+
+def test_brief_has_no_trailing_rule():
+    card = Card("Fireball", "Level 3 Evocation", [("Range", "150 feet")], [("", ["prose"])])
+    lines = layout(card, 32, brief=True)
+    assert lines[-1].kind is LineKind.FIELD
+    assert "prose" not in " ".join(line.text for line in lines)

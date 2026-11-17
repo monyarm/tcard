@@ -114,22 +114,27 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
     out.append(Line(LineKind.RULE, "-" * cols))
     for label, value in card.fields:
         out += _field(label, value, cols)
-    if card.fields:
-        out.append(Line(LineKind.RULE, "-" * cols))
 
+    sections: list[tuple[str, list[str]]] = []
     if not brief:
         for heading, paragraphs in card.sections:
             body = [p for p in paragraphs if p.strip()]
-            if not body:
-                continue
-            if heading:
-                if out:
-                    out.append(Line(LineKind.RULE, "-" * cols))
-                out += [Line(LineKind.SECTION, part) for part in wrap(heading, cols)]
-            for paragraph in body:
-                if out and out[-1].kind is LineKind.BODY:
-                    out.append(Line(LineKind.BLANK))
-                out += [Line(LineKind.BODY, part) for part in wrap(paragraph, cols)]
+            if body:
+                sections.append((heading, body))
+
+    # Only separate fields from something; a trailing rule on a brief card is noise.
+    if card.fields and sections:
+        out.append(Line(LineKind.RULE, "-" * cols))
+
+    for heading, body in sections:
+        if heading:
+            if out:
+                out.append(Line(LineKind.RULE, "-" * cols))
+            out += [Line(LineKind.SECTION, part) for part in wrap(heading, cols)]
+        for paragraph in body:
+            if out and out[-1].kind is LineKind.BODY:
+                out.append(Line(LineKind.BLANK))
+            out += [Line(LineKind.BODY, part) for part in wrap(paragraph, cols)]
 
     for line in out:
         if len(line.text) > cols:

@@ -76,6 +76,8 @@ def format_duration(value: list) -> str:
             text = f"up to {amount} {_plural(amount, unit)}"
             if item.get("concentration"):
                 text = "Concentration, " + text
+            else:
+                text = text[0].upper() + text[1:]
             parts.append(text)
         else:
             parts.append("Special")

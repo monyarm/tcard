@@ -92,3 +92,7 @@ def test_format_components_without_material():
 
 def test_school_unknown_code():
     assert school_name("Z") == "Z"
+
+
+def test_duration_without_concentration_is_capitalised():
+    assert dict(to_card(SHAPES[2]).fields)["Duration"] == "Up to 1 round"
