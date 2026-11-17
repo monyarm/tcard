@@ -1,0 +1,12 @@
+[project]
+name = "tcard"
+version = "0.1.0"
+description = "Render tabletop item cards for thermal printing"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+tcard = "tcard.cli:main"
+
+[tool.tcard]
+# stdlib only; PNG backend arrives with the tp stdin patch.
