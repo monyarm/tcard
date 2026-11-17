@@ -1,0 +1,101 @@
+"""5e.tools entry trees (strings, entries, list, table) to card sections."""
+
+from __future__ import annotations
+
+
+def _inline(value: object) -> str:
+    if isinstance(value, str):
+        return value
+    if isinstance(value, list):
+        return " ".join(_inline(item) for item in value)
+    if isinstance(value, dict):
+        if "roll" in value:
+            return _roll(value["roll"])
+        if "exact" in value:
+            return str(value["exact"])
+        if "entries" in value:
+            return " ".join(_inline(item) for item in value["entries"])
+        if "name" in value:
+            return str(value["name"])
+    return ""
+
+
+def _roll(roll: object) -> str:
+    if isinstance(roll, str):
+        return roll
+    if not isinstance(roll, dict):
+        return ""
+    if "exact" in roll:
+        return str(roll["exact"])
+    if "min" in roll and "max" in roll:
+        return f"{roll['min']}-{roll['max']}"
+    return ""
+
+
+class _Builder:
+    def __init__(self) -> None:
+        self.sections: list[tuple[str, list[str]]] = [("", [])]
+
+    def heading(self, name: str) -> None:
+        self.sections.append((name, []))
+
+    def para(self, text: str, depth: int = 0) -> None:
+        self.sections[-1][1].append("  " * depth + text)
+
+    def visit(self, node: object, depth: int = 0) -> None:
+        if node is None:
+            return
+        if isinstance(node, str):
+            self.para(node, depth)
+            return
+        if isinstance(node, list):
+            for item in node:
+                self.visit(item, depth)
+            return
+        if not isinstance(node, dict):
+            return
+        kind = node.get("type")
+        if kind == "entries" and node.get("name"):
+            before = len(self.sections)
+            self.heading(str(node["name"]))
+            self.visit(node.get("entries", []), depth)
+            if not self.sections[-1][1]:
+                del self.sections[before:]
+        elif kind in ("list", "options"):
+            for item in node.get("items", []):
+                self.item(item, depth)
+        elif kind == "table":
+            self.table(node)
+        elif kind in ("inset", "insetReadaloud", "quote"):
+            self.visit(node.get("entries", []), depth)
+        elif "entries" in node:
+            self.visit(node["entries"], depth)
+        elif "items" in node:
+            for item in node["items"]:
+                self.item(item, depth)
+
+    def item(self, item: object, depth: int) -> None:
+        if isinstance(item, dict) and ("entries" in item or "items" in item):
+            if item.get("name"):
+                self.heading(str(item["name"]))
+            self.visit(item, depth)
+            return
+        self.para("- " + _inline(item), depth)
+
+    def table(self, node: dict) -> None:
+        labels = node.get("colLabels") or []
+        for row in node.get("rows", []):
+            cells = [_inline(cell) for cell in row]
+            parts = [
+                f"{labels[i]}: {cell}" if i < len(labels) and labels[i] else cell
+                for i, cell in enumerate(cells)
+            ]
+            row_text = ", ".join(part for part in parts if part)
+            if row_text:
+                self.para(row_text)
+
+
+def flatten(nodes: object) -> list[tuple[str, list[str]]]:
+    builder = _Builder()
+    builder.visit(nodes)
+    return [(heading, paragraphs) for heading, paragraphs in builder.sections if paragraphs]

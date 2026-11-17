@@ -1,0 +1,140 @@
+[
+  {
+    "name": "Fire Bolt",
+    "source": "XPHB",
+    "level": 0,
+    "school": "V",
+    "time": [
+      {
+        "number": 1,
+        "unit": "action"
+      }
+    ],
+    "range": {
+      "type": "point",
+      "distance": {
+        "type": "feet",
+        "amount": 120
+      }
+    },
+    "components": {
+      "v": true,
+      "s": true
+    },
+    "duration": [
+      {
+        "type": "instant"
+      }
+    ],
+    "entries": [
+      "You hurl a mote of fire."
+    ]
+  },
+  {
+    "name": "Spirit Guardians",
+    "source": "XPHB",
+    "level": 3,
+    "school": "C",
+    "time": [
+      {
+        "number": 1,
+        "unit": "action"
+      }
+    ],
+    "range": {
+      "type": "sphere",
+      "distance": {
+        "type": "feet",
+        "amount": 60
+      }
+    },
+    "components": {
+      "v": true,
+      "s": true,
+      "m": "a holy symbol"
+    },
+    "duration": [
+      {
+        "type": "timed",
+        "duration": {
+          "amount": 1,
+          "type": "minute"
+        },
+        "concentration": true
+      }
+    ],
+    "entries": [
+      "Spirits flit around you."
+    ]
+  },
+  {
+    "name": "Shield",
+    "source": "XPHB",
+    "level": 1,
+    "school": "A",
+    "time": [
+      {
+        "number": 1,
+        "unit": "reaction",
+        "condition": "when you are hit by an attack"
+      }
+    ],
+    "range": {
+      "type": "point",
+      "distance": {
+        "type": "self"
+      }
+    },
+    "components": {
+      "v": true,
+      "s": true
+    },
+    "duration": [
+      {
+        "type": "timed",
+        "duration": {
+          "amount": 1,
+          "type": "round"
+        }
+      }
+    ],
+    "entries": [
+      "An invisible barrier appears."
+    ]
+  },
+  {
+    "name": "Chromatic Orb",
+    "source": "XPHB",
+    "level": 1,
+    "school": "V",
+    "time": [
+      {
+        "number": 1,
+        "unit": "action"
+      }
+    ],
+    "range": {
+      "type": "point",
+      "distance": {
+        "type": "feet",
+        "amount": 90
+      }
+    },
+    "components": {
+      "v": true,
+      "s": true,
+      "m": {
+        "text": "a diamond worth 50 gp",
+        "cost": 50
+      }
+    },
+    "duration": [
+      {
+        "type": "instant"
+      }
+    ],
+    "entries": [
+      "You hurl an orb of energy."
+    ]
+  }
+]
