@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tcard</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <h1>tcard</h1>
+  <div class="controls">
+    <label>cols <input id="cols" type="number" min="8" max="200" step="1" value="32"></label>
+    <label><input id="brief" type="checkbox"> brief</label>
+    <button id="refresh" title="reload this kind from its source">refresh</button>
+    <span id="status" class="status"></span>
+  </div>
+</header>
+
+<main>
+  <nav id="systems" aria-label="systems"></nav>
+
+  <section id="filters" aria-label="filters">
+    <div id="kinds" class="kinds"></div>
+    <input id="search" type="search" placeholder="search names…  ( / )" autocomplete="off">
+    <div id="facets"></div>
+    <button id="clear" class="link">clear filters</button>
+  </section>
+
+  <section id="results" aria-label="cards">
+    <div class="results-head">
+      <span id="count"></span>
+      <button id="print-selected" class="ghost" disabled>print selected</button>
+    </div>
+    <ul id="rows"></ul>
+    <button id="more" class="ghost" hidden>load more</button>
+  </section>
+
+  <section id="preview" aria-label="preview">
+    <div class="preview-head">
+      <span id="preview-name">pick a card</span>
+      <span id="preview-size" class="muted"></span>
+      <button id="print" disabled>print</button>
+    </div>
+    <pre id="card"></pre>
+  </section>
+</main>
+
+<script src="/static/app.js"></script>
+</body>
+</html>

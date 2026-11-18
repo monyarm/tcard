@@ -268,6 +268,33 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   ```
 - Long spells and features run to a second page; `tp` waits 3 s between pages.
 
+## Web UI
+
+```
+tcard web                      # http://127.0.0.1:8765, opens the browser
+tcard web --serve              # also share it with tailscale (funnel with --serve funnel)
+tcard web --serve cloudflare   # quick trycloudflare.com URL instead
+```
+
+Pick a system, then a kind, then narrow by name and by any facet the records
+carry (book, level, school, discipline, category, surgery...), and the card
+appears in a 32-column preview — the exact text that will print. `Print` runs
+the same CLI command and pipes its stdout into `tp`, so paper and screen never
+disagree. `cols`, `brief` and a per-kind `refresh` sit in the top bar; results
+can be ticked and printed in one go, each card as its own print job.
+
+The server binds loopback only. Sharing puts a proxy in front of it and turns on
+an access key, printed at startup as a link (`https://host/?k=…`); the first
+visit stores it in a cookie, so players only need the link. `--serve tailscale`
+is tailnet-only, `--serve funnel` publishes to the internet, and cloudflare
+quick tunnels get a fresh URL every start (`cloudflare:NAME` runs a named
+tunnel instead). `tailscale serve` needs root once:
+`sudo tailscale set --operator=$USER`.
+
+`--view-only` lets people browse without printing, `--key` fixes the key
+instead of generating one, and `--dry-run` renders without sending anything to
+the printer (useful for checking the UI itself).
+
 Config: `~/.config/tcard/config.toml`, optional.
 
 ```toml

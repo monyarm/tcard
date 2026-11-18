@@ -169,6 +169,12 @@ def _candidate_lines(pairs, available) -> list[str]:
 
 
 def main(argv: list[str] | None = None) -> int:
+    argv = sys.argv[1:] if argv is None else argv
+    if argv[:1] == ["web"]:
+        # Not a content kind, so it is dispatched before the term grammar.
+        from .web.server import main as web_main
+
+        return web_main(argv[1:])
     parser = argparse.ArgumentParser(prog="tcard", description="Print tabletop cards for a thermal printer.")
     parser.add_argument(
         "terms",
