@@ -1,0 +1,92 @@
+{
+ "feat": [
+  {
+   "name": "Alert",
+   "source": "PHB",
+   "page": 165,
+   "reprintedAs": [
+    "Alert|XPHB"
+   ],
+   "entries": [
+    "Always on the lookout for danger, you gain the following benefits:",
+    {
+     "type": "list",
+     "items": [
+      "You gain a +5 bonus to initiative.",
+      "You can't be {@status surprised} while you are conscious.",
+      "Other creatures don't gain advantage on attack rolls against you as a result of being unseen by you."
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Alert",
+   "source": "XPHB",
+   "page": 200,
+   "srd52": true,
+   "basicRules2024": true,
+   "category": "O",
+   "entries": [
+    "You gain the following benefits.",
+    {
+     "type": "entries",
+     "name": "Initiative Proficiency",
+     "entries": [
+      "When you roll {@variantrule Initiative|XPHB}, you can add your {@variantrule Proficiency|XPHB|Proficiency Bonus} to the roll."
+     ]
+    },
+    {
+     "type": "entries",
+     "name": "Initiative Swap",
+     "entries": [
+      "Immediately after you roll {@variantrule Initiative|XPHB}, you can swap your {@variantrule Initiative|XPHB} with the {@variantrule Initiative|XPHB} of one willing ally in the same combat. You can't make this swap if you or the ally has the {@condition Incapacitated|XPHB} condition."
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Lucky",
+   "source": "PHB",
+   "page": 167,
+   "reprintedAs": [
+    "Lucky|XPHB"
+   ],
+   "entries": [
+    "You have inexplicable luck that seems to kick in at just the right moment.",
+    "You have 3 luck points. Whenever you make an attack roll, an ability check, or a saving throw, you can spend one luck point to roll an additional {@dice d20}. You can choose to spend one of your luck points after you roll the die, but before the outcome is determined. You choose which of the {@dice d20}s is used for the attack roll, ability check, or saving throw.",
+    "You can also spend one luck point when an attack roll is made against you. Roll a {@dice d20}, and then choose whether the attack uses the attacker's roll or yours. If more than one creature spends a luck point to influence the outcome of a roll, the points cancel each other out; no additional dice are rolled.",
+    "You regain your expended luck points when you finish a long rest."
+   ]
+  },
+  {
+   "name": "Lucky",
+   "source": "XPHB",
+   "page": 201,
+   "category": "O",
+   "entries": [
+    "You gain the following benefits.",
+    {
+     "type": "entries",
+     "name": "Luck Points",
+     "entries": [
+      "You have a number of Luck Points equal to your {@variantrule Proficiency|XPHB|Proficiency Bonus} and can spend the points on the benefits below. You regain your expended Luck Points when you finish a {@variantrule Long Rest|XPHB}."
+     ]
+    },
+    {
+     "type": "entries",
+     "name": "Advantage",
+     "entries": [
+      "When you roll a {@dice d20} for a {@variantrule D20 Test|XPHB}, you can spend 1 Luck Point to give yourself {@variantrule Advantage|XPHB} on the roll."
+     ]
+    },
+    {
+     "type": "entries",
+     "name": "Disadvantage",
+     "entries": [
+      "When a creature rolls a {@dice d20} for an attack roll against you, you can spend 1 Luck Point to impose {@variantrule Disadvantage|XPHB} on that roll."
+     ]
+    }
+   ]
+  }
+ ]
+}

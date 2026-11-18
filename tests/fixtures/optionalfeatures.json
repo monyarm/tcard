@@ -1,0 +1,160 @@
+{
+ "optionalfeature": [
+  {
+   "name": "Agonizing Blast",
+   "source": "PHB",
+   "page": 110,
+   "srd": true,
+   "reprintedAs": [
+    "Agonizing Blast|XPHB"
+   ],
+   "featureType": [
+    "EI"
+   ],
+   "prerequisite": [
+    {
+     "spell": [
+      "eldritch blast#c"
+     ]
+    }
+   ],
+   "entries": [
+    "When you cast {@spell eldritch blast}, add your Charisma modifier to the damage it deals on a hit."
+   ]
+  },
+  {
+   "name": "Agonizing Blast",
+   "source": "XPHB",
+   "page": 155,
+   "srd52": true,
+   "featureType": [
+    "EI"
+   ],
+   "prerequisite": [
+    {
+     "spell": [
+      {
+       "choose": "level=0|class=Warlock",
+       "entry": "a Warlock Cantrip That Deals Damage",
+       "entrySummary": "Warlock Cantrip That Deals Damage"
+      }
+     ],
+     "level": {
+      "level": 2,
+      "class": {
+       "name": "Warlock",
+       "source": "XPHB",
+       "visibleStats": true
+      }
+     }
+    }
+   ],
+   "entries": [
+    "Choose one of your known {@filter Warlock cantrips|spells|level=0|class=Warlock|damage type=acid;bludgeoning;cold;fire;force;lightning;necrotic;piercing;poison;psychic;radiant;slashing;thunder} that deals damage. You can add your Charisma modifier to that spell's damage rolls.",
+    {
+     "type": "entries",
+     "entries": [
+      {
+       "type": "entries",
+       "name": "Repeatable",
+       "entries": [
+        "You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Archery",
+   "source": "PHB",
+   "page": 72,
+   "srd": true,
+   "otherSources": [
+    {
+     "source": "PHB",
+     "page": 91
+    }
+   ],
+   "reprintedAs": [
+    {
+     "uid": "Archery|XPHB",
+     "tag": "feat"
+    }
+   ],
+   "featureType": [
+    "FS:F",
+    "FS:R"
+   ],
+   "entries": [
+    "You gain a +2 bonus to attack rolls you make with ranged weapons."
+   ]
+  },
+  {
+   "name": "Quickened Spell",
+   "source": "PHB",
+   "page": 102,
+   "srd": true,
+   "reprintedAs": [
+    "Quickened Spell|XPHB"
+   ],
+   "featureType": [
+    "MM"
+   ],
+   "consumes": {
+    "name": "Sorcery Point",
+    "amount": 2
+   },
+   "entries": [
+    "When you cast a spell that has a casting time of 1 action, you can spend 2 sorcery points to change the casting time to 1 bonus action for this casting."
+   ]
+  },
+  {
+   "name": "Quickened Spell",
+   "source": "XPHB",
+   "page": 142,
+   "srd52": true,
+   "featureType": [
+    "MM"
+   ],
+   "consumes": {
+    "name": "Sorcery Point",
+    "amount": 2
+   },
+   "entries": [
+    "When you cast a spell that has a casting time of an action, you can spend 2 Sorcery Points to change the casting time to a {@variantrule Bonus Action|XPHB} for this casting. You can't modify a spell in this way if you've already cast a level 1+ spell on the current turn, nor can you cast a level 1+ spell on this turn after modifying a spell in this way."
+   ]
+  },
+  {
+   "name": "Trip Attack",
+   "source": "PHB",
+   "page": 74,
+   "reprintedAs": [
+    "Trip Attack|XPHB"
+   ],
+   "featureType": [
+    "MV:B"
+   ],
+   "consumes": {
+    "name": "Superiority Die"
+   },
+   "entries": [
+    "When you hit a creature with a weapon attack, you can expend one superiority die to attempt to knock the target down. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw. On a failed save, you knock the target {@condition prone}."
+   ]
+  },
+  {
+   "name": "Trip Attack",
+   "source": "XPHB",
+   "page": 95,
+   "featureType": [
+    "MV:B"
+   ],
+   "consumes": {
+    "name": "Superiority Die"
+   },
+   "entries": [
+    "When you hit a creature with an attack roll using a weapon or an {@variantrule Unarmed Strike|XPHB}, you can expend one Superiority Die and add the die to the attack's damage roll. If the target is Large or smaller, it must succeed on a Strength saving throw or have the {@condition Prone|XPHB} condition."
+   ]
+  }
+ ]
+}

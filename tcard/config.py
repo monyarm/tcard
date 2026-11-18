@@ -16,7 +16,7 @@ class ConfigError(Exception):
 class Config:
     systems: list[str] = field(default_factory=lambda: ["dnd:5e"])
     kinds: list[str] = field(default_factory=list)
-    prefer: list[str] = field(default_factory=lambda: ["XPHB", "PHB"])
+    prefer: list[str] = field(default_factory=lambda: ["XPHB", "XDMG", "PHB", "DMG"])
     cols: int = 32
 
 

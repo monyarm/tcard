@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...model import Card
 from ..base import Kind
-from . import index, items, klass, spell
+from . import actions, conditions, feats, index, items, klass, optional, simple, spell
 
 SYSTEM_ID = "dnd:5e"
 ALIASES = ("5e",)
@@ -20,4 +20,12 @@ class SpellKind(Kind):
         return spell.to_card(record)
 
 
-KINDS = {"spell": SpellKind(), "item": items.ItemKind(), "class_ability": klass.ClassAbilityKind()}
+KINDS = {
+    "spell": SpellKind(),
+    "item": items.ItemKind(),
+    "class_ability": klass.ClassAbilityKind(),
+    **{kind_id: optional.OptionalKind(kind_id, codes) for kind_id, codes in optional.KINDS.items()},
+    "feat": simple.SimpleKind("feat", feats.records, feats.to_card),
+    "condition": simple.SimpleKind("condition", conditions.records, conditions.to_card),
+    "action": simple.SimpleKind("action", actions.records, actions.to_card),
+}

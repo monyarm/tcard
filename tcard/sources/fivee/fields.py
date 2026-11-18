@@ -30,6 +30,10 @@ def _as_list(value: object) -> list:
 
 def _describe(value: object) -> str:
     if isinstance(value, dict):
+        if value.get("entry"):
+            return _clean(value["entry"])
+        if "choose" in value:
+            return ""
         name = value.get("name") or value.get("displayName")
         level = value.get("level")
         if name and level:
@@ -46,6 +50,8 @@ def _prereq_item(key: str, value: object) -> str:
     if key == "other":
         return _describe(value)
     if key == "level":
+        if isinstance(value, dict) and value.get("class"):
+            return f"{_describe(value['class'])} level {_describe(value.get('level'))}"
         return f"level {_describe(value)}"
     if key == "ability":
         return ", ".join(f"{str(k).upper()} {v}" for item in _as_list(value) if isinstance(item, dict) for k, v in item.items())
