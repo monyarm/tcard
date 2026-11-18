@@ -45,7 +45,17 @@ Content kinds:
 spell  item  class_ability  subclass  monster
 invocation  metamagic  maneuver  fighting_style  pact_boon  infusion
 rune  arcane_shot  elemental_discipline  renown_boon
-feat  condition  action  background
+feat  condition  action  background  species  variant_rule
+```
+
+Species (the 2024 name for races) prints type, size, speed, darkvision,
+resistances and the trait list; 2014 races add their ability scores. Variant
+rules print their rule text:
+
+```
+tcard species aasimar
+tcard species dragonborn --source PHB
+tcard variant_rule cover
 ```
 
 Monsters print the stat block: AC, HP, speed, saves, skills, defenses, senses,
