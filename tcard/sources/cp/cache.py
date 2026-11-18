@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import ssl
 from urllib.error import HTTPError
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -15,6 +16,12 @@ from ...errors import TcardError
 BASE = "https://cybersmily.net/json"
 WIKI = "https://cyberpunk.fandom.com"
 AGENT = "tcard/0.1 (+thermalstatblock)"
+
+
+# datafortress2020 ships an expired certificate and will not be fixed.
+LAX = ssl.create_default_context()
+LAX.check_hostname = False
+LAX.verify_mode = ssl.CERT_NONE
 
 
 def cache_dir() -> Path:
@@ -39,6 +46,22 @@ def _get(url: str, refresh: bool = False) -> bytes:
         tmp.write_bytes(body)
         tmp.replace(path)
     return path.read_bytes()
+
+
+def raw(url: str, refresh: bool = False) -> str:
+    """Fetch a page from a site with a broken certificate chain."""
+    digest = hashlib.sha1(url.encode()).hexdigest()[:12]
+    path = cache_dir() / "pages" / f"{digest}.txt"
+    if refresh or not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        request = Request(url, headers={"User-Agent": AGENT})
+        try:
+            with urlopen(request, timeout=60, context=LAX) as response:
+                body = response.read()
+        except (HTTPError, OSError) as exc:
+            raise TcardError(f"cannot fetch {url}: {exc}", 3) from exc
+        path.write_bytes(body)
+    return path.read_bytes().decode("cp1252", "replace")
 
 
 def data(relative: str, refresh: bool = False) -> list[dict]:

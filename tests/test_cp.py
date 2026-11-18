@@ -238,3 +238,70 @@ def test_registry_knows_cyberpunk():
     assert "weapon" in kinds and "role" in kinds and "cyberware" in kinds
     assert "electronics" in kinds
     assert len(kinds) == 32
+
+
+def test_weapon_prints_the_book_category_and_firing_modes():
+    card = cards.weapon(dict(WEAPON, category="EXOTICS", subcategory="HEAVY",
+                             fullAuto=True, burstFire=True, burst="3m",
+                             ap="1/2 vs Soft", thrown=True, bod=9))
+    fields = dict(card.fields)
+    assert fields["Category"] == "Exotics"
+    assert fields["Subcategory"] == "Heavy"
+    assert fields["Firing Modes"] == "Full auto, Burst fire"
+    assert fields["Burst"] == "3m"
+    assert fields["Armour Piercing"] == "1/2 vs Soft"
+    assert fields["Thrown"] == "Yes"
+    assert fields["Minimum BOD"] == "9"
+
+
+def test_cyberware_exotic_bodysculpt_reads_as_bioware():
+    card = cards.cyberware({"name": "Fangs", "type": "EXOTIC BODYSCULPT",
+                            "cost": 500, "hc": "1", "surgery": "M"})
+    assert card.subtitle == "Bioware"
+    assert dict(card.fields)["Surgery"] == "Minor"
+
+
+def test_cyberware_prints_option_slots_and_falls_back_to_datafortress():
+    record = {"name": "Neural Bridge", "type": "CYBERLIMB", "cost": 600}
+    with mock.patch.object(cards.datafortress, "lookup",
+                           return_value={"hc": "2", "surgery": "Major",
+                                         "effect": "Works with both hands."}):
+        card = cards.cyberware(record)
+    fields = dict(card.fields)
+    assert fields["Humanity Cost"] == "2"
+    assert fields["Surgery"] == "Major"
+    assert card.sections[0][1] == ["Works with both hands."]
+
+
+def test_weapon_option_prints_a_cost_multiplier():
+    card = cards.weapon_option({"name": "Scope", "type": "Rifle",
+                                "costMultiplier": "0.25"})
+    assert dict(card.fields)["Cost Multiplier"] == "x0.25"
+
+
+def test_skill_prints_its_option_and_manoeuvre_bonuses():
+    card = cards.skill({"name": "Martial Art: Aikido", "stat": "REF",
+                        "ipmod": 2, "option": "Martial Art: Aikido",
+                        "maBonuses": {"punch": 1, "kick": -1}})
+    fields = dict(card.fields)
+    assert fields["Option"] == "Martial Art: Aikido"
+    assert fields["Manoeuvres"] == "Punch +1, Kick -1"
+
+
+def test_role_prints_secondary_skills():
+    card = cards.role({"name": "Solo", "specialability": {"name": "Combat Sense"},
+                       "skills": [["Handgun", "Rifle"]],
+                       "secondary": [["Demolitions", "Disguise"]]})
+    fields = dict(card.fields)
+    assert fields["Secondary Skills"] == "Demolitions or Disguise"
+
+
+def test_datafortress_rows_pair_stats_with_effect_text():
+    from tcard.sources.cp import datafortress
+    markup = ("<tr><td>Type</td><td>Cost</td><td>HC</td><td>Surgery Code</td></tr>"
+              "<tr><td>Neural Bridge</td><td>$500</td><td>2</td><td>Major</td></tr>"
+              "<tr><td>Effect</td></tr><tr><td>Works with both hands.</td></tr>")
+    items = datafortress.parse(markup)
+    assert len(items) == 1
+    assert items[0] == {"name": "Neural Bridge", "cost": "$500", "hc": "2",
+                        "surgery": "Major", "effect": "Works with both hands."}

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from ...model import Card, Table
-from . import cache, wiki
+from . import cache, datafortress, wiki
 
 WEAPON_TYPES = {"P": "Pistol", "SMG": "SMG", "RIF": "Rifle", "SHT": "Shotgun",
                 "HVY": "Heavy Weapon", "MEL": "Melee", "EX": "Exotic"}
@@ -16,6 +16,8 @@ LOCATIONS = {"torso": "Torso", "head": "Head", "rarm": "Right Arm", "larm": "Lef
              "rleg": "Right Leg", "lleg": "Left Leg", "llarm": "Left Arm"}
 MANOEUVRES = ("strike", "punch", "kick", "disarm", "sweep", "block", "dodge",
               "grapple", "throw", "hold", "choke", "escape", "ram")
+# Biosculpting is bioware; it lives in the one cyberware kind.
+CYBER_TYPES = {"EXOTIC BODYSCULPT": "Bioware", "BIOWARE": "Bioware"}
 
 
 # Some rows carry the unit in a numeric field; the unit alone is no value.
@@ -46,12 +48,27 @@ def _code(value: object, table: dict[str, str]) -> str:
     return table.get(text.upper().rstrip("*"), text)
 
 
+def _flag(value: object) -> bool:
+    return str(value or "").strip().lower() not in ("", "0", "false", "none")
+
+
+def _firing(record: dict) -> str:
+    modes = []
+    if _flag(record.get("fullAuto")):
+        modes.append("Full auto")
+    if _flag(record.get("burstFire")):
+        modes.append("Burst fire")
+    return ", ".join(modes)
+
+
 def _named(record: dict) -> str:
     return str(record.get("name") or "Untitled").strip()
 
 
 def weapon(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
+    _add(fields, "Category", str(record.get("category") or "").strip().title())
+    _add(fields, "Subcategory", str(record.get("subcategory") or "").strip().title())
     _add(fields, "Damage", record.get("damage"))
     _add(fields, "Ammo", record.get("ammo"))
     _add(fields, "Shots", record.get("shots"))
@@ -61,9 +78,18 @@ def weapon(record: dict) -> Card:
     _add(fields, "Concealability", _code(record.get("conc"), CONCEAL))
     _add(fields, "Availability", _code(record.get("avail"), AVAILABILITY))
     _add(fields, "Reliability", _code(record.get("rel"), RELIABILITY))
+    _add(fields, "Firing Modes", _firing(record))
+    _add(fields, "Burst", record.get("burst"))
+    _add(fields, "Armour Piercing", record.get("ap"))
+    if _flag(record.get("thrown")):
+        _add(fields, "Thrown", "Yes")
+    _add(fields, "Minimum BOD", record.get("bod"))
     _add(fields, "Cost", _cost(record.get("cost")))
     subtitle = WEAPON_TYPES.get(str(record.get("type") or "").strip().upper(), "Weapon")
     paragraphs = wiki.prose(cache.wikitext(_named(record)) or "")
+    notes = str(record.get("notes") or "").strip()
+    if notes:
+        paragraphs = paragraphs + [notes]
     return Card(_named(record), subtitle, fields, [("", paragraphs)] if paragraphs else [])
 
 
@@ -94,14 +120,19 @@ def cyberware(record: dict) -> Card:
         fields.append(("Subtype", subtype.title()))
     # Humanity Cost and Surgery are the point of the item: "0" and "None" are
     # real values here, so they print instead of being treated as missing.
+    # datafortress carries the humanity cost and surgery code the JSON lacks.
+    extra = datafortress.lookup(_named(record)) or {}
     for label, key, table in (("Humanity Cost", "hc", None), ("Surgery", "surgery", SURGERY)):
-        if key not in record:
+        value = record.get(key) or extra.get(key)
+        if value is None and key not in record:
             continue
-        value = _code(record.get(key), table) if table else str(record.get(key) or "").strip()
-        fields.append((label, value or "None"))
-    notes = str(record.get("notes") or "").strip()
-    return Card(_named(record), str(record.get("type") or "Cyberware").title(), fields,
-                [("", [notes])] if notes else [])
+        text = _code(value, table) if table else str(value or "").strip()
+        fields.append((label, text or "None"))
+    _add(fields, "Option Slots", record.get("numOptions"))
+    notes = str(record.get("notes") or "").strip() or str(extra.get("effect") or "").strip()
+    kind = str(record.get("type") or "Cyberware").strip().upper()
+    subtitle = CYBER_TYPES.get(kind, kind.title())
+    return Card(_named(record), subtitle, fields, [("", [notes])] if notes else [])
 
 
 def gear(record: dict) -> Card:
@@ -124,6 +155,8 @@ def role(record: dict) -> Card:
         _add(fields, "Salary", ", ".join(f"{index + 1}: {value}" for index, value in enumerate(salary)))
     skills = [_joined(skill) for skill in record.get("skills") or []]
     _add(fields, "Skills", ", ".join(skill for skill in skills if skill))
+    extra = [_joined(skill) for skill in record.get("secondary") or []]
+    _add(fields, "Secondary Skills", ", ".join(skill for skill in extra if skill))
     description = str(ability.get("description") or "").strip()
     return Card(_named(record), "Role", fields, [("", [description])] if description else [])
 
@@ -138,6 +171,11 @@ def skill(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
     _add(fields, "Stat", record.get("stat"))
     _add(fields, "IP Multiplier", record.get("ipmod"))
+    _add(fields, "Option", record.get("option"))
+    bonuses = record.get("maBonuses") or {}
+    if isinstance(bonuses, dict):
+        parts = [f"{name.title()} {_signed(value)}" for name, value in bonuses.items()]
+        _add(fields, "Manoeuvres", ", ".join(parts))
     subtitle = "Special Ability" if record.get("sa") else "Skill"
     description = str(record.get("description") or "").strip()
     return Card(_named(record), subtitle, fields, [("", [description])] if description else [])
@@ -190,6 +228,9 @@ def weapon_option(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
     _add(fields, "Applies To", record.get("type"))
     _add(fields, "Cost", _cost(record.get("cost")))
+    multiplier = str(record.get("costMultiplier") or "").strip()
+    if multiplier:
+        _add(fields, "Cost Multiplier", f"x{multiplier}")
     notes = str(record.get("notes") or "").strip()
     return Card(_named(record), "Weapon Option", fields, [("", [notes])] if notes else [])
 
