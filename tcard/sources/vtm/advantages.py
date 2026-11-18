@@ -58,11 +58,16 @@ def _rows(table, section: str) -> list[dict]:
 
 def records(refresh: bool = False) -> list[dict]:
     markdown = cache.page(INDEX, refresh)
-    # Backgrounds share the page but are not merits or flaws.
-    head, _, _ = markdown.partition("\n## Backgrounds and Flaws")
+    head, _, tail = markdown.partition("\n## Backgrounds and Flaws")
     out: list[dict] = []
     for section, table in md.tables(head):
         out.extend(_rows(table, section))
+    # Backgrounds reuse the merit table shape, so the row named after its own
+    # heading is the background itself. Merits listed beside it (Zeroed under
+    # Mask) are still merits.
+    for section, table in md.tables("## Backgrounds and Flaws" + tail):
+        out.extend(record for record in _rows(table, section)
+                   if normalize(record["name"]) != normalize(section))
     return out
 
 

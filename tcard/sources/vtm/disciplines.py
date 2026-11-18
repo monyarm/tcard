@@ -13,6 +13,8 @@ INDEX = "Disciplines"
 LINK = re.compile(r'\*\*\[([^\]]+)\]\((https://vtm\.paradoxwikis\.com/[^)\s"]+)')
 HEADER_FIELDS = ("Type", "Masquerade threat", "Resonance")
 POWER_FIELDS = ("Cost", "Prerequisite", "Amalgam", "Duration", "Dice pool", "Opposing pool")
+# The rules text of a power, kept out of the field list because it is prose.
+POWER_TEXT = ("Effect", "Additional Notes")
 EMPTY_VALUES = ("", "none", "n/a", "no")
 
 
@@ -59,6 +61,7 @@ def _powers(markdown: str) -> list[dict]:
                 "name": name,
                 "level": level,
                 "fields": {key: values.get(key, "") for key in POWER_FIELDS},
+                "text": [values[key] for key in POWER_TEXT if values.get(key)],
             })
     return out
 
@@ -99,14 +102,15 @@ def records(refresh: bool = False) -> list[dict]:
                 "discipline": entry["name"],
                 "level": power["level"],
                 "fields": power["fields"],
+                "text": power["text"],
             })
     return out
 
 
-def _series(powers: list[dict]) -> dict[str, list[str]]:
-    out: dict[str, list[str]] = {}
+def _series(powers: list[dict]) -> dict[str, list[dict]]:
+    out: dict[str, list[dict]] = {}
     for power in powers:
-        out.setdefault(str(power["level"]), []).append(power["name"])
+        out.setdefault(str(power["level"]), []).append(power)
     return out
 
 
@@ -114,8 +118,11 @@ def _discipline_card(record: dict) -> Card:
     fields = [(key, record["header"][key]) for key in HEADER_FIELDS if record["header"].get(key)]
     sections = []
     for level in sorted(record["levels"], key=int):
-        names = record["levels"][level]
-        sections.append((f"Level {level}", [f"- {name}" for name in names]))
+        bullets = []
+        for power in record["levels"][level]:
+            effect = (power.get("text") or [""])[0]
+            bullets.append(f"- {power['name']}: {effect}" if effect else f"- {power['name']}")
+        sections.append((f"Level {level}", bullets))
     return Card(record["name"], record.get("flavour", ""), fields, sections)
 
 
@@ -125,7 +132,9 @@ def _power_card(record: dict) -> Card:
         value = record["fields"].get(key, "")
         if value and value.lower() not in EMPTY_VALUES:
             fields.append((key, value))
-    return Card(record["name"], f"{record['discipline']} {record['level']}", fields)
+    body = [paragraph for paragraph in record.get("text", []) if paragraph]
+    return Card(record["name"], f"{record['discipline']} {record['level']}", fields,
+                [("", body)] if body else [])
 
 
 def to_card(record: dict) -> Card:

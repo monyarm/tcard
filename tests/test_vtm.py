@@ -137,6 +137,13 @@ ADVANTAGES = """## Merits and Flaws
 | Merits | Dot Value | Description |
 | --- | --- | --- |
 | **Allies** | **•** | Backgrounds are not merits. |
+
+### Mask
+
+| Merits | Dot Value | Description | Flaws | Dot Value | Description |
+| --- | --- | --- | --- | --- | --- |
+| **Mask** | **• - ••** | A fake identity. |  |  |  |
+| **Zeroed** | **•** | Purged from the world. |  |  |  |
 """
 
 PREDATOR = """Markdown Content:
@@ -236,7 +243,7 @@ def test_discipline_card():
     assert dict(card.fields) == {"Type": "Mental", "Masquerade threat": "Low", "Resonance": "Phlegmatic"}
     headings = [heading for heading, _ in card.sections]
     assert headings == ["Level 1", "Level 3"]
-    assert card.sections[0][1] == ["- Heightened Senses"]
+    assert card.sections[0][1][0].startswith("- Heightened Senses: Enhance vampiric senses")
 
 
 def test_discipline_power_by_path():
@@ -249,6 +256,8 @@ def test_discipline_power_by_path():
     fields = dict(card.fields)
     assert fields["Cost"] == "One Rouse Check"
     assert "Prerequisite" not in fields and "Amalgam" not in fields
+    body = " ".join(card.sections[0][1])
+    assert body.startswith("Perceives information about the target.")
 
 
 def test_clan_card_and_bane_parts():
@@ -279,8 +288,15 @@ def test_merit_and_flaw_group_addressing():
     flaws = advantages.AdvantageKind("flaw")
     merit_records = _with_pages(merits.records)
     flaw_records = _with_pages(flaws.records)
-    assert {r["name"] for r in merit_records} == {"Beautiful", "Linguistics"}
+    assert {r["name"] for r in merit_records} == {"Beautiful", "Linguistics", "Zeroed"}
     assert {r["name"] for r in flaw_records} == {"Ugly", "Repulsive"}
+    # Background rows are not merits, but merits listed beside one still are.
+    assert "Allies" not in {r["name"] for r in merit_records}
+    assert "Mask" not in {r["name"] for r in merit_records}
+
+    zeroed = advantages.to_card(merits.matches(merit_records, "zeroed")[0])
+    assert zeroed.subtitle == "Merit (Mask)"
+    assert dict(zeroed.fields)["Dots"] == "\u25cf\u25cb\u25cb\u25cb\u25cb"
 
     match = merits.matches(merit_records, "look:beautiful")
     card = advantages.to_card(match[0])
