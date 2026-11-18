@@ -13,7 +13,8 @@ ARTICLE = re.compile(r"<article\b.*?</article>", re.S)
 JUNK = re.compile(
     r"(?i)^(join our discord|support us|become a patron|follow us|pathfinder .*copyright"
     r"|copyright \d{4}|section \d+|open game license|compatibility with the pathfinder"
-    r"|authors?:|contents$)"
+    r"|authors?:|contents$|pathfinder (roleplaying game|campaign setting|player companion"
+    r"|companion|adventure path|tales|module)|paizo publishing)"
 )
 # d20pfsrd titles carry the feat/ability category in parentheses.
 CATEGORY = re.compile(
@@ -24,6 +25,8 @@ CATEGORY = re.compile(
 
 
 _COPYRIGHT = re.compile(r"(?i)\bcopyright \d{4}")
+# Spell pages put the mythic variant in a sub-heading; it is a different spell.
+MYTHIC = re.compile(r"(?i)^mythic\b")
 
 
 def _clean(value: str) -> str:
@@ -50,10 +53,23 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
     school = ""
 
     for tag, css, inner in html.blocks(markup):
+        if "source" in css.split():
+            # A "[Source]" citation paragraph, not rules text.
+            continue
         if tag in ("h2", "h3", "h4"):
             heading = html.text(inner).strip()
-            if heading:
-                sections.append((heading, []))
+            if not heading:
+                continue
+            if school and MYTHIC.match(heading):
+                # Skip the mythic block until the next heading or divider.
+                mode = "skip"
+                continue
+            if mode == "skip":
+                mode = "body"
+            sections.append((heading, []))
+            continue
+
+        if mode == "skip" and "divider" not in css:
             continue
 
         if tag == "table":
@@ -102,7 +118,13 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
             fields.append((label, value))
 
     subtitle = school[:1].upper() + school[1:] if school else ""
-    sections = [(heading, paragraphs) for heading, paragraphs in sections if paragraphs]
+    # Some spell pages end with a "[Source]" divider holding the OGL block.
+    sections = [
+        (heading, paragraphs)
+        for heading, paragraphs in sections
+        if paragraphs and heading.strip().lower() not in ("source", "sources")
+    ]
+
     return Card(title, subtitle, fields, sections)
 
 

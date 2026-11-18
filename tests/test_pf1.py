@@ -27,9 +27,9 @@ def test_fireball_card():
     assert fields["Spell Resistance"] == "yes"
     assert fields["Level"] == "bloodrager 3, magus 3, sorcerer/wizard 3"
     headings = [heading for heading, _ in card.sections]
-    assert headings == ["", "Mythic Fireball"]
+    assert headings == [""]
     assert card.sections[0][1][0].startswith("A fireball spell generates")
-    assert any("Augmented (6th)" in part for part in card.sections[1][1])
+    assert not any("Augmented (6th)" in part for part in card.sections[0][1])
 
 
 def test_archetype_headings_become_sections():
