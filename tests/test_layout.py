@@ -32,13 +32,21 @@ def test_layout_wraps_field_with_indent():
     assert "  bat guano and sulfur)" in texts
 
 
-def test_layout_rejects_narrow_width():
+def test_layout_wraps_a_label_too_long_for_its_line():
+    card = Card("T", fields=[("Table: Draconic Bloodline Breath Weapons", "1d6")])
+    lines = layout(card, 20)
+    assert all(len(line.text) <= 20 for line in lines)
+    text = "\n".join(line.text for line in lines)
+    assert "Table:" in text and "1d6" in text
+
+
+def test_layout_rejects_a_width_below_four():
     try:
-        layout(CARD, 8)
+        layout(CARD, 3)
     except ValueError as exc:
-        assert "8" in str(exc)
+        assert "3" in str(exc)
         return
-    raise AssertionError("narrow width must raise")
+    raise AssertionError("width below 4 must raise")
 
 
 def test_layout_never_exceeds_width():

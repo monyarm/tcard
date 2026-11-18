@@ -72,10 +72,14 @@ def _field(label: str, value: str, cols: int) -> list[Line]:
     head = f"{label}: "
     room = cols - len(head)
     if room < 4:
-        raise ValueError(f"{cols} columns too narrow for field {label!r}")
+        # A label too long to share its line wraps above an indented value.
+        label_lines = [Line(LineKind.FIELD, part) for part in wrap(f"{label}:", cols)]
+        return label_lines + _field_value(value, "  ", cols - 2, cols)
+    return _field_value(value, head, room, cols) or [Line(LineKind.FIELD, head.rstrip())]
+
+
+def _field_value(value: str, prefix: str, limit: int, cols: int) -> list[Line]:
     out: list[Line] = []
-    prefix = head
-    limit = room
     current = ""
     for word in fold(value).expandtabs(4).split():
         while len(word) > limit:
@@ -98,7 +102,7 @@ def _field(label: str, value: str, cols: int) -> list[Line]:
             current = word
     if current:
         out.append(Line(LineKind.FIELD, prefix + current))
-    return out or [Line(LineKind.FIELD, head.rstrip())]
+    return out
 
 
 _BULLET = "- "

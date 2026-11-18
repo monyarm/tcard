@@ -77,12 +77,26 @@ def urls(refresh: bool = False) -> list[str]:
 
 SUFFIXES = (
     "-archetypes", "-archetype", "-prestige-class", "-racial-trait", "-trait", "-traits",
-    "-ex", "-su", "-sp", "-uc", "-um", "-oa",
+    "-ex", "-su", "-sp", "-uc", "-um", "-oa", "-acg", "-apg", "-arg", "-ui", "-iswg", "-isc",
 )
-# Index pages for a family carry the family word, or a publisher name.
-PUBLISHER_HINTS = ("publishing", "press", "llc", "d20pfsrd", "games", "legendary", "paizo", "fan")
+# Third-party collections name their publisher in the path segment. Paizo's own
+# sets read "paizo-<family>", "<family>-from-paizo", or a plain official word.
+PUBLISHER_WORDS = frozenset((
+    "publishing", "press", "llc", "inc", "games", "gaming", "studios", "studio",
+    "enterprizes", "enterprises", "productions", "design", "house", "works",
+    "goblin", "duck", "sheepdog", "codex", "united", "fans", "d20pfsrd",
+    "ascension", "legendary", "everyman", "kobold", "bloodstone", "rite",
+    "dreamscarred", "necromancers", "purple", "radiance", "petersen", "brazer",
+    "flaming", "crab",
+))
 # Hex collections are official but not published under a "paizo-" set name.
 OFFICIAL_SETS = frozenset(("hexes", "common-hexes", "major-hexes", "grand-hexes", "grand-hex"))
+# Site navigation pages that sit where a feature leaf would be.
+NAV = frozenset(("gods-pantheons", "pantheons", "gods", "deities", "subdomains"))
+
+
+def _publisher(segment: str) -> bool:
+    return any(word in PUBLISHER_WORDS for word in segment.split("-"))
 
 
 def _slug(url: str) -> str:
@@ -140,18 +154,16 @@ def family_kind(segs: list[str]) -> str | None:
     slug = segs[-1]
     leaf = family.split("-")[-1]
     # Collection index pages end with the family words ("...-rogue-talents", "hexes").
-    if slug == family or slug in OFFICIAL_SETS or slug.endswith(leaf) or slug.endswith(family):
+    if slug == family or slug in OFFICIAL_SETS or slug in NAV or slug.endswith(leaf) or slug.endswith(family):
         return None
     # Collection pages whose slug repeats the family name, e.g. magus-arcana-samurai-sheepdog.
     if slug.startswith(family + "-"):
         return None
-    if any(hint in slug for hint in PUBLISHER_HINTS):
+    if _publisher(slug):
         return None
-    if len(segs) > 5:
-        # Official families group leaves under "paizo-<family>" or a plain hex set.
-        collection = segs[-2]
-        if not (collection.startswith("paizo-") or collection in OFFICIAL_SETS or collection == family):
-            return None
+    # Every collection segment between the family and the leaf must be official.
+    if any(_publisher(segment) for segment in segs[4:-1]):
+        return None
     kind = FAMILY_KINDS.get(family)
     if kind:
         return kind
@@ -185,13 +197,28 @@ def _match(kind: str, segs: list[str]) -> bool:
         index = segs.index("archetypes")
         # Publisher-named sets are 3PP; official sets are "paizo-<class>-archetypes".
         tail = segs[index + 1:]
-        return len(tail) == 2 and tail[0].startswith("paizo-")
+        return len(tail) == 2 and not _publisher(tail[0])
     if kind == "prestige_class":
         return len(segs) in (4, 5) and segs[:2] == ["classes", "prestige-classes"] and segs[-1] not in BOOKS
     if kind in ("feat", "trait", "equipment", "magic_item", "race", "archetype", "prestige_class"):
         return False
     # Anything left is a class-feature family kind (rogue_talent, witch_hex, ...).
     return family_kind(segs) == kind
+
+
+# Trailing words a class feature name repeats but its kind already says.
+FAMILY_WORDS = frozenset(_SINGULAR) | frozenset(_SINGULAR.values()) | frozenset(("subdomain", "subdomains"))
+
+
+def _family_name(url: str, segs: list[str]) -> str:
+    """Drop the trailing class and family words from a feature slug."""
+    tokens = _strip_suffix(_slug(url)).split("-")
+    stop = set(FAMILY_WORDS)
+    for segment in segs[2:4]:
+        stop.update(segment.split("-"))
+    while len(tokens) > 1 and tokens[-1] in stop:
+        tokens.pop()
+    return " ".join(tokens).title()
 
 
 def records(kind: str, refresh: bool = False) -> list[dict]:
@@ -215,6 +242,7 @@ def records(kind: str, refresh: bool = False) -> list[dict]:
         elif segs[0] == "classes":
             family = family_kind(segs)
             if family:
+                record["name"] = _family_name(url, segs)
                 record["family_kind"] = family
                 record["class"] = segs[2].replace("-", " ")
                 record["family"] = segs[3].replace("-", " ")

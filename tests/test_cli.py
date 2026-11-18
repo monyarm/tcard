@@ -154,7 +154,7 @@ def test_bad_cols_is_usage_error():
     assert "cols" in err
 
 
-def test_layout_error_becomes_usage_error():
-    code, _, err = run(["--cols", "10", "fireball"])
+def test_out_of_range_cols_is_usage_error():
+    code, _, err = run(["--cols", "3", "fireball"])
     assert code == 2
-    assert "narrow" in err
+    assert "between 8 and 200" in err

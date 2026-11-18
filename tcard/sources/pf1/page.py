@@ -29,8 +29,12 @@ _COPYRIGHT = re.compile(r"(?i)\bcopyright \d{4}")
 MYTHIC = re.compile(r"(?i)^mythic\b")
 
 
+_SPACED = re.compile(r"\s+([.,;:!?])")
+
+
 def _clean(value: str) -> str:
     """Cut the licence tail d20pfsrd appends to the last rules paragraph."""
+    value = _SPACED.sub(r"\1", value)
     cut = _COPYRIGHT.search(value)
     if not cut:
         return value
@@ -104,6 +108,17 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
                     sections[-1][1].append(text_part)
                 continue
             value = _clean(value)
+            if ":" in label:
+                # A bold run spanning a reference, e.g. "Table: Dragon Breath Weapons".
+                prose = _clean(f"{label} {value}")
+                if prose:
+                    target = sections[-1][1]
+                    if target and isinstance(target[-1], str) and not target[-1].endswith((".", "!", "?", ":")):
+                        # Continue the sentence the reference sits inside.
+                        target[-1] = f"{target[-1]} {prose}"
+                    else:
+                        target.append(prose)
+                continue
             if not value:
                 continue
             if label == "School":
@@ -111,6 +126,10 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
                 started = True
                 continue
             if not started:
+                continue
+            if label.lower() in ("table", "tables"):
+                # Table captions read better as prose above the grid.
+                sections[-1][1].append(value)
                 continue
             if not spell and (len(value) > 90 or re.search(r"[.!?]\s+[A-Z]", value)):
                 sections[-1][1].append(f"{label}: {value}")
