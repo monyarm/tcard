@@ -75,7 +75,11 @@ def page(name: str, refresh: bool = False) -> str:
 
 def wikitext(name: str, refresh: bool = False) -> str:
     """One White Wolf wiki page as MediaWiki wikitext."""
-    url = f"{WIKI}/api.php?action=parse&page={name}&prop=wikitext&format=json"
+    from urllib.parse import quote
+
+    # Titles carry spaces and parentheses; the API rejects them unquoted.
+    slug = quote(name.replace(" ", "_"), safe="()_-'!,")
+    url = f"{WIKI}/api.php?action=parse&page={slug}&prop=wikitext&format=json"
     body = get(url, refresh)
     try:
         return json.loads(body)["parse"]["wikitext"]["*"]

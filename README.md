@@ -188,6 +188,7 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   tcard vtm:v20 discipline auspex:heightened_senses
   tcard vtm:v20 clan brujah
   tcard vtm:v20 clan brujah:banes        # or :bane_2, :compulsion
+  tcard vtm:v20 clan cappadocian:lore    # or :history: the whole page prose
   tcard vtm:v20 bloodline baali
   tcard vtm:v20 ritual thaumaturgy:bind_the_accusing_tongue
   tcard vtm:v20 ritual necromancy:knowing_stone
@@ -199,6 +200,16 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   Rituals span seven tradition list pages (Thaumaturgy, Necromancy, Akhu,
   Anarch, Dur-An-Ki, Koldunic, Sadhana); Thaumaturgy publishes a rank table and
   the others publish dot bullets, and both shapes feed the same card.
+
+  Clan and bloodline cards open with the page's own prose and close with the
+  banes and compulsion. Pages without an `Overview` heading (Cappadocian,
+  Ahrimanes) fall back to their `History` or `Background information` lede, so
+  no card is head-only. The rest of the page — history, organisation, culture,
+  variants — is long enough to be its own print job (574 lines for Brujah, over
+  1100 for Tremere), so it is a part: `:lore` (aliases `:history`,
+  `:background`) prints every prose section minus the navigation ones
+  (references, gallery, trivia) and the name lists (members, legacies,
+  loresheets).
 - Pathfinder 2e comes from the Foundry data repo (`github.com/foundryvtt/pf2e`,
   branch `v14-dev`) as item JSON. The first use does a blobless sparse checkout
   into `~/.cache/tcard/pf2/repo` (one clone, then only the packs a kind needs);

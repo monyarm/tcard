@@ -79,6 +79,31 @@ def test_clan_card_and_parts() -> None:
     assert compulsion_card.title == "Rebellion"
 
 
+def test_clan_lore_part_prints_the_whole_page() -> None:
+    kind = kindred.KindredKind("clan", "Clans (VTM)", "Clan", set())
+    with mock.patch.object(cache, "wikitext", _page({"Brujah": _read("brujah.txt")})), \
+         mock.patch.object(cache, "category", _category({"Clans (VTM)": ["Brujah"]})):
+        records = kind.records()
+        lore = kind.card(kind.matches(records, "brujah:lore")[0])
+        history = kind.matches(records, "brujah:history")
+    assert lore.subtitle == "Lore"
+    assert [heading for heading, _ in lore.sections] == ["Overview", "Banes", "Compulsion"]
+    assert lore.sections[0][1] == ["Fighters against the system, rebels against injustice."]
+    assert lore.sections[1][1] == [
+        "- Violent Temper: All difficulties to resist Frenzy increase by two.",
+        "- Variant — Violence: A messy critical inflicts Aggravated damage.",
+    ]
+    assert history[0]["part"] == ("lore",)
+
+
+def test_clan_without_overview_opens_with_its_history() -> None:
+    markup = ("==History==\nThe clan is old.\n\n===Dark Ages===\nThe clan woke in the dark.\n\n"
+              "==Members==\n* Someone\n\n==References==\n<ref>book</ref>\n")
+    card = kindred.build(markup, "Clan", "Cappadocian")
+    assert card.sections[0] == ("Overview", ["The clan is old."])
+    assert [heading for heading, _ in kindred.lore(markup)] == ["History", "Dark Ages"]
+
+
 def test_bloodline_uses_the_same_shape() -> None:
     kind = kindred.KindredKind("bloodline", "Bloodlines (VTM)", "Bloodline", set())
     with mock.patch.object(cache, "wikitext", _page({"Brujah": _read("brujah.txt")})), \

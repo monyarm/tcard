@@ -11,8 +11,12 @@ from . import cache, wiki
 
 PARTS = {"bane": ("bane",), "banes": ("bane", "bane_2"), "bane_1": ("bane",),
          "banes_1": ("bane",), "bane_2": ("bane_2",), "banes_2": ("bane_2",),
-         "compulsion": ("compulsion",)}
+         "compulsion": ("compulsion",), "lore": ("lore",), "history": ("lore",),
+         "background": ("lore",)}
 _NUMBERED = re.compile(r"^(?:bane|banes)[ _]?(\d)$")
+# Pages are mostly good prose, but these sections are navigation or name lists.
+SKIP = {"references", "gallery", "see also", "trivia", "external links", "stats", "quotes"}
+_JUNK = ("member", "loresheet", "character sheet", "character creation", "legac")
 
 
 def _joined(value: str) -> str:
@@ -50,12 +54,46 @@ def _compulsion(markdown: str) -> tuple[str, str] | None:
     return (name.strip(), text.strip() or prose[0])
 
 
+def _skip(title: str) -> bool:
+    low = title.lower()
+    return low in SKIP or any(word in low for word in _JUNK)
+
+
+def lore(markdown: str) -> list[tuple[str, list[str]]]:
+    """Every prose section of the page, minus navigation and name lists."""
+    out = []
+    for _, title, body in wiki.sections(markdown):
+        if _skip(title):
+            continue
+        lines = wiki.paragraphs(body)
+        lines += [f"- {item}" for item in wiki.list_items(body)]
+        if lines:
+            out.append((title, lines))
+    return out
+
+
+def _summary(markdown: str) -> list[str]:
+    """The card's opening prose: Overview, else the first section that has text.
+
+    Many clans and bloodlines (Cappadocian, Baali) have no Overview heading; their
+    opening paragraph sits under History or Background.
+    """
+    prose = wiki.paragraphs(wiki.block(markdown, "Overview"))
+    if prose:
+        return prose[:2]
+    for heading in ("Background information", "History", "Background"):
+        prose = wiki.paragraphs(wiki.block(markdown, heading))
+        if prose:
+            return prose[:1]
+    return []
+
+
 def build(markdown: str, subtitle: str, title: str = "") -> Card:
     fields = _fields(markdown)
-    summary = wiki.paragraphs(wiki.block(markdown, "Overview"))
+    summary = _summary(markdown)
     sections = []
     if summary:
-        sections.append(("Overview", summary[:1]))
+        sections.append(("Overview", summary))
     banes = _banes(markdown)
     if banes:
         sections.append(("Banes", [f"{name}: {text}" for name, text in banes]))
@@ -67,6 +105,8 @@ def build(markdown: str, subtitle: str, title: str = "") -> Card:
 
 def build_part(markdown: str, subtitle: str, wanted: tuple[str, ...]) -> Card:
     banes = dict(_banes(markdown))
+    if wanted[0] == "lore":
+        return Card(subtitle, "Lore", [], lore(markdown))
     if wanted[0] == "compulsion":
         compulsion = _compulsion(markdown)
         if not compulsion:
