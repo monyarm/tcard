@@ -210,8 +210,15 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 
   Weapon stat blocks have no prose in the data, so descriptions are pulled from
   the Cyberpunk wiki (`cyberpunk.fandom.com`); weapons the wiki does not cover
-  print stats only. Hyphens are treated as spaces, so `hip_mounted_powerpack`
-  finds `Hip-Mounted Powerpack`.
+  print stats only. Cyberware without a Humanity Cost or Surgery code in the
+  JSON falls back to the `bio.htm` bioware tables on `datafortress2020.com`
+  (expired certificate, read with verification off). Hyphens are treated as
+  spaces, so `hip_mounted_powerpack` finds `Hip-Mounted Powerpack`.
+
+  Cards print every field the record carries: weapons show the book category,
+  subcategory, firing modes, burst, armour piercing, thrown and minimum BOD;
+  cyberware shows subtype, humanity cost, surgery and option slots; skills show
+  their option and manoeuvre bonuses; weapon options show a cost multiplier.
 
   ```
   tcard cp:2020 weapon arasaka_restraint_caster
