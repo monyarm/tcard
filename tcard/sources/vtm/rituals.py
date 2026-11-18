@@ -7,10 +7,12 @@ import re
 from ...model import Card
 from ...names import normalize, split_path
 from ..base import Kind
-from . import cache, md
+from . import cache, md, pack
 
 PAGES = {"Blood Sorcery": "Blood_Sorcery_Rituals", "Oblivion": "Oblivion_Ceremonies"}
 KEY_FIELDS = ("Cost", "Origin", "Pre-requisite", "Ritual Roll")
+# Long rules text, printed as prose under a label instead of as a field.
+BODY_FIELDS = ("Ingredients", "Process", "System")
 
 
 def _rows(markdown: str, discipline: str) -> list[dict]:
@@ -47,9 +49,21 @@ def records(refresh: bool = False) -> list[dict]:
 
 
 def to_card(record: dict) -> Card:
-    fields = [("Level", str(record["level"]))]
-    fields += [(key, value) for key, value in record["fields"].items() if value and value.lower() != "none"]
-    body = [text for text in (record["text"], record["notes"]) if text]
+    # The wiki table has a one-line effect; the pack has the ceremony's text.
+    extra = pack.lookup(record["name"], record["discipline"]) or {}
+    extra_fields = extra.get("fields") or {}
+    values = [(key, value) for key, value in record["fields"].items()
+              if value and value.lower() != "none"]
+    if "Cost" not in dict(values) and extra_fields.get("Cost"):
+        values.append(("Cost", extra_fields["Cost"]))
+    fields = [("Level", str(record["level"]))] + values
+    body = list(extra.get("prose") or [])
+    for label in BODY_FIELDS:
+        value = extra_fields.get(label)
+        if value:
+            body.extend(pack.body_lines(label, value))
+    if not body:
+        body = [text for text in (record["text"], record["notes"]) if text]
     return Card(record["name"], f"{record['discipline']} Ritual", fields, [("", body)] if body else [])
 
 

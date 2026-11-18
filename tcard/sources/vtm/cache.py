@@ -28,10 +28,14 @@ def cache_dir() -> Path:
 
 
 def fetch(url: str) -> str:
+    return fetch_bytes(url).decode("utf-8", "replace")
+
+
+def fetch_bytes(url: str) -> bytes:
     request = Request(url, headers={"User-Agent": AGENT})
     try:
-        with urlopen(request, timeout=60) as response:
-            return response.read().decode("utf-8", "replace")
+        with urlopen(request, timeout=120) as response:
+            return response.read()
     except HTTPError as exc:
         raise TcardError(f"cannot fetch {url}: {exc}", 3) from exc
     except OSError as exc:
@@ -40,14 +44,24 @@ def fetch(url: str) -> str:
 
 def get(url: str, refresh: bool = False) -> str:
     """Fetch any URL once and keep the body under the cache directory."""
+    path = _cached(url, "txt", refresh, fetch)
+    return path.read_text()
+
+
+def get_bytes(url: str, refresh: bool = False) -> bytes:
+    """Same cache, for binary bodies such as a Foundry pack."""
+    return _cached(url, "bin", refresh, fetch_bytes).read_bytes()
+
+
+def _cached(url: str, suffix: str, refresh: bool, fetch_body):
     digest = hashlib.sha1(url.encode()).hexdigest()[:12]
-    path = cache_dir() / "pages" / f"{digest}.txt"
+    path = cache_dir() / "pages" / f"{digest}.{suffix}"
     if refresh or not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")
-        tmp.write_text(fetch(url))
+        tmp.write_bytes(fetch_body(url))
         tmp.replace(path)
-    return path.read_text()
+    return path
 
 
 def page(name: str, refresh: bool = False) -> str:

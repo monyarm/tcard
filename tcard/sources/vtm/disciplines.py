@@ -8,12 +8,18 @@ from ...model import Card
 from ...names import normalize, split_path
 from ... import glyphs
 from ..base import Kind
-from . import cache, md
+from . import cache, md, pack
 
 INDEX = "Disciplines"
 LINK = re.compile(r'\*\*\[([^\]]+)\]\((https://vtm\.paradoxwikis\.com/[^)\s"]+)')
 HEADER_FIELDS = ("Type", "Masquerade threat", "Resonance")
 POWER_FIELDS = ("Cost", "Prerequisite", "Amalgam", "Duration", "Dice pool", "Opposing pool")
+# Shorter labels so a field and its value share one 32-column row.
+LABELS = {"Dice pool": "Pool", "Opposing pool": "Opposing"}
+# Fields of the book's stat line, in the order a card reads them.
+POWER_ORDER = ("Cost", "Prerequisite", "Amalgam", "Activation", "Pool", "Opposing", "Duration")
+# Long rules text, printed as prose under a label instead of as a field.
+BODY_FIELDS = ("Ingredients", "Process", "System")
 # The rules text of a power, kept out of the field list because it is prose.
 POWER_TEXT = ("Effect", "Additional Notes")
 PLACEHOLDERS = frozenset(("", "-", "\u2014", "n/a", "none"))
@@ -130,12 +136,28 @@ def _discipline_card(record: dict) -> Card:
 
 
 def _power_card(record: dict) -> Card:
-    fields = []
+    # The wiki gives one sentence per power; the compendium pack has the book
+    # text, so it wins wherever it has an answer.
+    extra = pack.lookup(record["name"], record.get("discipline")) or {}
+    extra_fields = extra.get("fields") or {}
+    values: dict[str, str] = {}
     for key in POWER_FIELDS:
         value = record["fields"].get(key, "")
         if value and value.lower() not in EMPTY_VALUES:
-            fields.append((key, value))
-    body = [paragraph for paragraph in record.get("text", []) if paragraph]
+            values[LABELS.get(key, key)] = value
+    for label, value in extra_fields.items():
+        if value and value.lower() not in EMPTY_VALUES:
+            values[label] = value
+    body = list(extra.get("prose") or [])
+    for label in BODY_FIELDS:
+        value = extra_fields.get(label)
+        if value:
+            body.extend(pack.body_lines(label, value))
+    if not body:
+        body = [paragraph for paragraph in record.get("text", []) if paragraph]
+    fields = [(label, value) for label, value in values.items() if label not in BODY_FIELDS]
+    fields.sort(key=lambda pair: POWER_ORDER.index(pair[0])
+                if pair[0] in POWER_ORDER else len(POWER_ORDER))
     # Powers are level-gated 1-5, so the level reads as pips, like V20.
     subtitle = f"{record['discipline']} {glyphs.DOT * int(record['level'])}"
     return Card(record["name"], subtitle, fields, [("", body)] if body else [])

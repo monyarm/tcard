@@ -5,7 +5,7 @@ import unittest.mock as mock
 from tcard.render.layout import layout
 from tcard.render.text import render
 from tcard.sources.vtm import (
-    cache, clans, disciplines, advantages, loresheets, predators, rituals,
+    cache, clans, disciplines, advantages, loresheets, pack, predators, rituals,
 )
 
 DISC_INDEX = """## The Disciplines
@@ -212,6 +212,39 @@ PAGES = {
 
 WIKI = {loresheets.INDEX: LORESHEET_INDEX, "Bahari": BAHARI}
 
+# The compendium pack carries the book text; the wiki keeps the one-liners.
+PACK = {
+    ("auspex", "scry the soul"): {
+        "prose": ["By focusing on a person, the vampire can perceive the state "
+                  "of that person's psyche as a shifting aura of colors."],
+        "fields": {
+            "Cost": "One Rouse Check",
+            "Pool": "Intelligence + Auspex",
+            "Opposing": "Composure + Subterfuge",
+            "Duration": "One turn, or Story teller's discretion",
+            "System": "Make an Intelligence + Auspex vs Composure + Subterfuge roll.\n"
+                      "- The emotional state of the subject\n"
+                      "- The Resonance of their Blood",
+        },
+    },
+    ("ceremonies", "gift of false life"): {
+        "prose": [],
+        "fields": {
+            "Prerequisite": "Ashes to Ashes",
+            "Ingredients": "A human body.",
+            "Process": "Apply the concoction to the corpse.",
+            "System": "Raise a number of corpses equal to their Oblivion rating.",
+        },
+    },
+}
+
+
+def _lookup(name, discipline=None):
+    """Same order as the real lookup: discipline-qualified, then name only."""
+    key = name.lower().removeprefix("the ")
+    exact = PACK.get((str(discipline or "").lower(), key))
+    return exact or next((value for (_, power), value in PACK.items() if power == key), None)
+
 
 def _page(name, refresh=False):
     return PAGES[name]
@@ -227,7 +260,8 @@ def _get(url, refresh=False):
 
 def _with_pages(call):
     with mock.patch.object(cache, "page", _page), mock.patch.object(cache, "wikitext", _wikitext), \
-            mock.patch.object(cache, "get", _get):
+            mock.patch.object(cache, "get", _get), \
+            mock.patch.object(pack, "lookup", _lookup):
         return call()
 
 
@@ -250,14 +284,26 @@ def test_discipline_power_by_path():
     records = _with_pages(disciplines.records)
     matches = disciplines.DisciplineKind().matches(records, "auspex:scry the soul")
     assert len(matches) == 1
-    card = disciplines.to_card(matches[0])
+    card = _with_pages(lambda: disciplines.to_card(matches[0]))
     assert card.title == "Scry the Soul"
     assert card.subtitle == "Auspex " + "\u25cf" * 3
     fields = dict(card.fields)
     assert fields["Cost"] == "One Rouse Check"
+    assert fields["Pool"] == "Intelligence + Auspex"
+    assert fields["Opposing"] == "Composure + Subterfuge"
     assert "Prerequisite" not in fields and "Amalgam" not in fields
-    body = " ".join(card.sections[0][1])
-    assert body == "Read a mind."
+    body = card.sections[0][1]
+    assert body[0].startswith("By focusing on a person")
+    assert "System: Make an Intelligence + Auspex" in body[1]
+    assert "- The emotional state of the subject" in body[2]
+
+
+def test_power_without_pack_text_falls_back_to_the_wiki_effect():
+    records = _with_pages(disciplines.records)
+    card = _with_pages(lambda: disciplines.to_card(
+        disciplines.DisciplineKind().matches(records, "auspex:heightened senses")[0]))
+    assert dict(card.fields)["Cost"] == "Free"
+    assert card.sections[0][1] == ["Enhance vampiric senses."]
 
 
 def test_clan_card_and_bane_parts():
@@ -322,12 +368,20 @@ def test_predator_card():
 def test_ritual_table_rows():
     records = _with_pages(rituals.records)
     assert [r["name"] for r in records] == ["Astromancy", "Gift of False Life"]
-    card = rituals.to_card(records[1])
+    card = _with_pages(lambda: rituals.to_card(records[1]))
     assert card.subtitle == "Oblivion Ritual"
     fields = dict(card.fields)
     assert fields["Level"] == "2"
     assert fields["Pre-requisite"] == "Ashes to Ashes"
-    assert any("Raise a corpse" in part for part in card.sections[0][1])
+    body = card.sections[0][1]
+    assert "Ingredients: A human body." in body
+    assert any("corpses equal to their Oblivion rating" in part for part in body)
+
+
+def test_ritual_without_pack_text_falls_back_to_the_wiki_effect():
+    records = _with_pages(rituals.records)
+    card = _with_pages(lambda: rituals.to_card(records[0]))
+    assert card.sections[0][1] == ["Read the stars.", "Requires a clear sky."]
 
 
 def test_ritual_path_lookup():
@@ -362,12 +416,12 @@ def test_loresheet_whole_and_entry():
 def test_every_vtm_card_renders_at_32_columns():
     cards = []
     discipline_records = _with_pages(disciplines.records)
-    cards.extend(disciplines.to_card(r) for r in discipline_records)
+    cards.extend(_with_pages(lambda: disciplines.to_card(r)) for r in discipline_records)
     clan_records = _with_pages(clans.records)
     cards.append(_with_pages(lambda: clans.to_card(clan_records[0])))
     cards.extend(advantages.to_card(r) for r in _with_pages(advantages.records))
     cards.extend(predators.to_card(r) for r in _with_pages(predators.records))
-    cards.extend(rituals.to_card(r) for r in _with_pages(rituals.records))
+    cards.extend(_with_pages(lambda: rituals.to_card(r)) for r in _with_pages(rituals.records))
     sheet = _with_pages(lambda: loresheets.to_card(
         next(r for r in loresheets.records() if r["name"] == "The Bahari")))
     cards.append(sheet)
@@ -387,3 +441,44 @@ def test_vtm_is_registered():
     assert registry.resolve("v5") == "vtm:v5"
     kinds = registry.kinds("vtm:v5")
     assert set(kinds) == {"discipline", "clan", "loresheet", "predator_type", "ritual", "merit", "flaw"}
+
+
+def test_pack_details_splits_labels_bullets_and_pools():
+    markup = ("<p>The vampire sees auras.</p>"
+              "<p>\u25a0 Cost: One Rouse Check </p>"
+              "<p>\u25a0 Dice Pools: Intelligence + Auspex vs Composure + Subterfuge </p>"
+              "<p>\u25a0 System: Roll.<br>\u25fb A warm colour<br>\u25fb A cold colour</p>"
+              "<p>Source: <em>Corebook (p. 250)</em></p>")
+    detail = pack.details(markup)
+    assert detail["prose"] == ["The vampire sees auras."]
+    fields = detail["fields"]
+    assert fields["Cost"] == "One Rouse Check"
+    assert fields["Pool"] == "Intelligence + Auspex"
+    assert fields["Opposing"] == "Composure + Subterfuge"
+    assert fields["System"] == "Roll.\n- A warm colour\n- A cold colour"
+    assert "Source" not in fields
+
+
+def test_pack_repairs_split_words_in_both_cases():
+    assert pack._repair("A vam pire with out rest") == "A vampire without rest"
+    assert pack._repair("Vam pire dam age") == "Vampire damage"
+    assert pack._repair("withholding harmless") == "withholding harmless"
+
+
+def test_pack_entries_rebuild_shared_key_prefixes():
+    import struct
+
+    def varint(value):
+        out = bytearray()
+        while True:
+            byte = value & 0x7F
+            value >>= 7
+            out.append(byte | (0x80 if value else 0))
+            if not value:
+                return bytes(out)
+
+    body = b""
+    body += varint(0) + varint(1) + varint(1) + b"a" + b"1"
+    body += varint(1) + varint(1) + varint(1) + b"b" + b"2"
+    block = body + struct.pack("<I", 0) + struct.pack("<I", 1)
+    assert list(pack.entries(block)) == [(b"a", b"1"), (b"ab", b"2")]
