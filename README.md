@@ -42,10 +42,19 @@ tcard fireball                   # both inferred
 Content kinds:
 
 ```
-spell  item  class_ability  subclass
+spell  item  class_ability  subclass  monster
 invocation  metamagic  maneuver  fighting_style  pact_boon  infusion
 rune  arcane_shot  elemental_discipline  renown_boon
 feat  condition  action  background
+```
+
+Monsters print the stat block: AC, HP, speed, saves, skills, defenses, senses,
+languages, CR, two ability-score tables, then traits, actions, bonus actions,
+reactions, legendary, mythic, lair and regional sections:
+
+```
+tcard monster goblin
+tcard monster adult_red_dragon
 ```
 
 Names: use `_` for spaces and ignore apostrophes (`tasha's_hideous_laughter`).

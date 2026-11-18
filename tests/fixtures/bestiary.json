@@ -1,0 +1,549 @@
+[
+ {
+  "name": "Adult Black Dragon",
+  "source": "MM",
+  "size": [
+   "H"
+  ],
+  "type": "dragon",
+  "alignment": [
+   "C",
+   "E"
+  ],
+  "ac": [
+   {
+    "ac": 19,
+    "from": [
+     "natural armor"
+    ]
+   }
+  ],
+  "hp": {
+   "average": 195,
+   "formula": "17d12 + 85"
+  },
+  "speed": {
+   "walk": 40,
+   "fly": 80,
+   "swim": 40
+  },
+  "save": {
+   "dex": "+7",
+   "con": "+10",
+   "wis": "+6",
+   "cha": "+8"
+  },
+  "skill": {
+   "perception": "+11",
+   "stealth": "+7"
+  },
+  "immune": [
+   "acid"
+  ],
+  "senses": [
+   "blindsight 60 ft.",
+   "darkvision 120 ft."
+  ],
+  "passive": 21,
+  "languages": [
+   "Common",
+   "Draconic"
+  ],
+  "cr": "14",
+  "str": 23,
+  "dex": 14,
+  "con": 21,
+  "int": 14,
+  "wis": 13,
+  "cha": 17,
+  "trait": [
+   {
+    "name": "Amphibious",
+    "entries": [
+     "The dragon can breathe air and water."
+    ]
+   },
+   {
+    "name": "Legendary Resistance (3/Day)",
+    "entries": [
+     "If the dragon fails a saving throw, it can choose to succeed instead."
+    ]
+   }
+  ],
+  "action": [
+   {
+    "name": "Multiattack",
+    "entries": [
+     "The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws."
+    ]
+   },
+   {
+    "name": "Bite",
+    "entries": [
+     "{@atk mw} {@hit 11} to hit, reach 10 ft., one target. {@h}17 ({@damage 2d10 + 6}) piercing damage plus 4 ({@damage 1d8}) acid damage."
+    ]
+   },
+   {
+    "name": "Claw",
+    "entries": [
+     "{@atk mw} {@hit 11} to hit, reach 5 ft., one target. {@h}13 ({@damage 2d6 + 6}) slashing damage."
+    ]
+   },
+   {
+    "name": "Tail",
+    "entries": [
+     "{@atk mw} {@hit 11} to hit, reach 15 ft., one target. {@h}15 ({@damage 2d8 + 6}) bludgeoning damage."
+    ]
+   },
+   {
+    "name": "Frightful Presence",
+    "entries": [
+     "Each creature of the dragon's choice that is within 120 feet of the dragon and aware of it must succeed on a {@dc 16} Wisdom saving throw or become {@condition frightened} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours."
+    ]
+   },
+   {
+    "name": "Acid Breath {@recharge 5}",
+    "entries": [
+     "The dragon exhales acid in a 60-foot line that is 5 feet wide. Each creature in that line must make a {@dc 18} Dexterity saving throw, taking 54 ({@damage 12d8}) acid damage on a failed save, or half as much damage on a successful one."
+    ]
+   }
+  ],
+  "legendary": [
+   {
+    "name": "Detect",
+    "entries": [
+     "The dragon makes a Wisdom ({@skill Perception}) check."
+    ]
+   },
+   {
+    "name": "Tail Attack",
+    "entries": [
+     "The dragon makes a tail attack."
+    ]
+   },
+   {
+    "name": "Wing Attack (Costs 2 Actions)",
+    "entries": [
+     "The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a {@dc 19} Dexterity saving throw or take 13 ({@damage 2d6 + 6}) bludgeoning damage and be knocked {@condition prone}. The dragon can then fly up to half its flying speed."
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Adult Red Dragon",
+  "source": "MM",
+  "size": [
+   "H"
+  ],
+  "type": "dragon",
+  "alignment": [
+   "C",
+   "E"
+  ],
+  "ac": [
+   {
+    "ac": 19,
+    "from": [
+     "natural armor"
+    ]
+   }
+  ],
+  "hp": {
+   "average": 256,
+   "formula": "19d12 + 133"
+  },
+  "speed": {
+   "walk": 40,
+   "climb": 40,
+   "fly": 80
+  },
+  "save": {
+   "dex": "+6",
+   "con": "+13",
+   "wis": "+7",
+   "cha": "+11"
+  },
+  "skill": {
+   "perception": "+13",
+   "stealth": "+6"
+  },
+  "immune": [
+   "fire"
+  ],
+  "senses": [
+   "blindsight 60 ft.",
+   "darkvision 120 ft."
+  ],
+  "passive": 23,
+  "languages": [
+   "Common",
+   "Draconic"
+  ],
+  "cr": "17",
+  "str": 27,
+  "dex": 10,
+  "con": 25,
+  "int": 16,
+  "wis": 13,
+  "cha": 21,
+  "trait": [
+   {
+    "name": "Legendary Resistance (3/Day)",
+    "entries": [
+     "If the dragon fails a saving throw, it can choose to succeed instead."
+    ]
+   }
+  ],
+  "action": [
+   {
+    "name": "Multiattack",
+    "entries": [
+     "The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws."
+    ]
+   },
+   {
+    "name": "Bite",
+    "entries": [
+     "{@atk mw} {@hit 14} to hit, reach 10 ft., one target. {@h}19 ({@damage 2d10 + 8}) piercing damage plus 7 ({@damage 2d6}) fire damage."
+    ]
+   },
+   {
+    "name": "Claw",
+    "entries": [
+     "{@atk mw} {@hit 14} to hit, reach 5 ft., one target. {@h}15 ({@damage 2d6 + 8}) slashing damage."
+    ]
+   },
+   {
+    "name": "Tail",
+    "entries": [
+     "{@atk mw} {@hit 14} to hit, reach 15 ft., one target. {@h}17 ({@damage 2d8 + 8}) bludgeoning damage."
+    ]
+   },
+   {
+    "name": "Frightful Presence",
+    "entries": [
+     "Each creature of the dragon's choice that is within 120 feet of the dragon and aware of it must succeed on a {@dc 19} Wisdom saving throw or become {@condition frightened} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours."
+    ]
+   },
+   {
+    "name": "Fire Breath {@recharge 5}",
+    "entries": [
+     "The dragon exhales fire in a 60-foot cone. Each creature in that area must make a {@dc 21} Dexterity saving throw, taking 63 ({@damage 18d6}) fire damage on a failed save, or half as much damage on a successful one."
+    ]
+   }
+  ],
+  "legendary": [
+   {
+    "name": "Detect",
+    "entries": [
+     "The dragon makes a Wisdom ({@skill Perception}) check."
+    ]
+   },
+   {
+    "name": "Tail Attack",
+    "entries": [
+     "The dragon makes a tail attack."
+    ]
+   },
+   {
+    "name": "Wing Attack (Costs 2 Actions)",
+    "entries": [
+     "The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a {@dc 22} Dexterity saving throw or take 15 ({@damage 2d6 + 8}) bludgeoning damage and be knocked {@condition prone}. The dragon can then fly up to half its flying speed."
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Goblin",
+  "source": "MM",
+  "size": [
+   "S"
+  ],
+  "type": {
+   "type": "humanoid",
+   "tags": [
+    "goblinoid"
+   ]
+  },
+  "alignment": [
+   "N",
+   "E"
+  ],
+  "ac": [
+   {
+    "ac": 15,
+    "from": [
+     "{@item leather armor|phb}",
+     "{@item shield|phb}"
+    ]
+   }
+  ],
+  "hp": {
+   "average": 7,
+   "formula": "2d6"
+  },
+  "speed": {
+   "walk": 30
+  },
+  "skill": {
+   "stealth": "+6"
+  },
+  "senses": [
+   "darkvision 60 ft."
+  ],
+  "passive": 9,
+  "languages": [
+   "Common",
+   "Goblin"
+  ],
+  "cr": "1/4",
+  "str": 8,
+  "dex": 14,
+  "con": 10,
+  "int": 10,
+  "wis": 8,
+  "cha": 8,
+  "trait": [
+   {
+    "name": "Nimble Escape",
+    "entries": [
+     "The goblin can take the {@action Disengage} or {@action Hide} action as a bonus action on each of its turns."
+    ]
+   }
+  ],
+  "action": [
+   {
+    "name": "Scimitar",
+    "entries": [
+     "{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) slashing damage."
+    ]
+   },
+   {
+    "name": "Shortbow",
+    "entries": [
+     "{@atk rw} {@hit 4} to hit, range 80/320 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Adult Black Dragon",
+  "source": "XMM",
+  "size": [
+   "H"
+  ],
+  "type": {
+   "type": "dragon",
+   "tags": [
+    "chromatic"
+   ]
+  },
+  "alignment": [
+   "C",
+   "E"
+  ],
+  "ac": [
+   19
+  ],
+  "hp": {
+   "average": 195,
+   "formula": "17d12 + 85"
+  },
+  "speed": {
+   "walk": 40,
+   "fly": 80,
+   "swim": 40
+  },
+  "save": {
+   "dex": "+7",
+   "wis": "+6"
+  },
+  "skill": {
+   "perception": "+11",
+   "stealth": "+7"
+  },
+  "immune": [
+   "acid"
+  ],
+  "senses": [
+   "Blindsight 60 ft.",
+   "Darkvision 120 ft."
+  ],
+  "passive": 21,
+  "languages": [
+   "Common",
+   "Draconic"
+  ],
+  "cr": {
+   "cr": "14",
+   "xpLair": 13000
+  },
+  "str": 23,
+  "dex": 14,
+  "con": 21,
+  "int": 14,
+  "wis": 13,
+  "cha": 19,
+  "trait": [
+   {
+    "name": "Amphibious",
+    "entries": [
+     "The dragon can breathe air and water."
+    ]
+   },
+   {
+    "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+    "entries": [
+     "If the dragon fails a saving throw, it can choose to succeed instead."
+    ]
+   }
+  ],
+  "action": [
+   {
+    "name": "Multiattack",
+    "entries": [
+     "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast {@spell Melf's Acid Arrow|XPHB} (level 3 version)."
+    ]
+   },
+   {
+    "name": "Rend",
+    "entries": [
+     "{@atkr m} {@hit 11}, reach 10 ft. {@h}13 ({@damage 2d6 + 6}) Slashing damage plus 4 ({@damage 1d8}) Acid damage."
+    ]
+   },
+   {
+    "name": "Acid Breath {@recharge 5}",
+    "entries": [
+     "{@actSave dex} {@dc 18}, each creature in a 60-foot-long, 5-foot-wide {@variantrule Line [Area of Effect]|XPHB|Line}. {@actSaveFail} 54 ({@damage 12d8}) Acid damage. {@actSaveSuccess} Half damage."
+    ]
+   }
+  ],
+  "legendary": [
+   {
+    "name": "Cloud of Insects",
+    "entries": [
+     "{@actSave dex} {@dc 17}, one creature the dragon can see within 120 feet. {@actSaveFail} 22 ({@damage 4d10}) Poison damage, and the target has {@variantrule Disadvantage|XPHB} on saving throws to maintain {@status Concentration|XPHB} until the end of its next turn. {@actSaveSuccessOrFail} The dragon can't take this action again until the start of its next turn."
+    ]
+   },
+   {
+    "name": "Frightful Presence",
+    "entries": [
+     "The dragon uses Spellcasting to cast {@spell Fear|XPHB}. The dragon can't take this action again until the start of its next turn."
+    ]
+   },
+   {
+    "name": "Pounce",
+    "entries": [
+     "The dragon can move up to half its {@variantrule Speed|XPHB}, and it makes one Rend attack."
+    ]
+   }
+  ]
+ },
+ {
+  "name": "Adult Red Dragon",
+  "source": "XMM",
+  "size": [
+   "H"
+  ],
+  "type": {
+   "type": "dragon",
+   "tags": [
+    "chromatic"
+   ]
+  },
+  "alignment": [
+   "C",
+   "E"
+  ],
+  "ac": [
+   19
+  ],
+  "hp": {
+   "average": 256,
+   "formula": "19d12 + 133"
+  },
+  "speed": {
+   "walk": 40,
+   "climb": 40,
+   "fly": 80
+  },
+  "save": {
+   "dex": "+6",
+   "wis": "+7"
+  },
+  "skill": {
+   "perception": "+13",
+   "stealth": "+6"
+  },
+  "immune": [
+   "fire"
+  ],
+  "senses": [
+   "Blindsight 60 ft.",
+   "Darkvision 120 ft."
+  ],
+  "passive": 23,
+  "languages": [
+   "Common",
+   "Draconic"
+  ],
+  "cr": {
+   "cr": "17",
+   "xpLair": 20000
+  },
+  "str": 27,
+  "dex": 10,
+  "con": 25,
+  "int": 16,
+  "wis": 13,
+  "cha": 23,
+  "trait": [
+   {
+    "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
+    "entries": [
+     "If the dragon fails a saving throw, it can choose to succeed instead."
+    ]
+   }
+  ],
+  "action": [
+   {
+    "name": "Multiattack",
+    "entries": [
+     "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast {@spell Scorching Ray|XPHB}."
+    ]
+   },
+   {
+    "name": "Rend",
+    "entries": [
+     "{@atkr m} {@hit 14}, reach 10 ft. {@h}13 ({@damage 1d10 + 8}) Slashing damage plus 5 ({@damage 2d4}) Fire damage."
+    ]
+   },
+   {
+    "name": "Fire Breath {@recharge 5}",
+    "entries": [
+     "{@actSave dex} {@dc 21}, each creature in a 60-foot {@variantrule Cone [Area of Effect]|XPHB|Cone}. {@actSaveFail} 59 ({@damage 17d6}) Fire damage. {@actSaveSuccess} Half damage."
+    ]
+   }
+  ],
+  "legendary": [
+   {
+    "name": "Commanding Presence",
+    "entries": [
+     "The dragon uses Spellcasting to cast {@spell Command|XPHB} (level 2 version). The dragon can't take this action again until the start of its next turn."
+    ]
+   },
+   {
+    "name": "Fiery Rays",
+    "entries": [
+     "The dragon uses Spellcasting to cast {@spell Scorching Ray|XPHB}. The dragon can't take this action again until the start of its next turn."
+    ]
+   },
+   {
+    "name": "Pounce",
+    "entries": [
+     "The dragon moves up to half its {@variantrule Speed|XPHB}, and it makes one Rend attack."
+    ]
+   }
+  ]
+ }
+]
