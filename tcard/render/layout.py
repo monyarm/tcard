@@ -22,9 +22,7 @@ _FOLD = {
     "\u2011": "-",
     "\u2212": "-",
     "\u2026": "...",
-    "\u2022": "*",
     "\u00b7": "*",
-    "\u25cf": "*",
     "\u00d7": "x",
     "\u00f7": "/",
     "\u00b0": " degrees",
@@ -34,11 +32,15 @@ _FOLD = {
 }
 
 
+# DejaVu Sans Mono draws these in exactly one cell, so they survive to the printer.
+KEEP = frozenset("\u25cf\u25cb")
+
+
 def fold(text: str) -> str:
-    """Transliterate typography, then drop anything still non-ASCII."""
+    """Transliterate typography, then drop anything the printer cannot draw."""
     text = text.translate(str.maketrans(_FOLD))
     text = unicodedata.normalize("NFKD", text)
-    return text.encode("ascii", "ignore").decode("ascii")
+    return "".join(char for char in text if char in KEEP or ord(char) < 128)
 
 
 def wrap(text: str, cols: int) -> list[str]:
@@ -190,19 +192,21 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
             if out and out[-1].kind is not LineKind.RULE:
                 out.append(Line(LineKind.RULE, "-" * cols))
             out += [Line(LineKind.SECTION, part) for part in wrap(heading, cols)]
+        previous_bullet = False
         for paragraph in body:
             if isinstance(paragraph, Table):
                 if out and out[-1].kind is LineKind.BODY:
                     out.append(Line(LineKind.BLANK))
                 out += [Line(LineKind.TABLE, part, paragraph) for part in _table_lines(paragraph, cols)]
                 continue
-            if out and out[-1].kind in (LineKind.BODY, LineKind.TABLE):
+            # Consecutive bullets are one list, not separate blocks.
+            bullets = paragraph.lstrip(" ").startswith(_BULLET) and previous_bullet
+            if not bullets and out and out[-1].kind in (LineKind.BODY, LineKind.TABLE):
                 out.append(Line(LineKind.BLANK))
+            previous_bullet = paragraph.lstrip(" ").startswith(_BULLET)
             out += [Line(LineKind.BODY, part) for part in _body(paragraph, cols)]
 
     for line in out:
         if len(line.text) > cols:
             raise ValueError(f"line exceeds {cols} columns: {line.text!r}")
-        if not line.text.isascii():
-            raise ValueError(f"non-ascii line: {line.text!r}")
     return out

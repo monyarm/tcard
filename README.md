@@ -128,6 +128,37 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   Pages are fetched on demand and cached in `~/.cache/tcard/pf1/`.
   3PP content is filtered by path heuristics, so a few community entries can
   still appear in `--all` listings.
+- Vampire: The Masquerade 5th edition comes from `https://vtm.paradoxwikis.com`.
+  The wiki answers every request with a JS bot gate, so pages are fetched through
+  `https://r.jina.ai/` and cached in `~/.cache/tcard/vtm-v5/`. The first
+  discipline lookup fetches all 12 discipline pages (~30 s once); everything else
+  is one page. Kinds: `discipline`, `clan`, `loresheet`, `predator_type`,
+  `ritual`, `merit`, `flaw`.
+
+  Disciplines, clans and loresheets are containers: print the whole thing, or
+  one part after the colon.
+
+  ```
+  tcard vtm:v5 discipline auspex
+  tcard vtm:v5 discipline auspex:scry_the_soul
+  tcard vtm:v5 clan brujah
+  tcard vtm:v5 clan brujah:bane          # bane_2 is the variant bane
+  tcard vtm:v5 clan brujah:banes
+  tcard vtm:v5 loresheet bahari
+  tcard vtm:v5 loresheet bahari:2        # or an entry name
+  tcard vtm:v5 ritual blood_sorcery:astromancy
+  tcard vtm:v5 ritual oblivion:gift_of_false_life
+  tcard vtm:v5 merit look:beautiful
+  tcard vtm:v5 flaw look:ugly
+  tcard vtm:v5 predator_type alleycat
+  ```
+
+  Loresheets come from `whitewolf.fandom.com`, because the Paradox wiki only
+  indexes them: the names come from its `Loresheet` page and `Category:Loresheets`,
+  and the dot-rated entries are read from each loresheet's own page.
+
+  Dot ratings print as `●`/`○`. DejaVu Sans Mono draws both in exactly one cell,
+  and `tp` keeps any glyph its font can draw.
 - Long spells and features run to a second page; `tp` waits 3 s between pages.
 
 Config: `~/.config/tcard/config.toml`, optional.
