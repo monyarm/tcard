@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from ...model import Card
+from ...model import Card, Table
 from . import cache, html
 
 TITLE = re.compile(r"<h1[^>]*>(.*?)</h1>", re.S)
@@ -19,12 +19,18 @@ def parse(markup: str, name: str | None = None) -> Card:
     title = html.text(TITLE.search(markup).group(1)) if TITLE.search(markup) else (name or "Untitled")
 
     fields: list[tuple[str, str]] = []
-    sections: list[tuple[str, list[str]]] = [("", [])]
+    sections: list[tuple[str, list[str | Table]]] = [("", [])]
     mode = "stat"
     started = False
     school = ""
 
-    for css, inner in html.paragraphs(markup):
+    for tag, css, inner in html.blocks(markup):
+        if tag == "table":
+            grid = html.table(inner)
+            if grid.rows:
+                sections[-1][1].append(grid)
+            continue
+
         if "divider" in css:
             heading = html.text(inner).strip()
             upper = heading.upper()

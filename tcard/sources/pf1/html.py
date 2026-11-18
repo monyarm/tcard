@@ -5,6 +5,8 @@ from __future__ import annotations
 import html as htmlmod
 import re
 
+from ...model import Table
+
 TAG = re.compile(r"<[^>]+>")
 BLOCK = re.compile(r"</?(?:br|p|div|li|tr|td|h[1-6])\b[^>]*>", re.I)
 SPACE = re.compile(r"\s+")
@@ -43,3 +45,28 @@ def labelled(fragment: str) -> list[tuple[str | None, str]]:
             elif flat:
                 out.append((None, flat))
     return out
+
+
+BLOCK = re.compile(r"<(p|table)\b([^>]*)>(.*?)</\1>", re.S | re.I)
+ROW = re.compile(r"<tr\b[^>]*>(.*?)</tr>", re.S | re.I)
+CELL = re.compile(r"<(t[hd])\b[^>]*>(.*?)</t[hd]>", re.S | re.I)
+
+
+def blocks(markup: str) -> list[tuple[str, str, str]]:
+    """Paragraphs and tables in document order: (tag, class, inner html)."""
+    out = []
+    for tag, attrs, inner in BLOCK.findall(markup):
+        css = re.search(r'class="([^"]*)"', attrs)
+        out.append((tag.lower(), css.group(1) if css else "", inner))
+    return out
+
+
+def table(inner: str) -> Table:
+    rows: list[list[str]] = []
+    header = False
+    for row_html in ROW.findall(inner):
+        cells = CELL.findall(row_html)
+        if any(tag.lower() == "th" for tag, _ in cells):
+            header = True
+        rows.append([text(cell) for _, cell in cells])
+    return Table([row for row in rows if row], header=header)
