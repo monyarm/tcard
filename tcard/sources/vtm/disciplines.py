@@ -15,6 +15,7 @@ HEADER_FIELDS = ("Type", "Masquerade threat", "Resonance")
 POWER_FIELDS = ("Cost", "Prerequisite", "Amalgam", "Duration", "Dice pool", "Opposing pool")
 # The rules text of a power, kept out of the field list because it is prose.
 POWER_TEXT = ("Effect", "Additional Notes")
+PLACEHOLDERS = frozenset(("", "-", "\u2014", "n/a", "none"))
 EMPTY_VALUES = ("", "none", "n/a", "no")
 
 
@@ -61,7 +62,8 @@ def _powers(markdown: str) -> list[dict]:
                 "name": name,
                 "level": level,
                 "fields": {key: values.get(key, "") for key in POWER_FIELDS},
-                "text": [values[key] for key in POWER_TEXT if values.get(key)],
+                "text": [values[key] for key in POWER_TEXT
+                         if values.get(key, "").strip().lower() not in PLACEHOLDERS],
             })
     return out
 
