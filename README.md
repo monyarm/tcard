@@ -180,6 +180,29 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   `@Check[...]`, `@Template[...]`); they are expanded to plain words before
   wrapping. Monsters keep their stat block: one row of ability modifiers under
   the fields, then the flavour text and one section per embedded ability.
+- Cyberpunk 2020 comes from `cybersmily.net`, which serves the whole dataset as
+  static JSON. It is cached in `~/.cache/tcard/cp-2020/`. Equipment is split by
+  shop category rather than lumped into one kind: `weapon`, `armor`, `cyberware`,
+  `program`, `vehicle`, `martial_art`, `weapon_option`, `role`, `skill`,
+  `corporation`, plus 22 gear kinds (`electronics`, `security`, `drugs`,
+  `medical`, `tools`, `surveillance`, `communication`, `lifestyle`,
+  `demolition`, `military_gear`, `transport`, `braindance`, ...).
+
+  Weapon stat blocks have no prose in the data, so descriptions are pulled from
+  the Cyberpunk wiki (`cyberpunk.fandom.com`); weapons the wiki does not cover
+  print stats only. Hyphens are treated as spaces, so `hip_mounted_powerpack`
+  finds `Hip-Mounted Powerpack`.
+
+  ```
+  tcard cp:2020 weapon arasaka_restraint_caster
+  tcard cp:2020 armor heavy_leather_jacket
+  tcard cp:2020 cyberware alpha_tuff_bone
+  tcard cp:2020 role solo
+  tcard cp:2020 martial_art aikido
+  tcard cp:2020 program hammer
+  tcard cp:2020 vehicle 1959_international_harvester
+  tcard cp:2020 corporation budgetarms
+  ```
 - Long spells and features run to a second page; `tp` waits 3 s between pages.
 
 Config: `~/.config/tcard/config.toml`, optional.

@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from . import fivee, pf1, pf2, vtm
+from . import cp, fivee, pf1, pf2, vtm
 
-SYSTEMS = {fivee.SYSTEM_ID: fivee, pf1.SYSTEM_ID: pf1, pf2.SYSTEM_ID: pf2, vtm.SYSTEM_ID: vtm}
-ALIASES = {alias: module.SYSTEM_ID for module in (fivee, pf1, pf2, vtm) for alias in module.ALIASES}
+SYSTEMS = {
+    module.SYSTEM_ID: module for module in (fivee, pf1, pf2, vtm, cp)
+}
+ALIASES = {alias: module.SYSTEM_ID for module in (fivee, pf1, pf2, vtm, cp) for alias in module.ALIASES}
 
 
 def systems() -> list[str]:
