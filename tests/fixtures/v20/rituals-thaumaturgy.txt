@@ -1,0 +1,23 @@
+Below is the list of rituals.
+
+==Rituals==
+===Rank 1 ===
+{| class="article-table"
+!Name !!Ingredients !!Process!!Effect!!Developer
+|-
+|'''Bind the Accusing Tongue'''
+{{ref|Bind_The_Accusing_Tongue}}
+|A lock of hair and a black silk cord||Wind the cord around the hair.||The target cannot speak ill about the caster. ||[[Clan Tremere]]
+|-
+|'''Blood Contract'''
+|Two drops of vitae||Mix the vitae on a contract.||Both parties are bound to the agreement.||Clan Tremere
+|-
+|}
+===Rank 2===
+{| class="article-table"
+!Name !!Ingredients !!Process!!Effect!!Developer
+|-
+|'''Principal Focus of Vitae Infusion'''
+|An object and a point of blood||Infuse the object with vitae.||The object holds a point of blood.||Clan Tremere
+|-
+|}

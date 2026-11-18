@@ -1,0 +1,31 @@
+[[Image:ClanBrujahTitle.png|center|300px]]
+
+{{Organization
+|name = Brujah
+|plural = Brujah
+|nicknames = 
+* Agitators
+* Rebels
+|bane='''Violent Temper'''
+|compulsion=Rebellion
+|faction = * [[Camarilla (VTM)|Camarilla]] (Formerly)
+* [[Anarch Movement]] ([[V5]])
+|disciplines = [[Celerity (VTM)|Celerity]], [[Potence]], [[Presence (VTM)|Presence]]
+}}
+The '''Brujah''' are one of the thirteen [[Clan (VTM)|clans]] of Kindred.
+
+==Overview==
+Fighters against the system, rebels against injustice.
+
+==Weaknesses==
+====Banes====
+*'''Violent Temper''': All difficulties to resist Frenzy increase by two.
+*Variant — '''Violence''': A messy critical inflicts Aggravated damage.
+
+===Compulsion===
+'''Rebellion''': the vampire takes a stand against the status quo until they have gone against orders.
+
+==Gallery==
+<gallery>
+Brujah.png
+</gallery>

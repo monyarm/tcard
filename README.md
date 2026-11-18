@@ -159,6 +159,26 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 
   Dot ratings print as `●`/`○`. DejaVu Sans Mono draws both in exactly one cell,
   and `tp` keeps any glyph its font can draw.
+- Vampire: The Masquerade 20th Anniversary comes from `whitewolf.fandom.com`
+  wikitext, cached in `~/.cache/tcard/vtm-v20/`. Kinds: `discipline`, `clan`,
+  `bloodline`, `ritual`, `path`, `merit`, `flaw`.
+
+  ```
+  tcard vtm:v20 discipline auspex
+  tcard vtm:v20 discipline auspex:heightened_senses
+  tcard vtm:v20 clan brujah
+  tcard vtm:v20 clan brujah:banes        # or :bane_2, :compulsion
+  tcard vtm:v20 bloodline baali
+  tcard vtm:v20 ritual thaumaturgy:bind_the_accusing_tongue
+  tcard vtm:v20 ritual necromancy:knowing_stone
+  tcard vtm:v20 path path_of_caine
+  tcard vtm:v20 merit one:ambidextrous
+  tcard vtm:v20 flaw two:blind
+  ```
+
+  Rituals span seven tradition list pages (Thaumaturgy, Necromancy, Akhu,
+  Anarch, Dur-An-Ki, Koldunic, Sadhana); Thaumaturgy publishes a rank table and
+  the others publish dot bullets, and both shapes feed the same card.
 - Pathfinder 2e comes from the Foundry data repo (`github.com/foundryvtt/pf2e`,
   branch `v14-dev`) as item JSON. The first use does a blobless sparse checkout
   into `~/.cache/tcard/pf2/repo` (one clone, then only the packs a kind needs);

@@ -1,0 +1,24 @@
+This is a list of Merits and Flaws in the Storyteller System.
+
+==Merits==
+
+==='''<u>One</u>'''===
+'''''Ability Aptitude''''' You are particularly gifted with one Ability.
+
+'''Ambidextrous''' Most people are good with one hand, but your character is equally good with both.
+
+==='''<u>Variable</u>''' ===
+{| class="article-table"
+!Title!!Affected!!Description!!Book Source
+|-
+|'''Favors'''||Wan Kuei||Represents a character's current balance of social accounts.||[[World of Darkness: Blood & Silk]]
+|-
+|}
+
+==Flaws==
+
+==='''<u>One</u>'''===
+'''Addiction''' You are addicted to a substance and suffer without it.
+
+==='''<u>Two</u>'''===
+'''Blind''' You cannot see and suffer the usual penalties.

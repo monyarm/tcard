@@ -1,0 +1,11 @@
+Below is a list of rituals practiced via '''[[Necromancy (VTM)|Necromancy]]'''.
+
+==Rituals==
+
+===African/Voudoun Necromancy===
+* {{dot|1}} Level 1 {{ref|lvl1}}
+** '''Knowing Stone''': By painting a name on a stone with his blood, the Necromancer sees where the soul of a person resides.
+
+* {{dot|3}} Level 3 {{ref|lvl3}}
+** '''Blood Dance''': In a ceremony where the Necromancer dances and chants to attract the right spirit.
+** '''Eyes of the Dead''': The Necromancer spills vitae over an object associated with a deceased person.

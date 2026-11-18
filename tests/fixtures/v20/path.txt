@@ -1,0 +1,16 @@
+{{Path
+|image = PathCaine.png
+|name = Path of Caine
+|nickname = Noddists
+|faction = [[Sabbat]]
+|bearing = Faith
+|virtues = Conviction, Instinct
+}}
+The '''Path of Caine''' is a [[Path of Enlightenment]].
+
+==Overview==
+Followers of the Path of Caine seek to emulate the first murderer.
+
+==Ethics==
+* Know the nature of Caine.
+* Blood is the only currency.

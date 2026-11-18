@@ -1,0 +1,27 @@
+[[Image:AuspexTitle.png|center|300px]]
+
+{{Organization
+|name = Auspex
+|clans = [[Malkavian]], [[Tremere]]
+}}
+The '''Auspex''' Discipline grants supernatural senses.
+
+==Overview==
+Auspex is a potent double sword that lets Kindred sift truth from lies.
+
+==Official Abilities==
+===Standard Powers===
+* {{dot|1}} {{ref|lvl1}}
+** '''Heightened Senses''': Raise your five senses to superhuman levels
+** '''Ancestors' Vigilance''': Raise one sense and perceive [[Ghost (WOD)|ghosts]]
+* {{dot|3}} {{ref|lvl3}}
+** '''The Spirit's Touch''': Learn something of an object from its resonance
+
+===Advanced Powers===
+* {{dot|6}} {{ref|lvl6}}
+** '''Precognition''': Glimpse a possible future
+
+==Gallery==
+<gallery>
+Auspex.png
+</gallery>
