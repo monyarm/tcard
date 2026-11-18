@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...model import Card
 from . import cache
-from .fields import sections, source_field
+from .fields import sections
 
 
 def records(refresh: bool = False) -> list[dict]:
@@ -13,7 +13,4 @@ def records(refresh: bool = False) -> list[dict]:
 
 def to_card(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
-    source = source_field(record)
-    if source:
-        fields.append(source)
     return Card(str(record.get("name", "Untitled")), "Condition", fields, sections(record.get("entries")))

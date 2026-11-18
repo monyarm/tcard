@@ -6,7 +6,7 @@ from ...model import Card
 from ...names import normalize, split_path
 from ..base import Kind
 from . import cache
-from .fields import sections, source_field
+from .fields import sections
 from .index import _dedupe
 
 
@@ -35,9 +35,6 @@ def to_card(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
     if record.get("level") is not None:
         fields.append(("Level", str(record["level"])))
-    source = source_field(record)
-    if source:
-        fields.append(source)
     return Card(str(record.get("name", "Untitled")), subtitle, fields, sections(record.get("entries")))
 
 

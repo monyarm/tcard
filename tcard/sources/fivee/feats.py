@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...model import Card
 from . import cache
-from .fields import format_prereq, sections, source_field
+from .fields import format_prereq, sections
 
 CATEGORIES = {"O": "Origin Feat", "G": "General Feat", "FS": "Fighting Style Feat", "EB": "Epic Boon Feat"}
 
@@ -20,7 +20,4 @@ def to_card(record: dict) -> Card:
     prerequisite = format_prereq(record.get("prerequisite"))
     if prerequisite:
         fields.append(("Prerequisite", prerequisite))
-    source = source_field(record)
-    if source:
-        fields.append(source)
     return Card(str(record.get("name", "Untitled")), subtitle, fields, sections(record.get("entries")))

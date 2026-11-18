@@ -110,10 +110,6 @@ def to_card(record: dict) -> Card:
         ("Components", format_components(record.get("components") or {})),
         ("Duration", format_duration(record.get("duration", []))),
     ]
-    source = record.get("source")
-    if source:
-        page = record.get("page")
-        fields.append(("Source", f"{source} p.{page}" if page else source))
     fields = [(label, render_tags(value)) for label, value in fields]
     sections = _sections(record.get("entries", []))
     sections += _sections(record.get("entriesHigherLevel", []))

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...model import Card
 from . import cache
-from .fields import sections, source_field
+from .fields import sections
 from .spell import format_time
 
 
@@ -16,7 +16,4 @@ def to_card(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
     if record.get("time"):
         fields.append(("Time", format_time(record["time"])))
-    source = source_field(record)
-    if source:
-        fields.append(source)
     return Card(str(record.get("name", "Untitled")), "Action", fields, sections(record.get("entries")))

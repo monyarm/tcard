@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import unicodedata
 
-from ..model import Card, Line, LineKind
+from ..model import Card, Line, LineKind, Table
 
 # tp folds text to ASCII and drops what it cannot map. Do it here, once, so the
 # pipe never sees a character the printer would smear.
@@ -123,6 +123,38 @@ def _body(text: str, cols: int) -> list[str]:
     return wrap(text, cols)
 
 
+def _table_fallback(rows: list[list[str]], cols: int) -> list[str]:
+    return [line for row in rows for line in wrap(", ".join(cell for cell in row if cell), cols)]
+
+
+def _table_lines(table: Table, cols: int) -> list[str]:
+    """Columns padded to a shared width, shrunk until the grid fits cols."""
+    rows = [[fold(cell).strip() for cell in row] for row in table.rows]
+    rows = [row for row in rows if any(row)]
+    if not rows:
+        return []
+    width = max(len(row) for row in rows)
+    rows = [row + [""] * (width - len(row)) for row in rows]
+    widths = [max(1, max(len(row[i]) for row in rows)) for i in range(width)]
+    gaps = width - 1
+    if sum(widths) + gaps > cols:
+        room = cols - gaps
+        while sum(widths) > room:
+            widest = max(range(width), key=lambda i: widths[i])
+            if widths[widest] <= 3:
+                return _table_fallback(rows, cols)
+            widths[widest] -= 1
+    out: list[str] = []
+    for index, row in enumerate(rows):
+        cells = [wrap(cell, widths[i]) or [""] for i, cell in enumerate(row)]
+        for line_no in range(max(len(cell) for cell in cells)):
+            parts = [cell[line_no] if line_no < len(cell) else "" for cell in cells]
+            out.append(" ".join(part.ljust(widths[i]) for i, part in enumerate(parts)).rstrip())
+        if index == 0 and table.header and len(rows) > 1:
+            out.append("-" * min(cols, sum(widths) + gaps))
+    return out
+
+
 def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
     """Build the line list. Raises ValueError instead of truncating."""
     if cols < 4:
@@ -137,10 +169,10 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
     for label, value in card.fields:
         out += _field(label, value, cols)
 
-    sections: list[tuple[str, list[str]]] = []
+    sections: list[tuple[str, list[str | Table]]] = []
     if not brief:
         for heading, paragraphs in card.sections:
-            body = [p for p in paragraphs if p.strip()]
+            body = [p for p in paragraphs if isinstance(p, Table) or p.strip()]
             if body:
                 sections.append((heading, body))
 
@@ -154,7 +186,12 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
                 out.append(Line(LineKind.RULE, "-" * cols))
             out += [Line(LineKind.SECTION, part) for part in wrap(heading, cols)]
         for paragraph in body:
-            if out and out[-1].kind is LineKind.BODY:
+            if isinstance(paragraph, Table):
+                if out and out[-1].kind is LineKind.BODY:
+                    out.append(Line(LineKind.BLANK))
+                out += [Line(LineKind.TABLE, part, paragraph) for part in _table_lines(paragraph, cols)]
+                continue
+            if out and out[-1].kind in (LineKind.BODY, LineKind.TABLE):
                 out.append(Line(LineKind.BLANK))
             out += [Line(LineKind.BODY, part) for part in _body(paragraph, cols)]
 

@@ -1,3 +1,4 @@
+from tcard.model import Table
 from tcard.sources.fivee.entries import flatten
 
 
@@ -19,9 +20,13 @@ def test_nested_list_indents():
     assert flatten([node]) == [("", ["- a", "- b"])]
 
 
-def test_table_falls_back_to_rows():
+def test_table_becomes_table_object():
     node = {"type": "table", "colLabels": ["d6", "Result"], "rows": [["1", "Bad"], ["2", "Worse"]]}
-    assert flatten([node]) == [("", ["d6: 1, Result: Bad", "d6: 2, Result: Worse"])]
+    sections = flatten([node])
+    table = sections[0][1][0]
+    assert isinstance(table, Table)
+    assert table.header is True
+    assert table.rows == [["d6", "Result"], ["1", "Bad"], ["2", "Worse"]]
 
 
 def test_unknown_object_does_not_crash():
@@ -34,4 +39,5 @@ def test_empty_sections_dropped():
 
 def test_roll_cells_render():
     node = {"type": "table", "colLabels": ["d20", "Effect"], "rows": [[{"roll": {"min": 1, "max": 5}}, "Bad"]]}
-    assert flatten([node]) == [("", ["d20: 1-5, Effect: Bad"])]
+    rows = flatten([node])[0][1][0].rows
+    assert rows == [["d20", "Effect"], ["1-5", "Bad"]]

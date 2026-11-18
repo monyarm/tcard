@@ -5,7 +5,7 @@ from __future__ import annotations
 from ...model import Card
 from ..base import Kind
 from . import cache
-from .fields import sections, source_field
+from .fields import sections
 from .index import _dedupe
 
 DAMAGE_TYPES = {"B": "bludgeoning", "P": "piercing", "S": "slashing"}
@@ -111,9 +111,6 @@ def to_card(record: dict) -> Card:
         field = _quantity(label, value, suffix)
         if field:
             fields.append(field)
-    source = source_field(record)
-    if source:
-        fields.append(source)
 
     nodes = list(record.get("entries") or []) + list(record.get("additionalEntries") or [])
     return Card(str(record.get("name", "Untitled")), subtitle, fields, sections(nodes))

@@ -2,20 +2,16 @@
 
 from __future__ import annotations
 
+from ...model import Table
 from .entries import flatten
 from .tags import render_tags
 
 
-def source_field(record: dict) -> tuple[str, str] | None:
-    source = record.get("source")
-    if not source:
-        return None
-    page = record.get("page")
-    return ("Source", f"{source} p.{page}" if page else source)
-
-
-def sections(nodes: object) -> list[tuple[str, list[str]]]:
-    return [(heading, [render_tags(text) for text in paragraphs]) for heading, paragraphs in flatten(nodes)]
+def sections(nodes: object) -> list[tuple[str, list[str | Table]]]:
+    return [
+        (heading, [item if isinstance(item, Table) else render_tags(item) for item in paragraphs])
+        for heading, paragraphs in flatten(nodes)
+    ]
 
 
 def _clean(text: object) -> str:

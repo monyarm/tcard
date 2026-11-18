@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...model import Card
 from .cache import load_json
-from .fields import sections, source_field
+from .fields import sections
 from .index import _dedupe
 
 
@@ -14,8 +14,7 @@ def records(refresh: bool = False) -> list[dict]:
 
 
 def to_card(record: dict) -> Card:
-    field = source_field(record)
-    fields = [field] if field else []
+    fields = []
     return Card(
         record.get("name", "Background"),
         "Background",

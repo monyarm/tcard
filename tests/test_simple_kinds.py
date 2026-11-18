@@ -21,7 +21,7 @@ def test_feat_card():
     record = next(r for r in records if r["name"] == "Lucky" and r["source"] == "XPHB")
     card = feats.to_card(record)
     assert card.subtitle == "Origin Feat"
-    assert dict(card.fields)["Source"] == "XPHB p.201"
+    assert "Source" not in dict(card.fields)
     assert card.sections and card.sections[0][1]
 
 
@@ -46,7 +46,7 @@ def test_background_card():
     record = next(r for r in records if r["name"] == "Acolyte" and r["source"] == "XPHB")
     card = backgrounds.to_card(record)
     assert card.subtitle == "Background"
-    assert dict(card.fields)["Source"] == "XPHB p.178"
+    assert "Source" not in dict(card.fields)
     assert card.sections and card.sections[0][1]
 
 
@@ -55,7 +55,7 @@ def test_background_picks_2014_record_too():
     record = next(r for r in records if r["name"] == "Soldier")
     card = backgrounds.to_card(record)
     assert card.subtitle == "Background"
-    assert dict(card.fields)["Source"].startswith("PHB")
+    assert "Source" not in dict(card.fields)
 
 
 def test_optional_labels_and_prerequisites():

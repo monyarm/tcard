@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from ...model import Table
+
 
 def _inline(value: object) -> str:
     if isinstance(value, str):
@@ -36,7 +38,7 @@ def _roll(roll: object) -> str:
 
 class _Builder:
     def __init__(self) -> None:
-        self.sections: list[tuple[str, list[str]]] = [("", [])]
+        self.sections: list[tuple[str, list[str | Table]]] = [("", [])]
 
     def heading(self, name: str) -> None:
         self.sections.append((name, []))
@@ -91,19 +93,19 @@ class _Builder:
         self.para("- " + _inline(item), depth)
 
     def table(self, node: dict) -> None:
-        labels = node.get("colLabels") or []
-        for row in node.get("rows", []):
-            cells = [_inline(cell) for cell in row]
-            parts = [
-                f"{labels[i]}: {cell}" if i < len(labels) and labels[i] else cell
-                for i, cell in enumerate(cells)
-            ]
-            row_text = ", ".join(part for part in parts if part)
-            if row_text:
-                self.para(row_text)
+        labels = [str(label) for label in (node.get("colLabels") or [])]
+        rows = [[_inline(cell) for cell in row] for row in node.get("rows", [])]
+        rows = [row for row in rows if any(row)]
+        if not rows:
+            return
+        width = max([len(labels)] + [len(row) for row in rows])
+        labels += [""] * (width - len(labels))
+        rows = [row + [""] * (width - len(row)) for row in rows]
+        header = any(labels)
+        self.sections[-1][1].append(Table(([labels] if header else []) + rows, header=header))
 
 
-def flatten(nodes: object) -> list[tuple[str, list[str]]]:
+def flatten(nodes: object) -> list[tuple[str, list[str | Table]]]:
     builder = _Builder()
     builder.visit(nodes)
     return [(heading, paragraphs) for heading, paragraphs in builder.sections if paragraphs]

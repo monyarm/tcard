@@ -30,7 +30,7 @@ def test_magic_item_card():
     assert card.subtitle == "Uncommon Wondrous Item"
     assert "Attunement" not in fields
     assert fields["Weight"] == "15 lb"
-    assert fields["Source"] == "DMG p.153"
+    assert "Source" not in fields
 
 
 def test_ring_uses_item_type_table_and_bonus():

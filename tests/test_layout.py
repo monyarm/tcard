@@ -12,7 +12,6 @@ CARD = Card(
         ("Range", "150 feet"),
         ("Components", "V, S, M (a ball of bat guano and sulfur)"),
         ("Duration", "Instantaneous"),
-        ("Source", "XPHB p.274"),
     ],
     [("", ["A bright streak flashes from you."])],
 )
@@ -91,3 +90,15 @@ def test_bullet_continuation_is_indented():
     body = [line.text for line in layout(card, 32) if line.kind is LineKind.BODY]
     assert body[0].startswith("- Ability Scores:")
     assert body[1].startswith("  ") and body[1].strip()
+
+
+def test_table_fits_width_with_header_rule():
+    from tcard.model import Table
+
+    card = Card("T", sections=[("", [Table([["d6", "Result"], ["1", "Bad"], ["2", "Worse"]])])])
+    lines = layout(card, 32)
+    assert all(len(line.text) <= 32 for line in lines)
+    table = [line.text for line in lines if line.kind is LineKind.TABLE]
+    assert table[0].startswith("d6")
+    assert set(table[1]) == {"-"}
+    assert table[2].startswith("1 ")

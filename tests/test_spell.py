@@ -26,7 +26,7 @@ def test_fireball_card():
     assert fields["Range"] == "150 feet"
     assert fields["Components"] == "V, S, M (a ball of bat guano and sulfur)"
     assert fields["Duration"] == "Instantaneous"
-    assert fields["Source"] == "XPHB p.274"
+    assert "Source" not in fields
     headings = [heading for heading, _ in card.sections]
     assert "Using a Higher-Level Spell Slot" in headings
 
