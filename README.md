@@ -159,6 +159,27 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 
   Dot ratings print as `●`/`○`. DejaVu Sans Mono draws both in exactly one cell,
   and `tp` keeps any glyph its font can draw.
+- Pathfinder 2e comes from the Foundry data repo (`github.com/foundryvtt/pf2e`,
+  branch `v14-dev`) as item JSON. The first use does a blobless sparse checkout
+  into `~/.cache/tcard/pf2/repo` (one clone, then only the packs a kind needs);
+  `--refresh` pulls the branch again. Kinds: `spell`, `feat`, `equipment`,
+  `ancestry`, `heritage`, `background`, `class`, `class_feature`, `deity`,
+  `monster`, `condition`, `action`, `hazard`.
+
+  ```
+  tcard pf:2e spell fireball
+  tcard pf:2e feat toughness
+  tcard pf:2e equipment longsword
+  tcard pf:2e ancestry dwarf
+  tcard pf:2e deity sarenrae
+  tcard pf:2e monster goblin_warrior
+  tcard pf:2e condition prone
+  ```
+
+  Descriptions are HTML with Foundry macros (`@UUID[...]`, `@Damage[...]`,
+  `@Check[...]`, `@Template[...]`); they are expanded to plain words before
+  wrapping. Monsters keep their stat block: one row of ability modifiers under
+  the fields, then the flavour text and one section per embedded ability.
 - Long spells and features run to a second page; `tp` waits 3 s between pages.
 
 Config: `~/.config/tcard/config.toml`, optional.
