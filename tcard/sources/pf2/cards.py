@@ -342,23 +342,43 @@ def action(item: dict) -> Card:
 
 def hazard(item: dict) -> Card:
     system = item["system"]
-    level = _level(system)
-    fields: list[tuple[str, str]] = []
-    for key, label in (("complexity", "Complexity"), ("stealth", "Stealth")):
-        value = _value(system.get(key))
-        if value:
-            fields.append((label, value.title()))
+    details = system.get("details") or {}
+    level = _level(details) or _level(system)
     attributes = system.get("attributes") or {}
+    fields: list[tuple[str, str]] = []
+    fields.append(("Complexity", "Complex" if details.get("isComplex") else "Simple"))
+    stealth = attributes.get("stealth") or {}
+    stealth_value = _value(stealth)
+    if stealth_value and stealth_value != "0":
+        detail = _value({"value": stealth.get("details")}).replace("<p>", "").replace("</p>", "")
+        detail = f" {detail}" if detail else ""
+        fields.append(("Stealth", f"{stealth_value}{detail}"))
     ac = (attributes.get("ac") or {}).get("value")
-    hp = (attributes.get("hp") or {}).get("max")
     if ac:
         fields.append(("AC", str(ac)))
+    hp = (attributes.get("hp") or {}).get("max")
     if hp:
         fields.append(("HP", str(hp)))
+    hardness = attributes.get("hardness")
+    if hardness:
+        fields.append(("Hardness", str(hardness)))
+    saves = system.get("saves") or {}
+    rolls = [_value(saves.get(name)) for name in ("fortitude", "reflex", "will")]
+    rolls = [roll for roll in rolls if roll and roll != "0"]
+    if rolls:
+        fields.append(("Saves", " / ".join(rolls)))
     traits = _traits(system)
     if traits:
         fields.append(("Traits", traits))
-    body, sections = description(system.get("description", {}).get("value"))
+    body, sections = description(details.get("description"))
+    for key, label in (("trigger", "Trigger"), ("effect", "Effect"),
+                       ("disable", "Disable"), ("routine", "Routine"),
+                       ("reset", "Reset")):
+        value = details.get(key)
+        lines, _ = description(value)
+        if lines:
+            body.append(f"{label}: {lines[0]}")
+            body.extend(lines[1:])
     return Card(item["name"], f"Hazard {level}", fields, [("", body)] + sections)
 
 

@@ -124,6 +124,13 @@ def test_damage_and_check_macros():
     assert "DC 20" in macros.expand("@Check[type:reflex|dc:20]")
 
 
+def test_check_macro_names_the_bare_statistic_token():
+    assert macros.expand("@Check[thievery|dc:20]") == "DC 20 Thievery"
+    assert macros.expand("@Check[deception|dc:28|name:Confound the Haunt]") == "DC 28 Deception"
+    assert macros.expand("@Check[flat|dc:11]") == "DC 11 Flat Check"
+    assert macros.expand("@Check[will]") == "Will"
+
+
 def test_template_macro_reads_distance():
     assert macros.expand("@Template[type:burst|distance:20]") == "20-foot burst"
 
@@ -158,3 +165,26 @@ def test_pack_kind_card_loads_the_record_path():
     with mock.patch.object(cache, "load", lambda path: json.loads(pathlib.Path(path).read_text())):
         card = registry.kinds("pf:2e")["spell"].card(record)
     assert card.title == "Fireball"
+
+
+def test_hazard_card_reads_the_details_block():
+    item = {"name": "Confounding Betrayal", "system": {
+        "details": {"isComplex": True, "level": {"value": 8},
+                    "description": "<p>Allies appear.</p>",
+                    "disable": "<p>@Check[deception|dc:28] twice.</p>",
+                    "reset": "<p>Resets at dawn.</p>"},
+        "attributes": {"ac": {"value": 10}, "hp": {"max": 0}, "hardness": 0,
+                       "stealth": {"value": 21, "details": "<p>(expert)</p>"}},
+        "saves": {"fortitude": {"value": 0}, "reflex": {"value": 0}, "will": {"value": 0}},
+        "traits": {"value": ["haunt"], "rarity": "common"}}}
+    card = cards.hazard(item)
+    fields = dict(card.fields)
+    assert card.subtitle == "Hazard 8"
+    assert fields["Complexity"] == "Complex"
+    assert fields["Stealth"] == "21 (expert)"
+    assert fields["AC"] == "10"
+    assert "HP" not in fields and "Saves" not in fields
+    body = card.sections[0][1]
+    assert body[0] == "Allies appear."
+    assert body[1] == "Disable: DC 28 Deception twice."
+    assert body[2] == "Reset: Resets at dawn."

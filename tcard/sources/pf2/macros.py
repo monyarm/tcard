@@ -9,6 +9,7 @@ _ABILITY = {
     "str": "Fortitude", "dex": "Reflex", "con": "Fortitude",
     "int": "Will", "wis": "Will", "cha": "Will",
     "reflex": "Reflex", "fortitude": "Fortitude", "will": "Will", "perception": "Perception",
+    "flat": "Flat Check",
 }
 
 
@@ -38,8 +39,11 @@ def _damage(inner: str) -> str:
 
 
 def _check(inner: str) -> str:
-    options = dict(part.split(":", 1) for part in inner.split("|") if ":" in part)
-    raw = options.get("type", "perception")
+    parts = inner.split("|")
+    options = dict(part.split(":", 1) for part in parts if ":" in part)
+    # The bare first token names the statistic (`@Check[thievery|dc:20]`); older
+    # data spells it as `type:`. Defaulting to perception mislabels every skill.
+    raw = options.get("type") or parts[0].strip() or "perception"
     statistic = _ABILITY.get(raw.lower(), raw.replace("-", " ").title())
     dc = options.get("dc", "")
     return f"DC {dc} {statistic}" if dc else statistic
