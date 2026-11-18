@@ -7,7 +7,7 @@ import re
 from ...model import Card
 from ...names import normalize, split_path
 from ..base import Kind
-from . import cache, md
+from . import cache, md, pack
 
 INDEX = "Advantages_and_Flaws"
 
@@ -73,8 +73,12 @@ def records(refresh: bool = False) -> list[dict]:
 
 def to_card(record: dict) -> Card:
     fields = [("Dots", md.dots(record["dots"]))] if md.rating(record["dots"]) else []
+    # The wiki keeps only the opening clause of a merit, so the book's own text
+    # comes from the pack when it has the entry.
+    extra = pack.feature(record["name"]) or {}
+    body = [line for line in extra.get("prose") or [] if line] or [record["text"]]
     subtitle = f"{record['kind'].title()} ({record['group'].replace('_', ' ').title()})"
-    return Card(record["name"], subtitle, fields, [("", [record["text"]])] if record["text"] else [])
+    return Card(record["name"], subtitle, fields, [("", body)] if any(body) else [])
 
 
 class AdvantageKind(Kind):

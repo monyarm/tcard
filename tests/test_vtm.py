@@ -246,6 +246,24 @@ def _lookup(name, discipline=None):
     return exact or next((value for (_, power), value in PACK.items() if power == key), None)
 
 
+# The advantages and clans packs: the wiki keeps a clause, the pack the page.
+FEATURES = {
+    "beautiful": {"prose": ["You add one extra die to all appropriate Social "
+                            "dice pools, as your appearance is striking."],
+                  "fields": {}},
+}
+CLAN_TEXT = {"brujah": ["The dream of the learned clan is a world where all "
+                        "injustice has been eliminated."]}
+
+
+def _feature(name):
+    return FEATURES.get(name.lower().removeprefix("the "))
+
+
+def _clan(name):
+    return CLAN_TEXT.get(name.lower(), [])
+
+
 def _page(name, refresh=False):
     return PAGES[name]
 
@@ -261,7 +279,9 @@ def _get(url, refresh=False):
 def _with_pages(call):
     with mock.patch.object(cache, "page", _page), mock.patch.object(cache, "wikitext", _wikitext), \
             mock.patch.object(cache, "get", _get), \
-            mock.patch.object(pack, "lookup", _lookup):
+            mock.patch.object(pack, "lookup", _lookup), \
+            mock.patch.object(pack, "feature", _feature), \
+            mock.patch.object(pack, "clan", _clan):
         return call()
 
 
@@ -314,7 +334,8 @@ def test_clan_card_and_bane_parts():
     whole = _with_pages(lambda: kind.card(records[0]))
     assert whole.title == "Brujah"
     assert dict(whole.fields)["Disciplines"] == "Celerity, Potence, Presence"
-    assert [heading for heading, _ in whole.sections] == ["Bane", "Variant Bane", "Compulsion"]
+    assert whole.sections[0] == ("", CLAN_TEXT["brujah"])
+    assert [heading for heading, _ in whole.sections] == ["", "Bane", "Variant Bane", "Compulsion"]
 
     bane = _with_pages(lambda: kind.card(kind.matches(records, "brujah:bane")[0]))
     assert bane.title == "Violent Temper"
@@ -340,13 +361,14 @@ def test_merit_and_flaw_group_addressing():
     assert "Allies" not in {r["name"] for r in merit_records}
     assert "Mask" not in {r["name"] for r in merit_records}
 
-    zeroed = advantages.to_card(merits.matches(merit_records, "zeroed")[0])
+    zeroed = _with_pages(lambda: advantages.to_card(merits.matches(merit_records, "zeroed")[0]))
     assert zeroed.subtitle == "Merit (Mask)"
     assert dict(zeroed.fields)["Dots"] == "\u25cf\u25cb\u25cb\u25cb\u25cb"
 
     match = merits.matches(merit_records, "look:beautiful")
-    card = advantages.to_card(match[0])
+    card = _with_pages(lambda: advantages.to_card(match[0]))
     assert card.subtitle == "Merit (Look)"
+    assert card.sections[0][1] == FEATURES["beautiful"]["prose"]
     assert dict(card.fields)["Dots"] == "\u25cf\u25cf\u25cb\u25cb\u25cb"
 
     assert merits.matches(merit_records, "beautiful")
@@ -419,7 +441,7 @@ def test_every_vtm_card_renders_at_32_columns():
     cards.extend(_with_pages(lambda: disciplines.to_card(r)) for r in discipline_records)
     clan_records = _with_pages(clans.records)
     cards.append(_with_pages(lambda: clans.to_card(clan_records[0])))
-    cards.extend(advantages.to_card(r) for r in _with_pages(advantages.records))
+    cards.extend(_with_pages(lambda r=r: advantages.to_card(r)) for r in _with_pages(advantages.records))
     cards.extend(predators.to_card(r) for r in _with_pages(predators.records))
     cards.extend(_with_pages(lambda: rituals.to_card(r)) for r in _with_pages(rituals.records))
     sheet = _with_pages(lambda: loresheets.to_card(
@@ -463,6 +485,13 @@ def test_pack_repairs_split_words_in_both_cases():
     assert pack._repair("A vam pire with out rest") == "A vampire without rest"
     assert pack._repair("Vam pire dam age") == "Vampire damage"
     assert pack._repair("withholding harmless") == "withholding harmless"
+
+
+def test_pack_feature_keys_drop_dots_and_credit_lines():
+    assert pack._feature_key("• Zeroed") == "zeroed"
+    assert pack._feature_key("Flaw: (••) Repulsive") == "repulsive"
+    assert pack._feature_key("••• Persistent Blush") == "persistent blush"
+    assert pack._feature_key("Semblance of the Methuselah") == "semblance of methuselah"
 
 
 def test_pack_entries_rebuild_shared_key_prefixes():

@@ -159,16 +159,18 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   tcard vtm:v5 predator_type alleycat
   ```
 
-  The wiki only prints a one-line `Effect` per power, so discipline powers and
-  rituals take their rules text from a pinned Foundry VTT compendium pack
-  (`DeathDaisy/daisys-complete-foundry-wod5e-compository`, commit `8c735d0`),
-  read straight out of its LevelDB file. That gives the book's full paragraphs,
-  `System:` text and bullet lists, plus `Ingredients`/`Process` for rituals.
-  `Dice pool` prints as `Pool` and `Opposing pool` as `Opposing` so the value
-  fits beside the label. The pack covers 312 entries (79 Blood Sorcery rituals,
-  22 Oblivion ceremonies, 16-23 per discipline); anything it lacks falls back
-  to the wiki's `Effect` line. Its text comes from a PDF conversion, so a small
-  repair table joins split words (`vam pire` -> `vampire`, `Story teller` ->
+  The wiki only prints a one-line `Effect` per power, so discipline powers,
+  rituals, merits/flaws and clans take their text from a pinned Foundry VTT
+  compendium pack (`DeathDaisy/daisys-complete-foundry-wod5e-compository`,
+  commit `8c735d0`), read straight out of its LevelDB files. That gives the
+  book's full paragraphs, `System:` text and bullet lists,
+  `Ingredients`/`Process` for rituals, and each clan's history as the card's
+  opening section. `Dice pool` prints as `Pool` and `Opposing pool` as
+  `Opposing` so the value fits beside the label. The pack covers 312 discipline
+  entries (79 Blood Sorcery rituals, 22 Oblivion ceremonies, 16-23 per
+  discipline) and 135 of the 220 merits/flaws; anything it lacks falls back to
+  the wiki's own text. Its text comes from a PDF conversion, so a small repair
+  table joins split words (`vam pire` -> `vampire`, `Story teller` ->
   `Storyteller`) and restores dropped hyphens.
 
   Loresheets come from `whitewolf.fandom.com`, because the Paradox wiki only

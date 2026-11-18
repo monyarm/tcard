@@ -58,8 +58,9 @@ def _cached(url: str, suffix: str, refresh: bool, fetch_body):
     path = cache_dir() / "pages" / f"{digest}.{suffix}"
     if refresh or not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
+        body = fetch_body(url)
         tmp = path.with_suffix(".tmp")
-        tmp.write_bytes(fetch_body(url))
+        tmp.write_bytes(body.encode("utf-8") if isinstance(body, str) else body)
         tmp.replace(path)
     return path
 

@@ -8,6 +8,7 @@ reader plus snappy, no third-party dependency.
 
 from __future__ import annotations
 
+import difflib
 import html
 import json
 import re
@@ -20,7 +21,12 @@ from . import cache
 # Pinned commit, so a later rewrite of the repository cannot change the text.
 REPO = "DeathDaisy/daisys-complete-foundry-wod5e-compository"
 SHA = "8c735d0c6c84a033cb17d92f903178506f9084ce"
-PACK = f"https://raw.githubusercontent.com/{REPO}/{SHA}/packs/disciplines/000028.ldb"
+# Pack files, in load order; a later file adds to or replaces an earlier one.
+PACKS = {
+    "disciplines": ("disciplines/000028.ldb",),
+    "advantages": ("advantages-flaws/000026.ldb",),
+    "clans": ("clans/000028.ldb", "clans/000035.ldb"),
+}
 
 # The pack's own discipline keys differ from the wiki's page names.
 DISCIPLINES = {
@@ -160,9 +166,11 @@ _MARK = re.compile(r"^\u25a0\s*([^:]{2,40}):\s*(.*)$", re.S)
 _PARA = re.compile(r"<p\b[^>]*>(.*?)</p>", re.S | re.I)
 _BREAK = re.compile(r"<br\s*/?>", re.I)
 _TAG = re.compile(r"<[^>]+>")
-_ITEMS: list[dict] | None = None
+_ITEMS: dict[str, list[dict]] = {}
 _INDEX: dict | None = None
 _BY_NAME: dict[str, dict] | None = None
+_FEATURES: dict[str, dict] | None = None
+_CLANS: dict[str, dict] | None = None
 
 
 def _snappy(data: bytes) -> bytes:
@@ -323,17 +331,86 @@ def body_lines(label: str, value: str) -> list[str]:
     return [f"{label}: {parts[0]}", *(part for part in parts[1:] if part.strip())]
 
 
-def items(refresh: bool = False) -> list[dict]:
-    global _ITEMS
-    if refresh or _ITEMS is None:
+def _url(path: str) -> str:
+    return f"https://raw.githubusercontent.com/{REPO}/{SHA}/packs/{path}"
+
+
+def items(pack: str = "disciplines", refresh: bool = False) -> list[dict]:
+    """Entries of one pack, its tables merged by item name."""
+    if refresh or pack not in _ITEMS:
+        rows: list[dict] = []
         try:
-            raw = cache.get_bytes(PACK, refresh)
-            _ITEMS = [json.loads(value) for _, value in read_pack(raw)
-                      if value.startswith(b"{")]
+            for path in PACKS[pack]:
+                for _, value in read_pack(cache.get_bytes(_url(path), refresh)):
+                    if not value.startswith(b"{"):
+                        continue
+                    item = json.loads(value)
+                    name = str(item.get("name") or "")
+                    # A later table updates items the earlier one already listed.
+                    for at, seen in enumerate(rows):
+                        if name and seen.get("name") == name:
+                            rows[at] = item
+                            break
+                    else:
+                        rows.append(item)
         except (TcardError, ValueError, KeyError):
             # No pack means shorter cards, not a failed command.
-            _ITEMS = []
-    return _ITEMS
+            pass
+        _ITEMS[pack] = rows
+    return _ITEMS[pack]
+
+
+_DOTS = re.compile(r"^[\u2022\u25cf\u25cb.\s()\d\u2013-]+")
+_LEAD = re.compile(r"^(?:flaw|merit|background)\s*:\s*", re.I)
+
+
+def _feature_key(name: object) -> str:
+    """`Flaw: (••) Repulsive` and `Repulsive` are the same entry."""
+    text = _DOTS.sub("", _LEAD.sub("", str(name or "").strip()))
+    return " ".join(word for word in normalize(text).split()
+                    if word not in ("the", "a", "an"))
+
+
+def features(refresh: bool = False) -> dict[str, dict]:
+    global _FEATURES
+    if refresh or _FEATURES is None:
+        table: dict[str, dict] = {}
+        for item in items("advantages", refresh):
+            system = item.get("system") or {}
+            if item.get("type") != "feature" or not system.get("description"):
+                continue
+            table.setdefault(_feature_key(item.get("name")), item)
+        _FEATURES = table
+    return _FEATURES
+
+
+def feature(name: str) -> dict | None:
+    """Full text of a merit, flaw or background; the wiki only keeps a clause."""
+    table = features()
+    key = _feature_key(name)
+    item = table.get(key)
+    if item is None:
+        near = difflib.get_close_matches(key, list(table), n=1, cutoff=0.9)
+        item = table[near[0]] if near else None
+    if item is None:
+        return None
+    return details(str(item["system"]["description"]))
+
+
+def clan(name: str) -> list[str]:
+    """The clan's own description; the pack has no bane, so the wiki keeps those."""
+    global _CLANS
+    if _CLANS is None:
+        table: dict[str, dict] = {}
+        for item in items("clans"):
+            if item.get("type") == "clan" and (item.get("system") or {}).get("description"):
+                table.setdefault(normalize(str(item.get("name"))), item)
+        _CLANS = table
+    item = _CLANS.get(normalize(name))
+    if item is None:
+        return []
+    prose = details(str(item["system"]["description"]))["prose"]
+    return [line for line in prose if not line.lower().startswith("disciplines:")]
 
 
 def _discipline(name: object) -> str:
@@ -352,7 +429,7 @@ def index(refresh: bool = False) -> tuple[dict, dict]:
     if refresh or _INDEX is None or _BY_NAME is None:
         by_key: dict = {}
         by_name: dict = {}
-        for item in items(refresh):
+        for item in items("disciplines", refresh):
             system = item.get("system") or {}
             if item.get("type") != "power" or not system.get("description"):
                 continue

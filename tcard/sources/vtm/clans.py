@@ -7,7 +7,7 @@ import re
 from ...model import Card
 from ...names import normalize, split_path
 from ..base import Kind
-from . import cache, md
+from . import cache, md, pack
 
 INDEX = "Clans"
 LINK = re.compile(r'\*\*\[([^\]]+)\]\((https://vtm\.paradoxwikis\.com/[^)\s"]+)')
@@ -94,6 +94,9 @@ def to_card(record: dict, part: tuple[str, ...] | None = None) -> Card:
 
     fields = [("Disciplines", ", ".join(_disciplines(markdown)))]
     sections = []
+    intro = pack.clan(record["name"])
+    if intro:
+        sections.append(("", intro))
     for title in SECTIONS:
         name, text = named[title]
         if text:
