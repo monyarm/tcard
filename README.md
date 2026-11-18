@@ -65,9 +65,14 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 - `--all` lists every match; names collide (`Shield` is a spell and an item).
 - Data comes from `https://5e.tools/data` and is cached in `~/.cache/tcard/dnd-5e/`.
   Each kind is downloaded on first use. `--refresh` refetches.
-- Pathfinder 1e spells come from `https://www.d20pfsrd.com`: `tcard pf1 spell fireball`.
-  The first run walks 26 letter pages (~20 s) to build a name index; each spell
-  page is fetched once and cached in `~/.cache/tcard/pf1/`.
+- Pathfinder 1e comes from `https://www.d20pfsrd.com`. `tcard pf1 spell fireball`
+  uses 26 letter pages (~20 s once) to build the spell index. Other kinds use the
+  site's 23 sitemap pages (~27k URLs, one download) filtered by path:
+  `feat`, `trait`, `equipment`, `magic_item`, `race`, `archetype`,
+  `class_ability`, `prestige_class`, e.g. `tcard pf1 class_ability rogue:bleeding_attack`.
+  Pages are fetched on demand and cached in `~/.cache/tcard/pf1/`.
+  3PP content is filtered by path heuristics, so a few community entries can
+  still appear in `--all` listings.
 - Long spells and features run to a second page; `tp` waits 3 s between pages.
 
 Config: `~/.config/tcard/config.toml`, optional.

@@ -28,22 +28,22 @@ _MARK = "\x00"
 
 
 def labelled(fragment: str) -> list[tuple[str | None, str]]:
-    """Split a stat paragraph into (label, value) pairs, or (None, prose).
+    """Split a stat paragraph at each bold label, or return it as prose.
 
-    d20pfsrd marks labels with <b>/<strong>, separates entries with <br />
-    and separates some labels with "; ". Bold runs become markers before tags
-    are stripped so the label boundary survives.
+    d20pfsrd separates entries with <br />, "; " or just spaces, so the bold
+    run itself is the reliable boundary.
     """
     bolded = re.sub(r"<(b|strong)>(.*?)</\1>", lambda m: _MARK + text(m.group(2)) + _MARK, fragment, flags=re.S)
+    chunks = text(bolded).split(_MARK)
     out: list[tuple[str | None, str]] = []
-    for line in re.split(r"<br\s*/?>", bolded):
-        for part in re.split(r";\s*(?=" + _MARK + ")", line):
-            flat = text(part)
-            match = re.match(_MARK + r"([^" + _MARK + r"]+)" + _MARK + r"\s*(.*)", flat)
-            if match:
-                out.append((match.group(1), match.group(2)))
-            elif flat:
-                out.append((None, flat))
+    prefix = chunks[0].strip(" ;")
+    if prefix:
+        out.append((None, prefix))
+    for index in range(1, len(chunks) - 1, 2):
+        label = chunks[index].strip().rstrip(":").strip()
+        value = chunks[index + 1].strip().lstrip(": ").rstrip(" ;").strip()
+        if label:
+            out.append((label, value))
     return out
 
 

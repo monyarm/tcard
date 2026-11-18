@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
 import time
 from pathlib import Path
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from ...errors import TcardError
@@ -30,6 +32,12 @@ def fetch(url: str) -> str:
     try:
         with urlopen(request, timeout=30) as response:
             return response.read().decode("utf-8", "replace")
+    except HTTPError as exc:
+        # d20pfsrd serves valid sitemap bodies with a 404 status.
+        body = exc.read()
+        if body:
+            return body.decode("utf-8", "replace")
+        raise TcardError(f"cannot fetch {url}: {exc}", 3) from exc
     except OSError as exc:
         raise TcardError(f"cannot fetch {url}: {exc}", 3) from exc
 
@@ -67,8 +75,9 @@ def index(refresh: bool = False) -> list[dict]:
 
 
 def page(record: dict, refresh: bool = False) -> str:
-    slug = record["url"].rstrip("/").rsplit("/", 1)[-1] or record["name"]
-    path = cache_dir() / "pages" / f"{slug}.html"
+    # Slug-keyed pages collide across kinds (feats/power-attack vs traits/power-attack).
+    digest = hashlib.sha1(record["url"].encode()).hexdigest()[:12]
+    path = cache_dir() / "pages" / f"{digest}.html"
     if refresh or not path.exists():
         path.parent.mkdir(parents=True, exist_ok=True)
         tmp = path.with_suffix(".tmp")

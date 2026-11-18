@@ -165,7 +165,8 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
     out.append(Line(LineKind.RULE, "=" * cols))
     if card.subtitle:
         out += [Line(LineKind.SUBTITLE, part) for part in wrap(card.subtitle, cols)]
-    out.append(Line(LineKind.RULE, "-" * cols))
+    if card.subtitle or card.fields:
+        out.append(Line(LineKind.RULE, "-" * cols))
     for label, value in card.fields:
         out += _field(label, value, cols)
 
