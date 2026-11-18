@@ -54,7 +54,7 @@ def test_fireball_renders_clean_at_32():
     assert output.isascii()
     assert max(len(line) for line in output.splitlines()) <= 32
     assert "<" not in output and "&#" not in output and "\x00" not in output
-    assert output.startswith("FIREBALL\n")
+    assert output.startswith("FIREBALL        EVOCATION [FIRE]\n")
 
 
 def test_labelled_splits_on_br_and_semicolon():

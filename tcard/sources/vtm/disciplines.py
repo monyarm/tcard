@@ -6,6 +6,7 @@ import re
 
 from ...model import Card
 from ...names import normalize, split_path
+from ... import glyphs
 from ..base import Kind
 from . import cache, md
 
@@ -135,8 +136,9 @@ def _power_card(record: dict) -> Card:
         if value and value.lower() not in EMPTY_VALUES:
             fields.append((key, value))
     body = [paragraph for paragraph in record.get("text", []) if paragraph]
-    return Card(record["name"], f"{record['discipline']} {record['level']}", fields,
-                [("", body)] if body else [])
+    # Powers are level-gated 1-5, so the level reads as pips, like V20.
+    subtitle = f"{record['discipline']} {glyphs.DOT * int(record['level'])}"
+    return Card(record["name"], subtitle, fields, [("", body)] if body else [])
 
 
 def to_card(record: dict) -> Card:

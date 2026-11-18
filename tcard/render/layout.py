@@ -5,6 +5,7 @@ from __future__ import annotations
 import unicodedata
 
 from ..model import Card, Line, LineKind, Table
+from .. import glyphs
 
 # tp folds text to ASCII and drops what it cannot map. Do it here, once, so the
 # pipe never sees a character the printer would smear.
@@ -33,7 +34,7 @@ _FOLD = {
 
 
 # DejaVu Sans Mono draws these in exactly one cell, so they survive to the printer.
-KEEP = frozenset("\u25cf\u25cb")
+KEEP = glyphs.KEEP
 
 
 def fold(text: str) -> str:
@@ -107,19 +108,20 @@ def _field_value(value: str, prefix: str, limit: int, cols: int) -> list[Line]:
     return out
 
 
-_BULLET = "- "
+# Sources write list items as "- text"; the card prints a real bullet.
+_SOURCE_BULLET = "- "
 
 
 def _body(text: str, cols: int) -> list[str]:
     """Wrap a paragraph, keeping bullet and indented continuations aligned."""
     indent = text[: len(text) - len(text.lstrip(" "))]
     rest = text[len(indent) :]
-    if rest.startswith(_BULLET):
-        marker = indent + _BULLET
+    if rest.startswith(_SOURCE_BULLET):
+        marker = indent + glyphs.BULLET
         room = cols - len(marker)
         if room < 4:
             return wrap(text, cols)
-        parts = wrap(rest[len(_BULLET) :], room)
+        parts = wrap(rest[len(_SOURCE_BULLET) :], room)
         return [marker + parts[0]] + [" " * len(marker) + part for part in parts[1:]] if parts else [marker.rstrip()]
     if indent:
         room = cols - len(indent)
@@ -167,12 +169,22 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
         raise ValueError(f"cols must be at least 4, got {cols}")
 
     out: list[Line] = []
-    out += [Line(LineKind.TITLE, part) for part in wrap(card.title, cols)]
-    out.append(Line(LineKind.RULE, "=" * cols))
-    if card.subtitle:
-        out += [Line(LineKind.SUBTITLE, part) for part in wrap(card.subtitle, cols)]
-    if card.subtitle:
-        out.append(Line(LineKind.RULE, "-" * cols))
+    title = wrap(card.title, cols)
+    subtitle = wrap(card.subtitle, cols) if card.subtitle else []
+    # A one-line subtitle rides opposite the title rather than taking its own
+    # row and rule. A subtitle that repeats the title stays on its own line.
+    if (len(title) == 1 and len(subtitle) == 1
+            and len(title[0]) + 2 + len(subtitle[0]) <= cols
+            and not subtitle[0].lower().startswith(title[0].lower())):
+        gap = cols - len(title[0]) - len(subtitle[0])
+        out.append(Line(LineKind.TITLE, title[0] + " " * gap + subtitle[0]))
+        out.append(Line(LineKind.RULE, "=" * cols))
+    else:
+        out += [Line(LineKind.TITLE, part) for part in title]
+        out.append(Line(LineKind.RULE, "=" * cols))
+        if subtitle:
+            out += [Line(LineKind.SUBTITLE, part) for part in subtitle]
+            out.append(Line(LineKind.RULE, "-" * cols))
     for label, value in card.fields:
         out += _field(label, value, cols)
 
@@ -200,10 +212,10 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
                 out += [Line(LineKind.TABLE, part, paragraph) for part in _table_lines(paragraph, cols)]
                 continue
             # Consecutive bullets are one list, not separate blocks.
-            bullets = paragraph.lstrip(" ").startswith(_BULLET) and previous_bullet
+            bullets = paragraph.lstrip(" ").startswith(_SOURCE_BULLET) and previous_bullet
             if not bullets and out and out[-1].kind in (LineKind.BODY, LineKind.TABLE):
                 out.append(Line(LineKind.BLANK))
-            previous_bullet = paragraph.lstrip(" ").startswith(_BULLET)
+            previous_bullet = paragraph.lstrip(" ").startswith(_SOURCE_BULLET)
             out += [Line(LineKind.BODY, part) for part in _body(paragraph, cols)]
 
     for line in out:

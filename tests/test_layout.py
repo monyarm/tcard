@@ -21,9 +21,17 @@ GOLDEN = pathlib.Path(__file__).parent / "golden" / "fireball-32.txt"
 
 def test_layout_first_lines():
     lines = layout(CARD, 32)
-    assert lines[0].kind is LineKind.TITLE and lines[0].text == "Fireball"
+    assert lines[0].kind is LineKind.TITLE
+    assert lines[0].text == "Fireball       Level 3 Evocation"
     assert lines[1].kind is LineKind.RULE and lines[1].text == "=" * 32
-    assert lines[2].text == "Level 3 Evocation"
+    assert lines[2].kind is LineKind.FIELD and lines[2].text == "Casting Time: 1 action"
+
+
+def test_layout_repeats_nothing_in_a_merged_subtitle():
+    card = Card("Auspex", "Auspex " + "\u25cf" * 3)
+    lines = layout(card, 32)
+    assert lines[0].text == "Auspex"
+    assert lines[2].text == "Auspex \u25cf\u25cf\u25cf"
 
 
 def test_layout_wraps_field_with_indent():
@@ -70,7 +78,7 @@ def test_layout_long_title_wraps():
 
 def test_render_uppercases_headings_only():
     out = render(layout(CARD, 32))
-    assert out.startswith("FIREBALL\n")
+    assert out.startswith("FIREBALL       LEVEL 3 EVOCATION\n")
     assert "Casting Time: 1 action" in out
     assert out.endswith("\n")
 
@@ -96,7 +104,7 @@ def test_bullet_continuation_is_indented():
 
     card = Card("T", fields=[("Source", "X")], sections=[("", ["- Ability Scores: Intelligence, Wisdom, Charisma"])])
     body = [line.text for line in layout(card, 32) if line.kind is LineKind.BODY]
-    assert body[0].startswith("- Ability Scores:")
+    assert body[0].startswith("\u2022 Ability Scores:")
     assert body[1].startswith("  ") and body[1].strip()
 
 

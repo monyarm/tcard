@@ -252,7 +252,7 @@ def test_discipline_power_by_path():
     assert len(matches) == 1
     card = disciplines.to_card(matches[0])
     assert card.title == "Scry the Soul"
-    assert card.subtitle == "Auspex 3"
+    assert card.subtitle == "Auspex " + "\u25cf" * 3
     fields = dict(card.fields)
     assert fields["Cost"] == "One Rouse Check"
     assert "Prerequisite" not in fields and "Amalgam" not in fields

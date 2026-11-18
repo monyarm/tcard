@@ -10,8 +10,12 @@ def test_fold_drops_unmappable():
 
 
 def test_fold_output_is_ascii():
-    out = fold("\u201cq\u201d \u00e9 \u00f1 \u2022")
+    out = fold("\u201cq\u201d \u00e9 \u00f1 \u2603")
     assert all(ord(c) < 128 for c in out)
+
+
+def test_fold_keeps_the_glyphs_the_printer_can_draw():
+    assert fold("\u2022 \u25cf\u25cb") == "\u2022 \u25cf\u25cb"
 
 
 def test_wrap_respects_width():

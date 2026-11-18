@@ -82,7 +82,7 @@ def text(markdown: str) -> str:
     """Inline wikitext to plain text."""
     markdown = COMMENT.sub("", markdown)
     markdown = REF.sub("", markdown)
-    markdown = DOT.sub(lambda m: dot_bar(int(m.group(1))), markdown)
+    markdown = DOT.sub(lambda m: dot_bar(int(m.group(1))) + " ", markdown)
     markdown = FILE.sub("", markdown)
     markdown = LINK.sub(lambda m: m.group(2) if m.group(2) else m.group(1), markdown)
     markdown = OUTER.sub(r"\1", markdown)

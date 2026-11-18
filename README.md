@@ -29,6 +29,12 @@ python3 -m tcard fireball | tp
 tcard [SYSTEM] [KIND] NAME...
 ```
 
+Cards are 32 columns wide. Text is folded to ASCII except for the glyphs the
+printer's font draws in exactly one cell: `•` list bullets and `●`/`○`
+level pips. A subtitle that fits on one line rides opposite the title
+(`FIREBALL       LEVEL 3 EVOCATION`) rather than taking its own row; a subtitle
+that repeats the title, or does not fit, keeps its own row below the rule.
+
 Leading parts may be omitted when the lookup is unambiguous:
 
 ```
