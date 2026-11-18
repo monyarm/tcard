@@ -12,7 +12,8 @@ ARTICLE = re.compile(r"<article\b.*?</article>", re.S)
 # Site furniture that sits inside the article body.
 JUNK = re.compile(
     r"(?i)^(join our discord|support us|become a patron|follow us|pathfinder .*copyright"
-    r"|open game license|compatibility with the pathfinder|authors?:|contents$)"
+    r"|copyright \d{4}|section \d+|open game license|compatibility with the pathfinder"
+    r"|authors?:|contents$)"
 )
 # d20pfsrd titles carry the feat/ability category in parentheses.
 CATEGORY = re.compile(
@@ -20,6 +21,19 @@ CATEGORY = re.compile(
     r"Grit|Panache|Performance|Racial|Story|Mythic|Local|Magic|EX|UC|UM|OA|APG|ACG|ARG)\)\s*$",
     re.I,
 )
+
+
+_COPYRIGHT = re.compile(r"(?i)\bcopyright \d{4}")
+
+
+def _clean(value: str) -> str:
+    """Cut the licence tail d20pfsrd appends to the last rules paragraph."""
+    cut = _COPYRIGHT.search(value)
+    if not cut:
+        return value
+    head = value[: cut.start()].strip()
+    # "Advanced Player's Guide. Copyright 2010, Paizo..." leaves only the book name.
+    return "" if len(head) < 60 else head
 
 
 def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
@@ -36,6 +50,12 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
     school = ""
 
     for tag, css, inner in html.blocks(markup):
+        if tag in ("h2", "h3", "h4"):
+            heading = html.text(inner).strip()
+            if heading:
+                sections.append((heading, []))
+            continue
+
         if tag == "table":
             grid = html.table(inner)
             if grid.rows:
@@ -56,16 +76,18 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
             continue
 
         if mode == "body":
-            prose = html.text(inner)
+            prose = _clean(html.text(inner))
             if prose and not JUNK.match(prose):
                 sections[-1][1].append(prose)
             continue
 
         for label, value in html.labelled(inner):
             if label is None:
-                if started and value and not JUNK.match(value):
-                    sections[-1][1].append(value)
+                text_part = _clean(value)
+                if started and text_part and not JUNK.match(text_part):
+                    sections[-1][1].append(text_part)
                 continue
+            value = _clean(value)
             if not value:
                 continue
             if label == "School":

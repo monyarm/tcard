@@ -56,13 +56,13 @@ def labelled(fragment: str) -> list[tuple[str | None, str]]:
     return out
 
 
-BLOCK = re.compile(r"<(p|table)\b([^>]*)>(.*?)</\1>", re.S | re.I)
+BLOCK = re.compile(r"<(p|table|h[2-4])\b([^>]*)>(.*?)</\1>", re.S | re.I)
 ROW = re.compile(r"<tr\b[^>]*>(.*?)</tr>", re.S | re.I)
 CELL = re.compile(r"<(t[hd])\b[^>]*>(.*?)</t[hd]>", re.S | re.I)
 
 
 def blocks(markup: str) -> list[tuple[str, str, str]]:
-    """Paragraphs and tables in document order: (tag, class, inner html)."""
+    """Paragraphs, headings and tables in document order: (tag, class, inner html)."""
     out = []
     for tag, attrs, inner in BLOCK.findall(markup):
         css = re.search(r'class="([^"]*)"', attrs)

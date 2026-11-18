@@ -94,6 +94,9 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   Familiars and animal companions are `bestiary/monster-listings/...` pages too,
   so `monster` covers them (`tcard pf1 monster owl`).
 
+  Archetypes print one section per class feature (`tcard pf1 archetype acrobat`
+  gives `Expert Acrobat (Ex)`, `Second Chance (Ex)`, …).
+
   Deities are the one kind that does not come from d20pfsrd: deity write-ups are
   Product Identity and stay off the site, so `deity` reads the Pathfinder 1e
   Archives of Nethys (`https://aonprd.com/DeitiesByGroup.aspx` for the ~460 names,

@@ -26,8 +26,26 @@ def test_fireball_card():
     assert fields["Saving Throw"] == "Reflex half"
     assert fields["Spell Resistance"] == "yes"
     assert fields["Level"] == "bloodrager 3, magus 3, sorcerer/wizard 3"
-    assert len(card.sections) == 1
+    headings = [heading for heading, _ in card.sections]
+    assert headings == ["", "Mythic Fireball"]
     assert card.sections[0][1][0].startswith("A fireball spell generates")
+    assert any("Augmented (6th)" in part for part in card.sections[1][1])
+
+
+def test_archetype_headings_become_sections():
+    markup = (
+        "<article><h1>Acrobat</h1>"
+        "<p>Intro prose.</p>"
+        "<h4><b>Expert Acrobat (Ex)</b></h4>"
+        "<p>At 1st level this ability replaces trapfinding.</p>"
+        "<h4><b>Second Chance (Ex)</b></h4>"
+        "<p>At 3rd level you may reroll.</p>"
+        "</article>"
+    )
+    card = spell.parse(markup)
+    headings = [heading for heading, _ in card.sections]
+    assert headings == ["", "Expert Acrobat (Ex)", "Second Chance (Ex)"]
+    assert card.sections[2][1] == ["At 3rd level you may reroll."]
 
 
 def test_fireball_renders_clean_at_32():
