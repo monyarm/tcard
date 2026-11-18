@@ -6,6 +6,7 @@ Tabletop cards on stdout, sized for a thermal printer.
 tcard dnd:5e spell fireball | tp
 tcard bag_of_holding | tp
 tcard rogue:assassin:assassinate | tp
+tcard pf1 spell fireball | tp
 ```
 
 ## Install (local)
@@ -44,7 +45,7 @@ Content kinds:
 spell  item  class_ability
 invocation  metamagic  maneuver  fighting_style  pact_boon  infusion
 rune  arcane_shot  elemental_discipline  renown_boon
-feat  condition  action
+feat  condition  action  background
 ```
 
 Names: use `_` for spaces and ignore apostrophes (`tasha's_hideous_laughter`).
@@ -64,6 +65,9 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 - `--all` lists every match; names collide (`Shield` is a spell and an item).
 - Data comes from `https://5e.tools/data` and is cached in `~/.cache/tcard/dnd-5e/`.
   Each kind is downloaded on first use. `--refresh` refetches.
+- Pathfinder 1e spells come from `https://www.d20pfsrd.com`: `tcard pf1 spell fireball`.
+  The first run walks 26 letter pages (~20 s) to build a name index; each spell
+  page is fetched once and cached in `~/.cache/tcard/pf1/`.
 - Long spells and features run to a second page; `tp` waits 3 s between pages.
 
 Config: `~/.config/tcard/config.toml`, optional.

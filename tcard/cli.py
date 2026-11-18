@@ -125,9 +125,12 @@ def _run(args) -> int:
 
 
 def _candidate_lines(pairs, available) -> list[str]:
-    return [
-        f"  {available[item].display(record)} ({item}, {record.get('source', '?')})" for item, record in pairs
-    ]
+    lines = []
+    for item, record in pairs:
+        source = record.get("source")
+        suffix = f", {source}" if source else ""
+        lines.append(f"  {available[item].display(record)} ({item}{suffix})")
+    return lines
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -144,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--all", action="store_true", help="list every match instead of printing one")
     parser.add_argument("--refresh", action="store_true", help="refetch the 5e.tools snapshot")
     parser.add_argument("--version", action="version", version=f"tcard {__version__}")
-    args = parser.parse_args(argv)
+    args = parser.parse_intermixed_args(argv)
 
     try:
         return _run(args)
