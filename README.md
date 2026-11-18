@@ -42,7 +42,7 @@ tcard fireball                   # both inferred
 Content kinds:
 
 ```
-spell  item  class_ability
+spell  item  class_ability  subclass
 invocation  metamagic  maneuver  fighting_style  pact_boon  infusion
 rune  arcane_shot  elemental_discipline  renown_boon
 feat  condition  action  background
@@ -56,6 +56,10 @@ tcard fighter:second_wind
 tcard rogue:assassin:assassinate
 tcard 5e class_ability champion:improved_critical
 ```
+
+A whole subclass prints every feature it grants, grouped by level:
+`tcard subclass assassin` (or `tcard subclass rogue:assassin` when the name is
+shared). `--brief` would print only the header, so leave it off for subclasses.
 
 Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 

@@ -4,7 +4,19 @@ from __future__ import annotations
 
 from ...model import Card
 from ..base import Kind
-from . import actions, backgrounds, conditions, feats, index, items, klass, optional, simple, spell
+from . import (
+    actions,
+    backgrounds,
+    conditions,
+    feats,
+    index,
+    items,
+    klass,
+    optional,
+    simple,
+    spell,
+    subclass,
+)
 
 SYSTEM_ID = "dnd:5e"
 ALIASES = ("5e",)
@@ -25,6 +37,7 @@ KINDS = {
     "item": items.ItemKind(),
     "background": simple.SimpleKind("background", backgrounds.records, backgrounds.to_card),
     "class_ability": klass.ClassAbilityKind(),
+    "subclass": subclass.SubclassKind(),
     **{kind_id: optional.OptionalKind(kind_id, codes) for kind_id, codes in optional.KINDS.items()},
     "feat": simple.SimpleKind("feat", feats.records, feats.to_card),
     "condition": simple.SimpleKind("condition", conditions.records, conditions.to_card),

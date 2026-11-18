@@ -183,7 +183,7 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
 
     for heading, body in sections:
         if heading:
-            if out:
+            if out and out[-1].kind is not LineKind.RULE:
                 out.append(Line(LineKind.RULE, "-" * cols))
             out += [Line(LineKind.SECTION, part) for part in wrap(heading, cols)]
         for paragraph in body:
