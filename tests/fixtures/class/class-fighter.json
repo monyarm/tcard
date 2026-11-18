@@ -1,0 +1,109 @@
+{
+ "classFeature": [
+  {
+   "name": "Second Wind",
+   "source": "PHB",
+   "page": 72,
+   "srd": true,
+   "basicRules": true,
+   "className": "Fighter",
+   "classSource": "PHB",
+   "level": 1,
+   "entries": [
+    "You have a limited well of stamina that you can draw on to protect yourself from harm. On your turn, you can use a bonus action to regain hit points equal to {@dice 1d10} + your fighter level.",
+    "Once you use this feature, you must finish a short or long rest before you can use it again."
+   ]
+  },
+  {
+   "name": "Action Surge",
+   "source": "PHB",
+   "page": 72,
+   "srd": true,
+   "basicRules": true,
+   "className": "Fighter",
+   "classSource": "PHB",
+   "level": 2,
+   "entries": [
+    "Starting at 2nd level, you can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action.",
+    "Once you use this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, you can use it twice before a rest, but only once on the same turn."
+   ]
+  },
+  {
+   "name": "Second Wind",
+   "source": "XPHB",
+   "page": 91,
+   "srd52": true,
+   "basicRules2024": true,
+   "className": "Fighter",
+   "classSource": "XPHB",
+   "level": 1,
+   "entries": [
+    "You have a limited well of physical and mental stamina that you can draw on. As a {@variantrule Bonus Action|XPHB}, you can use it to regain {@variantrule Hit Points|XPHB} equal to {@dice 1d10} plus your Fighter level.",
+    "You can use this feature twice. You regain one expended use when you finish a {@variantrule Short Rest|XPHB}, and you regain all expended uses when you finish a {@variantrule Long Rest|XPHB}.",
+    "When you reach certain Fighter levels, you gain more uses of this feature, as shown in the Second Wind column of the Fighter Features table."
+   ]
+  },
+  {
+   "name": "Action Surge",
+   "source": "XPHB",
+   "page": 91,
+   "srd52": true,
+   "basicRules2024": true,
+   "className": "Fighter",
+   "classSource": "XPHB",
+   "level": 2,
+   "entries": [
+    "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the {@action Magic|XPHB} action.",
+    "Once you use this feature, you can't do so again until you finish a {@variantrule Short Rest|XPHB|Short} or {@variantrule Long Rest|XPHB}. Starting at level 17, you can use it twice before a rest but only once on a turn."
+   ]
+  },
+  {
+   "name": "Action Surge",
+   "source": "XPHB",
+   "page": 91,
+   "srd52": true,
+   "basicRules2024": true,
+   "className": "Fighter",
+   "classSource": "XPHB",
+   "level": 17,
+   "entries": [
+    "You can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action, except the {@action Magic|XPHB} action.",
+    "Once you use this feature, you can't do so again until you finish a {@variantrule Short Rest|XPHB|Short} or {@variantrule Long Rest|XPHB}. Starting at level 17, you can use it twice before a rest but only once on a turn."
+   ]
+  }
+ ],
+ "subclassFeature": [
+  {
+   "name": "Improved Critical",
+   "source": "PHB",
+   "page": 72,
+   "srd": true,
+   "basicRules": true,
+   "className": "Fighter",
+   "classSource": "PHB",
+   "subclassShortName": "Champion",
+   "subclassSource": "PHB",
+   "level": 3,
+   "header": 1,
+   "entries": [
+    "Beginning when you choose this archetype at 3rd level, your weapon attacks score a critical hit on a roll of 19 or 20."
+   ]
+  },
+  {
+   "name": "Improved Critical",
+   "source": "XPHB",
+   "page": 96,
+   "srd52": true,
+   "basicRules2024": true,
+   "className": "Fighter",
+   "classSource": "XPHB",
+   "subclassShortName": "Champion",
+   "subclassSource": "XPHB",
+   "level": 3,
+   "header": 2,
+   "entries": [
+    "Your attack rolls with weapons and Unarmed Strikes can score a {@variantrule Critical Hit|XPHB} on a roll of 19 or 20 on the {@dice d20}."
+   ]
+  }
+ ]
+}

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...model import Card
 from ..base import Kind
-from . import index, spell
+from . import index, items, klass, spell
 
 SYSTEM_ID = "dnd:5e"
 ALIASES = ("5e",)
@@ -20,4 +20,4 @@ class SpellKind(Kind):
         return spell.to_card(record)
 
 
-KINDS = {"spell": SpellKind()}
+KINDS = {"spell": SpellKind(), "item": items.ItemKind(), "class_ability": klass.ClassAbilityKind()}

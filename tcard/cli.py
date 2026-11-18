@@ -28,6 +28,11 @@ def split_terms(terms: list[str], systems: list[str], kinds: list[str]) -> tuple
         elif ":" in token and token.split(":", 1)[0] in registry.families():
             known = ", ".join(registry.names()) or "none"
             raise TcardError(f"unknown system {token!r} (known: {known})", EXIT_USAGE)
+    if not kinds:
+        try:
+            kinds = list(registry.kinds(system))
+        except KeyError:
+            kinds = []
     kind = rest.pop(0) if rest and rest[0] in kinds else None
     name = " ".join(rest).strip()
     if not name:

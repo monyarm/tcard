@@ -1,0 +1,321 @@
+{
+ "baseitem": [
+  {
+   "name": "Longsword",
+   "source": "PHB",
+   "page": 149,
+   "srd": true,
+   "basicRules": true,
+   "referenceSources": [
+    "CM",
+    "CoS",
+    "DSotDQ",
+    "GoS",
+    "IDRotF",
+    "KftGV",
+    "LK",
+    "LoX",
+    "PaBTSO",
+    "QftIS",
+    "RMBRE",
+    "TftYP-TSC",
+    "US",
+    "VEoR",
+    "WDH",
+    "WDMM"
+   ],
+   "reprintedAs": [
+    "Longsword|XPHB"
+   ],
+   "edition": "classic",
+   "type": "M",
+   "rarity": "none",
+   "weight": 3,
+   "value": 1500,
+   "weaponCategory": "martial",
+   "property": [
+    "V"
+   ],
+   "dmg1": "1d8",
+   "dmgType": "S",
+   "dmg2": "1d10",
+   "sword": true,
+   "weapon": true
+  },
+  {
+   "name": "Longsword",
+   "source": "XPHB",
+   "page": 215,
+   "srd52": true,
+   "basicRules2024": true,
+   "referenceSources": [
+    "HotB"
+   ],
+   "edition": "one",
+   "type": "M|XPHB",
+   "rarity": "none",
+   "weight": 3,
+   "value": 1500,
+   "weaponCategory": "martial",
+   "property": [
+    "V|XPHB"
+   ],
+   "mastery": [
+    "Sap|XPHB"
+   ],
+   "dmg1": "1d8",
+   "dmgType": "S",
+   "dmg2": "1d10",
+   "sword": true,
+   "weapon": true,
+   "hasFluffImages": true
+  },
+  {
+   "name": "Plate Armor",
+   "source": "PHB",
+   "page": 145,
+   "srd": true,
+   "basicRules": true,
+   "referenceSources": [
+    "BGDIA",
+    "GoS",
+    "PaBTSO",
+    "QftIS",
+    "TftYP-AtG",
+    "US"
+   ],
+   "reprintedAs": [
+    "Plate Armor|XPHB"
+   ],
+   "edition": "classic",
+   "type": "HA",
+   "rarity": "none",
+   "weight": 65,
+   "value": 150000,
+   "ac": 18,
+   "strength": "15",
+   "armor": true,
+   "stealth": true,
+   "entries": [
+    "Plate consists of shaped, interlocking metal plates to cover the entire body. A suit of plate includes gauntlets, heavy leather boots, a visored helmet, and thick layers of padding underneath the armor. Buckles and straps distribute the weight over the body."
+   ]
+  },
+  {
+   "name": "Plate Armor",
+   "source": "XPHB",
+   "page": 219,
+   "srd52": true,
+   "basicRules2024": true,
+   "edition": "one",
+   "type": "HA|XPHB",
+   "rarity": "none",
+   "weight": 65,
+   "value": 150000,
+   "ac": 18,
+   "strength": "15",
+   "armor": true,
+   "stealth": true,
+   "hasFluffImages": true
+  }
+ ],
+ "itemType": [
+  {
+   "abbreviation": "$",
+   "name": "Treasure"
+  },
+  {
+   "abbreviation": "$A",
+   "name": "Treasure (Art Object)"
+  },
+  {
+   "abbreviation": "$C",
+   "name": "Treasure (Coinage)"
+  },
+  {
+   "abbreviation": "$G",
+   "name": "Treasure (Gemstone)"
+  },
+  {
+   "abbreviation": "A",
+   "name": "Ammunition"
+  },
+  {
+   "abbreviation": "AF",
+   "name": "Ammunition"
+  },
+  {
+   "abbreviation": "AIR",
+   "name": "Vehicle (Air)"
+  },
+  {
+   "abbreviation": "AT",
+   "name": "Artisan's Tools"
+  },
+  {
+   "abbreviation": "EXP",
+   "name": "Explosive"
+  },
+  {
+   "abbreviation": "FD",
+   "name": "Food and Drink"
+  },
+  {
+   "abbreviation": "G",
+   "name": "Adventuring Gear"
+  },
+  {
+   "abbreviation": "GS",
+   "name": "Gaming Set"
+  },
+  {
+   "abbreviation": "GV",
+   "name": "Generic Variant"
+  },
+  {
+   "abbreviation": "HA",
+   "name": "Heavy Armor"
+  },
+  {
+   "abbreviation": "INS",
+   "name": "Instrument"
+  },
+  {
+   "abbreviation": "LA",
+   "name": "Light Armor"
+  },
+  {
+   "abbreviation": "M",
+   "name": "Melee Weapon"
+  },
+  {
+   "abbreviation": "MA",
+   "name": "Medium Armor"
+  },
+  {
+   "abbreviation": "MNT",
+   "name": "Mount"
+  },
+  {
+   "abbreviation": "OTH",
+   "name": "Other"
+  },
+  {
+   "abbreviation": "P",
+   "name": "Potion"
+  },
+  {
+   "abbreviation": "R",
+   "name": "Ranged Weapon"
+  },
+  {
+   "abbreviation": "RD",
+   "name": "Rod"
+  },
+  {
+   "abbreviation": "RG",
+   "name": "Ring"
+  },
+  {
+   "abbreviation": "S",
+   "name": "Shield"
+  },
+  {
+   "abbreviation": "SC",
+   "name": "Scroll"
+  },
+  {
+   "abbreviation": "SCF",
+   "name": "Spellcasting Focus"
+  },
+  {
+   "abbreviation": "SHP",
+   "name": "Vehicle (Water)"
+  },
+  {
+   "abbreviation": "SPC",
+   "name": "Vehicle (Space)"
+  },
+  {
+   "abbreviation": "T",
+   "name": "Tool"
+  },
+  {
+   "abbreviation": "TAH",
+   "name": "Tack and Harness"
+  },
+  {
+   "abbreviation": "TB",
+   "name": "Trade Bar"
+  },
+  {
+   "abbreviation": "TG",
+   "name": "Trade Good"
+  },
+  {
+   "abbreviation": "VEH",
+   "name": "Vehicle (Land)"
+  },
+  {
+   "abbreviation": "WD",
+   "name": "Wand"
+  }
+ ],
+ "itemProperty": [
+  {
+   "abbreviation": "2H",
+   "name": "Two-Handed"
+  },
+  {
+   "abbreviation": "A",
+   "name": "Ammunition"
+  },
+  {
+   "abbreviation": "AF",
+   "name": "Ammunition"
+  },
+  {
+   "abbreviation": "BF",
+   "name": "Burst Fire"
+  },
+  {
+   "abbreviation": "Evo",
+   "name": "Evolving Item"
+  },
+  {
+   "abbreviation": "F",
+   "name": "Finesse"
+  },
+  {
+   "abbreviation": "H",
+   "name": "Heavy"
+  },
+  {
+   "abbreviation": "L",
+   "name": "Light"
+  },
+  {
+   "abbreviation": "LD",
+   "name": "Loading"
+  },
+  {
+   "abbreviation": "R",
+   "name": "Reach"
+  },
+  {
+   "abbreviation": "RLD",
+   "name": "Reload"
+  },
+  {
+   "abbreviation": "T",
+   "name": "Thrown"
+  },
+  {
+   "abbreviation": "V",
+   "name": "Versatile"
+  },
+  {
+   "abbreviation": "Vst",
+   "name": "Vestige of Divergence"
+  }
+ ]
+}
