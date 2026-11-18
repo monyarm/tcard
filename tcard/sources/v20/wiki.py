@@ -215,9 +215,36 @@ def paragraphs(lines: list[str]) -> list[str]:
     return [part for part in out if part]
 
 
+def _split_top(line: str, separator: str) -> list[str]:
+    """Split on `separator`, ignoring pipes inside `[[links]]` and `{{templates}}`.
+
+    A cell like `[[Humanity (VTM)|Humanity]]` owns a pipe of its own; splitting
+    on it would shift every later column of the table.
+    """
+    parts: list[str] = []
+    depth = start = index = 0
+    while index < len(line):
+        if line.startswith(("[[", "{{"), index):
+            depth += 1
+            index += 2
+            continue
+        if line.startswith(("]]", "}}"), index):
+            depth = max(0, depth - 1)
+            index += 2
+            continue
+        if depth == 0 and line.startswith(separator, index):
+            parts.append(line[start:index])
+            index += len(separator)
+            start = index
+            continue
+        index += 1
+    parts.append(line[start:])
+    return parts
+
+
 def _cell(raw: str) -> str:
     """A cell may carry attributes before its text: `style="x" | Value`."""
-    return text(raw.split("|", 1)[-1] if "|" in raw else raw)
+    return text(_split_top(raw, "|")[-1])
 
 
 def tables(markdown: str) -> list[tuple[str, Table]]:
@@ -248,9 +275,9 @@ def tables(markdown: str) -> list[tuple[str, Table]]:
                 current = []
             elif stripped.startswith("!"):
                 header = True
-                current.extend(_cell(cell) for cell in stripped[1:].split("!!"))
+                current.extend(_cell(cell) for cell in _split_top(stripped[1:], "!!"))
             elif stripped.startswith("|"):
-                current.extend(_cell(cell) for cell in stripped[1:].split("||"))
+                current.extend(_cell(cell) for cell in _split_top(stripped[1:], "||"))
             elif current and stripped:
                 current[-1] = f"{current[-1]} {text(stripped)}".strip()
             index += 1

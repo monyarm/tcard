@@ -9,7 +9,7 @@ from unittest import mock
 from tcard.render.layout import layout
 from tcard.render.text import render
 from tcard.sources import registry
-from tcard.sources.v20 import advantages, cache, disciplines, kindred, paths, rituals
+from tcard.sources.v20 import advantages, cache, disciplines, kindred, paths, rituals, wiki
 
 FIXTURES = Path(__file__).parent / "fixtures" / "v20"
 
@@ -125,6 +125,17 @@ def test_ritual_table_format() -> None:
     assert card.subtitle == "Thaumaturgy Ritual"
     assert dict(card.fields)["Ingredients"] == "A lock of hair and a black silk cord"
     assert card.sections[0][1] == ["The target cannot speak ill about the caster."]
+
+
+def test_ritual_table_keeps_pipes_inside_links() -> None:
+    markup = ("{| class=\"wikitable\"\n! Name\n! Ingredients\n! Effect\n! Developer\n|-\n"
+              "|'''Heart of Stone'''\n| A stone floor, a candle\n"
+              "| The heart becomes stone, costing the caster [[Humanity (VTM)|Humanity]].\n"
+              "|[[Clan (VTM)|Clan]] [[Tremere (VTM)|Tremere]]\n|}\n")
+    table = wiki.tables(markup)[0][1]
+    assert table.rows[1] == ["Heart of Stone", "A stone floor, a candle",
+                            "The heart becomes stone, costing the caster Humanity.",
+                            "Clan Tremere"]
 
 
 def test_ritual_bullet_format_and_path_lookup() -> None:
