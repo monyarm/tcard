@@ -5,6 +5,7 @@ import unittest.mock as mock
 from tcard import cli
 from tcard.config import Config
 from tcard.model import Card, LineKind
+from tcard.sources.base import Kind
 
 RECORDS = [
     {"name": "Fireball", "source": "XPHB"},
@@ -14,7 +15,7 @@ RECORDS = [
 ]
 
 
-class FakeKind:
+class FakeKind(Kind):
     id = "spell"
 
     def records(self, refresh: bool = False):
@@ -27,7 +28,7 @@ class FakeKind:
 def run(argv):
     out, err = io.StringIO(), io.StringIO()
     with mock.patch.object(cli.registry, "kinds", lambda system: {"spell": FakeKind()}), mock.patch.object(
-        cli.config, "load", lambda: Config()
+        cli.config, "load", lambda: Config(kinds=["spell"])
     ), contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
         code = cli.main(argv)
     return code, out.getvalue(), err.getvalue()
@@ -131,9 +132,9 @@ def test_main_explicit_system_and_kind():
 
 
 def test_unknown_system_selector_is_usage_error():
-    code, _, err = run(["pf:2e", "fireball"])
+    code, _, err = run(["dnd:9e", "fireball"])
     assert code == 2
-    assert "unknown system 'pf:2e'" in err and "dnd:5e" in err
+    assert "unknown system 'dnd:9e'" in err and "dnd:5e" in err
 
 
 def test_exit_codes_map():

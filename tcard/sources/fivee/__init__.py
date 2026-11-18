@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 from ...model import Card
+from ..base import Kind
 from . import index, spell
 
 SYSTEM_ID = "dnd:5e"
+ALIASES = ("5e",)
 
 
-class SpellKind:
+class SpellKind(Kind):
     id = "spell"
 
     def records(self, refresh: bool = False) -> list[dict]:

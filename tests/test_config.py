@@ -11,7 +11,7 @@ def test_missing_config_uses_defaults():
         config = load()
         assert (config.systems, config.kinds, config.prefer, config.cols) == (
             ["dnd:5e"],
-            ["spell"],
+            [],
             ["XPHB", "PHB"],
             32,
         )

@@ -7,6 +7,7 @@ import sys
 
 from . import __version__, config
 from .errors import TcardError
+from .names import normalize
 from .render.layout import layout
 from .render.text import render
 from .sources import registry
@@ -18,13 +19,15 @@ EXIT_USAGE = 2
 
 def split_terms(terms: list[str], systems: list[str], kinds: list[str]) -> tuple[str, str | None, str]:
     rest = list(terms)
-    system = systems[0] if systems else "dnd:5e"
-    if rest and ":" in rest[0]:
-        selector = rest.pop(0)
-        if selector not in systems:
-            known = ", ".join(systems) or "none"
-            raise TcardError(f"unknown system {selector!r} (known: {known})", EXIT_USAGE)
-        system = selector
+    system = registry.resolve(systems[0]) if systems else "dnd:5e"
+    if rest:
+        token = rest[0]
+        if registry.resolve(token) in registry.SYSTEMS:
+            system = registry.resolve(token)
+            rest.pop(0)
+        elif ":" in token and token.split(":", 1)[0] in registry.families():
+            known = ", ".join(registry.names()) or "none"
+            raise TcardError(f"unknown system {token!r} (known: {known})", EXIT_USAGE)
     kind = rest.pop(0) if rest and rest[0] in kinds else None
     name = " ".join(rest).strip()
     if not name:
@@ -73,36 +76,30 @@ def _run(args) -> int:
             raise TcardError(f"unknown kind {item!r} for {system}", EXIT_USAGE)
 
     records = {item: available[item].records(refresh=args.refresh) for item in order}
-    wanted = name.casefold()
-
-    def exact(item: str) -> list[dict]:
-        return [record for record in records[item] if str(record.get("name", "")).casefold() == wanted]
-
-    def prefix(item: str) -> list[dict]:
-        return [record for record in records[item] if str(record.get("name", "")).casefold().startswith(wanted)]
+    wanted = normalize(name)
 
     if args.all:
-        found = [(item, record) for item in order for record in find(records[item], name)]
+        found = [(item, record) for item in order for record in available[item].matches(records[item], name)]
         if not found:
             raise TcardError(f"no match for {name!r}", EXIT_NO_MATCH)
-        _report(_candidate_lines(found), sys.stdout)
+        _report(_candidate_lines(found, available), sys.stdout)
         return EXIT_OK
 
     pool: list[dict] = []
     chosen = ""
     for item in order:
-        hits = exact(item)
+        hits = [record for record in records[item] if available[item].key(record) == wanted]
         if hits:
             pool, chosen = hits, item
             break
 
     if not pool:
-        hits = [(item, record) for item in order for record in prefix(item)]
-        distinct = {str(record.get("name", "")).casefold() for _, record in hits}
+        hits = [(item, record) for item in order for record in available[item].matches(records[item], name)]
+        distinct = {available[item].display(record).casefold() for item, record in hits}
         if not distinct:
             raise TcardError(f"no match for {name!r}", EXIT_NO_MATCH)
         if len(distinct) > 1:
-            _report([f"tcard: {name!r} is ambiguous:"] + _candidate_lines(hits), sys.stderr)
+            _report([f"tcard: {name!r} is ambiguous:"] + _candidate_lines(hits, available), sys.stderr)
             return EXIT_NO_MATCH
         pool = [record for _, record in hits]
         chosen = hits[0][0]
@@ -122,8 +119,10 @@ def _run(args) -> int:
     return EXIT_OK
 
 
-def _candidate_lines(pairs) -> list[str]:
-    return [f"  {record.get('name')} ({item}, {record.get('source', '?')})" for item, record in pairs]
+def _candidate_lines(pairs, available) -> list[str]:
+    return [
+        f"  {available[item].display(record)} ({item}, {record.get('source', '?')})" for item, record in pairs
+    ]
 
 
 def main(argv: list[str] | None = None) -> int:
