@@ -254,10 +254,10 @@ def test_weapon_prints_the_book_category_and_firing_modes():
     assert fields["Minimum BOD"] == "9"
 
 
-def test_cyberware_exotic_bodysculpt_reads_as_bioware():
+def test_cyberware_exotic_bodysculpt_keeps_its_type_name():
     card = cards.cyberware({"name": "Fangs", "type": "EXOTIC BODYSCULPT",
                             "cost": 500, "hc": "1", "surgery": "M"})
-    assert card.subtitle == "Bioware"
+    assert card.subtitle == "Exotic Bodysculpt"
     assert dict(card.fields)["Surgery"] == "Minor"
 
 
@@ -305,3 +305,32 @@ def test_datafortress_rows_pair_stats_with_effect_text():
     assert len(items) == 1
     assert items[0] == {"name": "Neural Bridge", "cost": "$500", "hc": "2",
                         "surgery": "Major", "effect": "Works with both hands."}
+
+
+def test_datafortress_catalogue_splits_name_stats_from_section():
+    from tcard.sources.cp import datafortress
+    markup = ("<p>COSMETIC CYBERWARE</p>"
+              "<p>Biomonitor</p>"
+              "<p>N +2 to Resist Torture &amp; Drugs 100 1 Chr1</p>"
+              "<p>Advanced Biomonitor</p>"
+              "<p>MA Reads vitals at range 200 (1d6/2)-1 Chr1</p>")
+    items = datafortress.parse_stats(markup)
+    assert items[0] == {"name": "Biomonitor", "cost": "100", "hc": "1",
+                        "surgery": "None", "effect": "+2 to Resist Torture & Drugs",
+                        "type": "COSMETIC CYBERWARE"}
+    assert items[1]["surgery"] == "Major"
+    assert items[1]["hc"] == "(1d6/2)-1"
+    assert items[1]["type"] == "COSMETIC CYBERWARE"
+
+
+def test_cyberware_loader_adds_catalogue_only_items():
+    import tcard.sources.cp as cp
+    from tcard.sources.cp import datafortress
+    rows = [{"name": "Standard Hand", "type": "CYBERHAND", "hc": "1"}]
+    extra = [{"name": "Spyke Body Plating", "type": "HAND-TO-HAND CYBERWEAPONS",
+              "cost": "400+", "hc": "1-3", "surgery": "None", "effect": "Grapple 1d3"}]
+    with mock.patch.object(cp, "_list", lambda *_: lambda refresh=False: list(rows)), \
+         mock.patch.object(datafortress, "records", lambda refresh=False: extra):
+        merged = cp._cyberware()
+    assert [row["name"] for row in merged] == ["Standard Hand", "Spyke Body Plating"]
+    assert merged[1]["notes"] == "Grapple 1d3"

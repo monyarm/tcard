@@ -5,7 +5,7 @@ from __future__ import annotations
 from ...model import Card
 from ...names import normalize
 from ..base import Kind
-from . import cache, cards
+from . import cache, cards, datafortress
 
 SYSTEM_ID = "cp:2020"
 ALIASES = ("cp2020", "cp")
@@ -86,6 +86,20 @@ def _weapons(refresh: bool = False) -> list[dict]:
     return out
 
 
+def _cyberware(refresh: bool = False) -> list[dict]:
+    """Cybersmily's list, plus the datafortress catalogue items it lacks."""
+    rows = _list("data/cyberware")(refresh)
+    seen = {normalize(str(row.get("name", ""))) for row in rows}
+    for item in datafortress.records(refresh):
+        key = normalize(item["name"])
+        if key and key not in seen:
+            seen.add(key)
+            rows.append({"name": item["name"], "type": item.get("type", ""),
+                         "cost": item.get("cost"), "hc": item.get("hc"),
+                         "surgery": item.get("surgery"), "notes": item.get("effect")})
+    return rows
+
+
 def _gear(category: str):
     def load(refresh: bool = False) -> list[dict]:
         return [row for row in cache.data("data/cp2020equipment", refresh)
@@ -96,7 +110,7 @@ def _gear(category: str):
 KINDS: dict[str, Kind] = {
     "weapon": JsonKind("weapon", _weapons, cards.weapon),
     "armor": JsonKind("armor", _list("data/cp2020armor"), cards.armor),
-    "cyberware": JsonKind("cyberware", _list("data/cyberware"), cards.cyberware),
+    "cyberware": JsonKind("cyberware", _cyberware, cards.cyberware),
     "program": JsonKind("program", _list("apps/nrmap/cp2020programs"), cards.program),
     "vehicle": JsonKind("vehicle", _list("apps/maxmetal/cp2020-vehicles"), cards.vehicle),
     "martial_art": JsonKind("martial_art", _list("wpns/cp2020martialarts"), cards.martial_art),

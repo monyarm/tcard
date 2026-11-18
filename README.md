@@ -210,10 +210,12 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 
   Weapon stat blocks have no prose in the data, so descriptions are pulled from
   the Cyberpunk wiki (`cyberpunk.fandom.com`); weapons the wiki does not cover
-  print stats only. Cyberware without a Humanity Cost or Surgery code in the
-  JSON falls back to the `bio.htm` bioware tables on `datafortress2020.com`
-  (expired certificate, read with verification off). Hyphens are treated as
-  spaces, so `hip_mounted_powerpack` finds `Hip-Mounted Powerpack`.
+  print stats only. Cyberware is merged with two `datafortress2020.com`
+  pages: the bioware tables (`bio.htm`) and the illustrated cybernetics
+  catalogue (`ultrachrome/Cyberware.html`), which together add 243 items the
+  JSON lacks and fill missing Humanity Cost, surgery and effect text (expired
+  certificate, read with verification off). Hyphens are treated as spaces, so
+  `hip_mounted_powerpack` finds `Hip-Mounted Powerpack`.
 
   Cards print every field the record carries: weapons show the book category,
   subcategory, firing modes, burst, armour piercing, thrown and minimum BOD;

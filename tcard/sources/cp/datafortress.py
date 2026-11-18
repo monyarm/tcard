@@ -1,4 +1,8 @@
-"""datafortress2020 bio.htm: humanity cost, surgery and effect prose."""
+"""datafortress2020: humanity cost, surgery and effect prose for CP2020 ware.
+
+Two pages: `bio.htm` (bioware tables) and `ultrachrome/Cyberware.html`, the
+illustrated catalogue of every cybernetic item printed for the game.
+"""
 
 from __future__ import annotations
 
@@ -8,20 +12,25 @@ import re
 from ...names import normalize
 from . import cache
 
-PAGE = "https://www.datafortress2020.com/bio.htm"
+BIO = "https://www.datafortress2020.com/bio.htm"
+PAGE = "https://www.datafortress2020.com/ultrachrome/Cyberware.html"
 _ROW = re.compile(r"<tr[^>]*>(.*?)</tr>", re.S | re.I)
 _CELL = re.compile(r"<t[dh][^>]*>(.*?)</t[dh]>", re.S | re.I)
+_PARA = re.compile(r"<p\b[^>]*>(.*?)</p>", re.S | re.I)
 _TAG = re.compile(r"<[^>]+>")
+_REF = re.compile(r"^[A-Za-z]{2,5}\d{0,2}$")
+_NUM = re.compile(r"^[\d.+\-/()%d]+[A-Za-z%]{0,2}$")
+SURGERY = {"N": "None", "M": "Minor", "MA": "Major", "CR": "Critical"}
 _INDEX: dict[str, dict] | None = None
 
 
 def _clean(cell: str) -> str:
-    text = html.unescape(_TAG.sub("", cell))
+    text = html.unescape(_TAG.sub("", cell)).replace("\xa0", " ")
     return re.sub(r"\s+", " ", text).strip()
 
 
 def parse(markup: str) -> list[dict]:
-    """Items as {name, cost, hc, surgery, effect} from the row pairs."""
+    """Bioware items as {name, cost, hc, surgery, effect} from the row pairs."""
     out: list[dict] = []
     pending: dict | None = None
     for row in _ROW.findall(markup):
@@ -38,10 +47,59 @@ def parse(markup: str) -> list[dict]:
     return [item for item in out if item["name"]]
 
 
+def parse_stats(markup: str) -> list[dict]:
+    """Cyberware items from the catalogue's name/stats paragraph pairs.
+
+    A stats paragraph ends with `cost HC book`, e.g.
+    `CR +2 to Death Saves for Torso wounds 1300 1d6+4 Chr1`.
+    """
+    out: list[dict] = []
+    previous = ""
+    section = "Cyberware"
+    for paragraph in (_clean(part) for part in _PARA.findall(markup)):
+        if not paragraph:
+            continue
+        if paragraph.isupper() and len(paragraph) < 48:
+            section = paragraph
+            previous = ""
+            continue
+        tokens = paragraph.split()
+        if (len(tokens) >= 4 and _REF.match(tokens[-1])
+                and _NUM.match(tokens[-2]) and _NUM.match(tokens[-3])):
+            body = tokens[:-3]
+            code = body[0].rstrip(".")
+            surgery = SURGERY.get(code, "")
+            if surgery:
+                body = body[1:]
+            out.append({
+                "name": previous,
+                "cost": tokens[-3],
+                "hc": tokens[-2],
+                "surgery": surgery,
+                "effect": " ".join(body).strip(" -"),
+                "type": section,
+            })
+        previous = paragraph
+    return [item for item in out if item["name"]]
+
+
 def records(refresh: bool = False) -> list[dict]:
     global _INDEX
     if refresh or _INDEX is None:
-        _INDEX = {normalize(item["name"]): item for item in parse(cache.raw(PAGE, refresh))}
+        items = parse(cache.raw(BIO, refresh)) + parse_stats(cache.raw(PAGE, refresh))
+        _INDEX = {}
+        for item in items:
+            if not item["name"]:
+                continue
+            key = normalize(item["name"])
+            existing = _INDEX.get(key)
+            if existing is None:
+                _INDEX[key] = dict(item)
+                continue
+            # Both pages overlap; keep whichever field each one actually fills.
+            for field in ("cost", "hc", "surgery", "effect"):
+                if not existing.get(field):
+                    existing[field] = item.get(field)
     return list(_INDEX.values())
 
 

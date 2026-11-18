@@ -16,8 +16,6 @@ LOCATIONS = {"torso": "Torso", "head": "Head", "rarm": "Right Arm", "larm": "Lef
              "rleg": "Right Leg", "lleg": "Left Leg", "llarm": "Left Arm"}
 MANOEUVRES = ("strike", "punch", "kick", "disarm", "sweep", "block", "dodge",
               "grapple", "throw", "hold", "choke", "escape", "ram")
-# Biosculpting is bioware; it lives in the one cyberware kind.
-CYBER_TYPES = {"EXOTIC BODYSCULPT": "Bioware", "BIOWARE": "Bioware"}
 
 
 # Some rows carry the unit in a numeric field; the unit alone is no value.
@@ -127,11 +125,12 @@ def cyberware(record: dict) -> Card:
         if value is None and key not in record:
             continue
         text = _code(value, table) if table else str(value or "").strip()
-        fields.append((label, text or "None"))
+        if text:
+            fields.append((label, text))
     _add(fields, "Option Slots", record.get("numOptions"))
     notes = str(record.get("notes") or "").strip() or str(extra.get("effect") or "").strip()
-    kind = str(record.get("type") or "Cyberware").strip().upper()
-    subtitle = CYBER_TYPES.get(kind, kind.title())
+    # Biosculpting is a kind of bioware, but it keeps its own type name.
+    subtitle = str(record.get("type") or "Cyberware").strip().title()
     return Card(_named(record), subtitle, fields, [("", [notes])] if notes else [])
 
 
