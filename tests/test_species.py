@@ -67,3 +67,23 @@ def test_cards_render_inside_32_columns():
 def test_registry_knows_both_kinds():
     kinds = registry.kinds("dnd:5e")
     assert "species" in kinds and "variant_rule" in kinds
+
+
+def test_subrace_composes_with_its_race():
+    records = _with_data(species.records)
+    card = species.to_card(_record(records, "Hill Dwarf", "PHB"))
+    fields = dict(card.fields)
+    assert card.subtitle == "Dwarf Subrace"
+    assert fields["Ability Scores"] == "Con +2, Wis +1"
+    assert fields["Darkvision"] == "60 ft."
+    assert fields["Resistances"] == "poison"
+    headings = [heading for heading, _ in card.sections]
+    assert "Dwarven Resilience" in headings and "Dwarven Toughness" in headings
+
+
+def test_subrace_is_addressable_through_its_race():
+    kind = species.SpeciesKind()
+    records = _with_data(kind.records)
+    found = kind.matches(records, "dwarf:hill")
+    assert [r["name"] for r in found] == ["Hill Dwarf"]
+    assert [r["name"] for r in kind.matches(records, "hill_dwarf")] == ["Hill Dwarf"]

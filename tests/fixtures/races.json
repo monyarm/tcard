@@ -223,6 +223,56 @@
      ]
     }
    ]
+  },
+  {
+   "name": "Dwarf",
+   "source": "PHB",
+   "page": 20,
+   "size": [
+    "M"
+   ],
+   "speed": 25,
+   "ability": [
+    {
+     "con": 2
+    }
+   ],
+   "darkvision": 60,
+   "resist": [
+    "poison"
+   ],
+   "entries": [
+    {
+     "type": "entries",
+     "name": "Dwarven Resilience",
+     "entries": [
+      "You have advantage on saving throws against poison, and you have resistance against poison damage."
+     ]
+    }
+   ]
+  }
+ ],
+ "subrace": [
+  {
+   "name": "Hill",
+   "raceName": "Dwarf",
+   "raceSource": "PHB",
+   "source": "PHB",
+   "page": 20,
+   "ability": [
+    {
+     "wis": 1
+    }
+   ],
+   "entries": [
+    {
+     "type": "entries",
+     "name": "Dwarven Toughness",
+     "entries": [
+      "Your hit point maximum increases by 1, and it increases by 1 every time you gain a level."
+     ]
+    }
+   ]
   }
  ]
 }

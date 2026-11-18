@@ -42,7 +42,7 @@ KINDS = {
     "class_ability": klass.ClassAbilityKind(),
     "subclass": subclass.SubclassKind(),
     "monster": simple.SimpleKind("monster", monster.records, monster.to_card),
-    "species": simple.SimpleKind("species", species.records, species.to_card),
+    "species": species.SpeciesKind(),
     "variant_rule": simple.SimpleKind("variant_rule", rules.records, rules.to_card),
     **{kind_id: optional.OptionalKind(kind_id, codes) for kind_id, codes in optional.KINDS.items()},
     "feat": simple.SimpleKind("feat", feats.records, feats.to_card),
