@@ -69,7 +69,10 @@ def _run(args) -> int:
     if not 8 <= cfg.cols <= 200:
         raise TcardError(f"cols must be between 8 and 200, got {cfg.cols}", EXIT_USAGE)
 
+    explicit = bool(args.terms) and registry.resolve(args.terms[0]) in registry.SYSTEMS
     system, kind, name = split_terms(args.terms, cfg.systems, cfg.kinds)
+    if args.all and not explicit:
+        return _all_systems(args, kind, name)
     try:
         available = registry.kinds(system)
     except KeyError:
@@ -124,11 +127,43 @@ def _run(args) -> int:
     return EXIT_OK
 
 
+def _all_systems(args, kind: str | None, name: str) -> int:
+    """--all without a system searches every system, so nothing hides."""
+    found: list[str] = []
+    failures: list[str] = []
+    for system in registry.systems():
+        available = registry.kinds(system)
+        for item, impl in available.items():
+            if kind and item != kind:
+                continue
+            try:
+                records = impl.records(refresh=args.refresh)
+            except TcardError as exc:
+                failures.append(f"tcard: {system} {item} unavailable: {exc}")
+                continue
+            for record in impl.matches(records, name):
+                suffix = f", {code}" if (code := _source(record)) else ""
+                found.append(f"  {impl.display(record)} ({system} {item}{suffix})")
+    if not found:
+        for line in failures:
+            print(line, file=sys.stderr)
+        raise TcardError(f"no match for {name!r} in any system", EXIT_NO_MATCH)
+    print("\n".join(found))
+    return EXIT_OK
+
+
+def _source(record: dict) -> str:
+    """Book code of a record; CP2020 writes {"book", "page"} instead of a string."""
+    source = record.get("source")
+    if isinstance(source, dict):
+        return str(source.get("book") or "")
+    return str(source or "")
+
+
 def _candidate_lines(pairs, available) -> list[str]:
     lines = []
     for item, record in pairs:
-        source = record.get("source")
-        suffix = f", {source}" if source else ""
+        suffix = f", {code}" if (code := _source(record)) else ""
         lines.append(f"  {available[item].display(record)} ({item}{suffix})")
     return lines
 

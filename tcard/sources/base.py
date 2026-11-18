@@ -26,4 +26,9 @@ class Kind:
         exact = [record for record in records if self.key(record) == wanted]
         if exact:
             return exact
-        return [record for record in records if self.key(record).startswith(wanted)]
+        prefix = [record for record in records if self.key(record).startswith(wanted)]
+        if prefix:
+            return prefix
+        # Last resort, so "palm" finds "High Five, AKA The Palm Bomb". Several
+        # hits still land in the ambiguous path, never a silent pick.
+        return [record for record in records if wanted in self.key(record)]

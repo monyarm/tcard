@@ -151,6 +151,20 @@ def test_cyberware_and_gear_keep_notes():
     assert item.sections[0][1][0] == "Waterproof."
 
 
+def test_cyberware_keeps_zero_hc_and_none_surgery():
+    # "0" humanity cost and "None" surgery are real values, not missing ones.
+    ware = cards.cyberware({"type": "CYBERLIMB", "subtype": "BUILTIN", "name": "Magnetic Hands/Feet",
+                            "notes": "For easier Zero-Gee movement", "cost": 60, "hc": "0", "surgery": "N"})
+    assert fields(ware)["Humanity Cost"] == "0"
+    assert fields(ware)["Surgery"] == "None"
+    assert fields(ware)["Subtype"] == "Builtin"
+
+
+def test_surgery_codes_map_to_words():
+    ware = cards.cyberware({"name": "X", "cost": 1, "hc": "2", "surgery": "CRx2"})
+    assert fields(ware)["Surgery"] == "Critical x2"
+
+
 def test_role_lists_salary_and_skills():
     card = cards.role(ROLE)
     assert fields(card)["Special Ability"] == "Combat Sense"

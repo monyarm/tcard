@@ -114,6 +114,32 @@ def test_main_source_flag():
     assert "PHB" in out
 
 
+def test_matches_falls_back_to_substring():
+    kind = FakeKind()
+    assert [record["name"] for record in kind.matches(RECORDS, "bolt")] == ["Fire Bolt"]
+
+
+def test_matches_prefers_a_prefix_over_a_later_substring():
+    kind = FakeKind()
+    records = [{"name": "Bolt"}, {"name": "Fire Bolt"}]
+    assert [record["name"] for record in kind.matches(records, "bol")] == ["Bolt"]
+
+
+def test_all_searches_every_system():
+    table = {"dnd:5e": {"spell": FakeKind()}, "cp:2020": {"weapon": FakeKind()}}
+    out, err = io.StringIO(), io.StringIO()
+    with mock.patch.object(cli.registry, "systems", lambda: ["dnd:5e", "cp:2020"]), mock.patch.object(
+        cli.registry, "kinds", lambda system: table[system]
+    ), mock.patch.object(cli.config, "load", lambda: Config(kinds=["spell"])), contextlib.redirect_stdout(
+        out
+    ), contextlib.redirect_stderr(err):
+        code = cli.main(["--all", "fire"])
+    text = out.getvalue()
+    assert code == 0
+    assert "(dnd:5e spell" in text
+    assert "(cp:2020 weapon" in text
+
+
 def test_main_cols_flag():
     code, out, _ = run(["--cols", "20", "fireball"])
     assert code == 0

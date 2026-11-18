@@ -10,7 +10,8 @@ WEAPON_TYPES = {"P": "Pistol", "SMG": "SMG", "RIF": "Rifle", "SHT": "Shotgun",
 CONCEAL = {"N": "None", "J": "Jacket", "L": "Long Coat", "P": "Pocket"}
 AVAILABILITY = {"P": "Poor", "C": "Common", "R": "Rare", "E": "Excellent"}
 RELIABILITY = {"ST": "Standard", "VR": "Very Reliable", "UR": "Unreliable"}
-SURGERY = {"N": "None", "M": "Minor", "MA": "Major"}
+SURGERY = {"N": "None", "M": "Minor", "MA": "Major", "CR": "Critical",
+           "CRX2": "Critical x2"}
 LOCATIONS = {"torso": "Torso", "head": "Head", "rarm": "Right Arm", "larm": "Left Arm",
              "rleg": "Right Leg", "lleg": "Left Leg", "llarm": "Left Arm"}
 MANOEUVRES = ("strike", "punch", "kick", "disarm", "sweep", "block", "dodge",
@@ -88,8 +89,16 @@ def armor(record: dict) -> Card:
 def cyberware(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
     _add(fields, "Cost", _cost(record.get("cost")))
-    _add(fields, "Humanity Cost", record.get("hc"))
-    _add(fields, "Surgery", _code(record.get("surgery"), SURGERY))
+    subtype = str(record.get("subtype") or "").strip()
+    if subtype and subtype.upper() != "OPTION":
+        fields.append(("Subtype", subtype.title()))
+    # Humanity Cost and Surgery are the point of the item: "0" and "None" are
+    # real values here, so they print instead of being treated as missing.
+    for label, key, table in (("Humanity Cost", "hc", None), ("Surgery", "surgery", SURGERY)):
+        if key not in record:
+            continue
+        value = _code(record.get(key), table) if table else str(record.get(key) or "").strip()
+        fields.append((label, value or "None"))
     notes = str(record.get("notes") or "").strip()
     return Card(_named(record), str(record.get("type") or "Cyberware").title(), fields,
                 [("", [notes])] if notes else [])
