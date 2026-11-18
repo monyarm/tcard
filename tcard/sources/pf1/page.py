@@ -12,7 +12,7 @@ ARTICLE = re.compile(r"<article\b.*?</article>", re.S)
 # Site furniture that sits inside the article body.
 JUNK = re.compile(
     r"(?i)^(join our discord|support us|become a patron|follow us|pathfinder .*copyright"
-    r"|open game license|compatibility with the pathfinder|authors?:)"
+    r"|open game license|compatibility with the pathfinder|authors?:|contents$)"
 )
 # d20pfsrd titles carry the feat/ability category in parentheses.
 CATEGORY = re.compile(
@@ -50,7 +50,8 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
             elif upper.startswith("DESCRIPTION"):
                 mode = "body"
             else:
-                mode = "body"
+                # DEFENSE/OFFENSE/STATISTICS are stat blocks too; unlabelled
+                # runs still land in the body through labelled().
                 sections.append((heading.title(), []))
             continue
 

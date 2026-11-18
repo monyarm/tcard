@@ -21,6 +21,8 @@ PAGE = """<?xml version="1.0"?><urlset>
 <loc>https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/assassin/</loc>
 <loc>https://www.d20pfsrd.com/classes/prestige-classes/apg/assassin/</loc>
 <loc>https://www.d20pfsrd.com/classes/core-classes/rogue/rogue-talents/bleeding-attack/</loc>
+<loc>https://www.d20pfsrd.com/bestiary/monster-listings/animals/rat/dire-rat/</loc>
+<loc>https://www.d20pfsrd.com/bestiary/monster-listings/animals/</loc>
 <loc>https://www.d20pfsrd.com/extras/community-creations/house-rule/</loc>
 <loc>https://www.d20pfsrd.com/races/3rd-party-races/gnoll/</loc>
 <loc>https://www.d20pfsrd.com/work-area/staging/feats/broken/</loc>
@@ -53,7 +55,7 @@ def test_skips_community_and_staging_paths():
         assert not any("/extras/" in url for url in found)
         assert not any("3rd-party" in url for url in found)
         assert not any("__trashed" in url for url in found)
-        assert len(found) == 8
+        assert len(found) == 10
 
     _with_cache(PAGE)(check)
 
@@ -80,6 +82,8 @@ def test_kind_filters():
         assert len(sitemap.records("race")) == 1
         assert len(sitemap.records("archetype")) == 1
         assert len(sitemap.records("prestige_class")) == 1
+        monsters = sitemap.records("monster")
+        assert [r["name"] for r in monsters] == ["Dire Rat"]
         abilities = sitemap.records("rogue_talent")
         assert [r["name"] for r in abilities] == ["Bleeding Attack"]
         assert abilities[0]["class"] == "rogue"
@@ -93,7 +97,7 @@ def test_cached_urls_are_reused():
     def check():
         sitemap.urls()
         sitemap.cache.fetch = lambda url: (_ for _ in ()).throw(AssertionError("refetched"))
-        assert len(sitemap.urls()) == 8
+        assert len(sitemap.urls()) == 10
 
     _with_cache(PAGE)(check)
 

@@ -27,7 +27,7 @@ def paragraphs(markup: str) -> list[tuple[str, str]]:
 _MARK = "\x00"
 
 
-def labelled(fragment: str) -> list[tuple[str | None, str]]:
+def _labelled_chunk(fragment: str) -> list[tuple[str | None, str]]:
     """Split a stat paragraph at each bold label, or return it as prose.
 
     d20pfsrd separates entries with <br />, "; " or just spaces, so the bold
@@ -42,9 +42,17 @@ def labelled(fragment: str) -> list[tuple[str | None, str]]:
         out.append((None, prefix))
     for index in range(1, len(chunks) - 1, 2):
         label = chunks[index].strip().rstrip(":").strip()
-        value = chunks[index + 1].strip().lstrip(": ").rstrip(" ;").strip()
+        value = chunks[index + 1].strip().lstrip(": ").rstrip(" ,;").strip()
         if label:
             out.append((label, value))
+    return out
+
+
+def labelled(fragment: str) -> list[tuple[str | None, str]]:
+    """Bold labels bound entries; <br> bounds them too on stat blocks."""
+    out: list[tuple[str | None, str]] = []
+    for chunk in re.split(r"<br\s*/?>", fragment):
+        out.extend(_labelled_chunk(chunk))
     return out
 
 

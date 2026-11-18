@@ -177,6 +177,8 @@ def _match(kind: str, segs: list[str]) -> bool:
         return head == "magic-items" and len(segs) >= 3 and last not in MAGIC_GROUPS
     if kind == "race":
         return head == "races" and len(segs) >= 3
+    if kind == "monster":
+        return head == "bestiary" and len(segs) >= 4 and segs[1] == "monster-listings"
     if kind == "archetype":
         if segs[0] != "classes" or "archetypes" not in segs:
             return False

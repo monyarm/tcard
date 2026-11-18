@@ -92,5 +92,6 @@ KINDS: dict[str, Kind] = {
     "race": PageKind("race"),
     "archetype": PageKind("archetype"),
     "prestige_class": PageKind("prestige_class"),
+    "monster": PageKind("monster"),
 }
 KINDS.update({kind_id: FamilyKind(kind_id) for kind_id in FAMILIES})

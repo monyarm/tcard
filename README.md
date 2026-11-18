@@ -69,7 +69,7 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   uses 26 letter pages (~20 s once) to build the spell index. Other kinds use the
   site's 23 sitemap pages (~27k URLs, one download) filtered by path:
   `feat`, `trait`, `equipment`, `magic_item`, `race`, `archetype`,
-  `prestige_class`, plus one kind per class feature family
+  `prestige_class`, `monster`, plus one kind per class feature family
   (`rogue_talent`, `witch_hex`, `magus_arcana`, `alchemist_discovery`,
   `rage_power`, `ki_power`, `arcane_school`, `arcanist_exploit`,
   `ninja_trick`, `slayer_talent`, `bardic_masterpiece`, `wild_talent`,
@@ -83,7 +83,11 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   tcard pf1 trait magic:aeromantic_affinity
   tcard pf1 trait racial:arcane_dabbler
   tcard pf1 magic_item bag_of_holding
+  tcard pf1 monster dire_rat
   ```
+
+  Familiars and animal companions are `bestiary/monster-listings/...` pages too,
+  so `monster` covers them (`tcard pf1 monster owl`).
 
   Traits take `trait:<group>:<name>`; groups are the site's own
   (`magic`, `racial`, `combat`, `social`, `religion`, `campaign`, ...).
