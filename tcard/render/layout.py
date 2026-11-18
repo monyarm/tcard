@@ -101,6 +101,28 @@ def _field(label: str, value: str, cols: int) -> list[Line]:
     return out or [Line(LineKind.FIELD, head.rstrip())]
 
 
+_BULLET = "- "
+
+
+def _body(text: str, cols: int) -> list[str]:
+    """Wrap a paragraph, keeping bullet and indented continuations aligned."""
+    indent = text[: len(text) - len(text.lstrip(" "))]
+    rest = text[len(indent) :]
+    if rest.startswith(_BULLET):
+        marker = indent + _BULLET
+        room = cols - len(marker)
+        if room < 4:
+            return wrap(text, cols)
+        parts = wrap(rest[len(_BULLET) :], room)
+        return [marker + parts[0]] + [" " * len(marker) + part for part in parts[1:]] if parts else [marker.rstrip()]
+    if indent:
+        room = cols - len(indent)
+        if room < 4:
+            return wrap(text, cols)
+        return [indent + part for part in wrap(rest, room)]
+    return wrap(text, cols)
+
+
 def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
     """Build the line list. Raises ValueError instead of truncating."""
     if cols < 4:
@@ -134,7 +156,7 @@ def layout(card: Card, cols: int = 32, brief: bool = False) -> list[Line]:
         for paragraph in body:
             if out and out[-1].kind is LineKind.BODY:
                 out.append(Line(LineKind.BLANK))
-            out += [Line(LineKind.BODY, part) for part in wrap(paragraph, cols)]
+            out += [Line(LineKind.BODY, part) for part in _body(paragraph, cols)]
 
     for line in out:
         if len(line.text) > cols:

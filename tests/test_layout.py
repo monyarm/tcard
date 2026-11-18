@@ -81,3 +81,13 @@ def test_brief_has_no_trailing_rule():
     lines = layout(card, 32, brief=True)
     assert lines[-1].kind is LineKind.FIELD
     assert "prose" not in " ".join(line.text for line in lines)
+
+
+def test_bullet_continuation_is_indented():
+    from tcard.model import Card, LineKind
+    from tcard.render.layout import layout
+
+    card = Card("T", fields=[("Source", "X")], sections=[("", ["- Ability Scores: Intelligence, Wisdom, Charisma"])])
+    body = [line.text for line in layout(card, 32) if line.kind is LineKind.BODY]
+    assert body[0].startswith("- Ability Scores:")
+    assert body[1].startswith("  ") and body[1].strip()

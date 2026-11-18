@@ -15,6 +15,8 @@ def _inline(value: object) -> str:
             return str(value["exact"])
         if "entries" in value:
             return " ".join(_inline(item) for item in value["entries"])
+        if "entry" in value:
+            return _inline(value["entry"])
         if "name" in value:
             return str(value["name"])
     return ""
@@ -75,11 +77,17 @@ class _Builder:
                 self.item(item, depth)
 
     def item(self, item: object, depth: int) -> None:
-        if isinstance(item, dict) and ("entries" in item or "items" in item):
-            if item.get("name"):
-                self.heading(str(item["name"]))
-            self.visit(item, depth)
-            return
+        if isinstance(item, dict):
+            name = str(item.get("name", "")).strip()
+            if "entry" in item:
+                body = _inline(item["entry"])
+                self.para("- " + " ".join(part for part in (name, body) if part), depth)
+                return
+            if "entries" in item or "items" in item:
+                if name:
+                    self.heading(name)
+                self.visit(item, depth)
+                return
         self.para("- " + _inline(item), depth)
 
     def table(self, node: dict) -> None:

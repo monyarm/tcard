@@ -2,7 +2,7 @@ import json
 import pathlib
 import unittest.mock as mock
 
-from tcard.sources.fivee import actions, cache, conditions, feats, optional
+from tcard.sources.fivee import actions, backgrounds, cache, conditions, feats, optional
 
 FIXTURES = pathlib.Path(__file__).parent / "fixtures"
 
@@ -39,6 +39,23 @@ def test_action_card_has_time():
     card = actions.to_card(record)
     assert card.subtitle == "Action"
     assert dict(card.fields)["Time"] == "1 action"
+
+
+def test_background_card():
+    records = _with_data(backgrounds.records)
+    record = next(r for r in records if r["name"] == "Acolyte" and r["source"] == "XPHB")
+    card = backgrounds.to_card(record)
+    assert card.subtitle == "Background"
+    assert dict(card.fields)["Source"] == "XPHB p.178"
+    assert card.sections and card.sections[0][1]
+
+
+def test_background_picks_2014_record_too():
+    records = _with_data(backgrounds.records)
+    record = next(r for r in records if r["name"] == "Soldier")
+    card = backgrounds.to_card(record)
+    assert card.subtitle == "Background"
+    assert dict(card.fields)["Source"].startswith("PHB")
 
 
 def test_optional_labels_and_prerequisites():
