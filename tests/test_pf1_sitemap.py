@@ -15,6 +15,7 @@ INDEX = (
 PAGE = """<?xml version="1.0"?><urlset>
 <loc>https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat/</loc>
 <loc>https://www.d20pfsrd.com/traits/combat-traits/power-attack-trait/</loc>
+<loc>https://www.d20pfsrd.com/traits/race-traits/arcane-dabbler-elf-racial-trait/</loc>
 <loc>https://www.d20pfsrd.com/equipment/weapons/longsword/</loc>
 <loc>https://www.d20pfsrd.com/magic-items/wondrous-items/bag-of-holding/</loc>
 <loc>https://www.d20pfsrd.com/races/core-races/dwarf/</loc>
@@ -55,7 +56,7 @@ def test_skips_community_and_staging_paths():
         assert not any("/extras/" in url for url in found)
         assert not any("3rd-party" in url for url in found)
         assert not any("__trashed" in url for url in found)
-        assert len(found) == 10
+        assert len(found) == 11
 
     _with_cache(PAGE)(check)
 
@@ -69,7 +70,7 @@ def test_feat_and_trait_do_not_collide():
         feats = sitemap.records("feat")
         traits = sitemap.records("trait")
         assert [r["name"] for r in feats] == ["Power Attack Combat"]
-        assert [r["name"] for r in traits] == ["Power Attack"]
+        assert [r["name"] for r in traits] == ["Power Attack", "Arcane Dabbler Elf"]
         assert feats[0]["url"] != traits[0]["url"]
 
     _with_cache(PAGE)(check)
@@ -82,6 +83,8 @@ def test_kind_filters():
         assert len(sitemap.records("race")) == 1
         assert len(sitemap.records("archetype")) == 1
         assert len(sitemap.records("prestige_class")) == 1
+        traits = sitemap.records("trait")
+        assert [r["name"] for r in traits if r["group"] == "racial"] == ["Arcane Dabbler Elf"]
         monsters = sitemap.records("monster")
         assert [r["name"] for r in monsters] == ["Dire Rat"]
         abilities = sitemap.records("rogue_talent")
@@ -97,7 +100,7 @@ def test_cached_urls_are_reused():
     def check():
         sitemap.urls()
         sitemap.cache.fetch = lambda url: (_ for _ in ()).throw(AssertionError("refetched"))
-        assert len(sitemap.urls()) == 10
+        assert len(sitemap.urls()) == 11
 
     _with_cache(PAGE)(check)
 

@@ -73,6 +73,8 @@ def test_registry_knows_pf1_and_alias():
     assert "pf:1e" in registry.systems()
     assert registry.resolve("pf1") == "pf:1e"
     assert "spell" in registry.kinds("pf:1e")
+    kinds = registry.kinds("pf:1e")
+    assert {"monster", "deity", "racial_trait"} <= set(kinds)
 
 
 def test_candidate_line_without_source():

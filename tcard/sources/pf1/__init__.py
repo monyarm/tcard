@@ -72,6 +72,20 @@ class TraitKind(PageKind):
         return super().matches(records, query)
 
 
+class RacialTraitKind(PageKind):
+    """Race traits as their own kind: `tcard pf1 racial_trait arcane_dabbler`."""
+
+    def __init__(self, kind_id: str) -> None:
+        self.id = kind_id
+
+    def records(self, refresh: bool = False) -> list[dict]:
+        return [
+            record
+            for record in sitemap.records("trait", refresh)
+            if normalize(str(record.get("group", ""))) == "racial"
+        ]
+
+
 # Family kinds observed on d20pfsrd; each one is its own kind so talents are not lumped together.
 FAMILIES = (
     "alchemist_discovery",
@@ -100,6 +114,7 @@ KINDS: dict[str, Kind] = {
     "spell": SpellKind("spell"),
     "feat": PageKind("feat"),
     "trait": TraitKind("trait"),
+    "racial_trait": RacialTraitKind("racial_trait"),
     "equipment": PageKind("equipment"),
     "magic_item": PageKind("magic_item"),
     "race": PageKind("race"),

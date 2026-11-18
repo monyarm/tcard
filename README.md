@@ -72,7 +72,7 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
 - Pathfinder 1e comes from `https://www.d20pfsrd.com`. `tcard pf1 spell fireball`
   uses 26 letter pages (~20 s once) to build the spell index. Other kinds use the
   site's 23 sitemap pages (~27k URLs, one download) filtered by path:
-  `feat`, `trait`, `equipment`, `magic_item`, `race`, `archetype`,
+  `feat`, `trait`, `racial_trait`, `equipment`, `magic_item`, `race`, `archetype`,
   `prestige_class`, `monster`, `deity`, plus one kind per class feature family
   (`rogue_talent`, `witch_hex`, `magus_arcana`, `alchemist_discovery`,
   `rage_power`, `ki_power`, `arcane_school`, `arcanist_exploit`,
@@ -86,6 +86,7 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   tcard pf1 witch_hex city_sight
   tcard pf1 trait magic:aeromantic_affinity
   tcard pf1 trait racial:arcane_dabbler
+  tcard pf1 racial_trait arcane_dabbler
   tcard pf1 magic_item bag_of_holding
   tcard pf1 monster dire_rat
   tcard pf1 deity sarenrae
