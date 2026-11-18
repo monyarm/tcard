@@ -26,6 +26,8 @@ _INDEX: dict[str, dict] | None = None
 
 def _clean(cell: str) -> str:
     text = html.unescape(_TAG.sub("", cell)).replace("\xa0", " ")
+    # The catalogue escapes ampersands as `\&`.
+    text = text.replace("\\&", "&")
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -55,30 +57,43 @@ def parse_stats(markup: str) -> list[dict]:
     """
     out: list[dict] = []
     previous = ""
+    previous_is_stats = False
     section = "Cyberware"
+
+    def is_stats(text: str) -> bool:
+        tokens = text.split()
+        return (len(tokens) >= 4 and bool(_REF.match(tokens[-1]))
+                and bool(_NUM.match(tokens[-2])) and bool(_NUM.match(tokens[-3])))
+
     for paragraph in (_clean(part) for part in _PARA.findall(markup)):
         if not paragraph:
             continue
         if paragraph.isupper() and len(paragraph) < 48:
             section = paragraph
             previous = ""
+            previous_is_stats = False
             continue
         tokens = paragraph.split()
-        if (len(tokens) >= 4 and _REF.match(tokens[-1])
-                and _NUM.match(tokens[-2]) and _NUM.match(tokens[-3])):
+        if is_stats(paragraph):
             body = tokens[:-3]
             code = body[0].rstrip(".")
             surgery = SURGERY.get(code, "")
             if surgery:
                 body = body[1:]
-            out.append({
-                "name": previous,
-                "cost": tokens[-3],
-                "hc": tokens[-2],
-                "surgery": surgery,
-                "effect": " ".join(body).strip(" -"),
-                "type": section,
-            })
+            # A stats line directly after another one means the item never had a
+            # name paragraph, so the "name" would be the previous item's stats.
+            if previous and not previous_is_stats:
+                out.append({
+                    "name": previous,
+                    "cost": tokens[-3],
+                    "hc": tokens[-2],
+                    "surgery": surgery,
+                    "effect": " ".join(body).strip(" -"),
+                    "type": section,
+                })
+            previous_is_stats = True
+        else:
+            previous_is_stats = False
         previous = paragraph
     return [item for item in out if item["name"]]
 

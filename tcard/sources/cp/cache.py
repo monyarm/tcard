@@ -74,6 +74,21 @@ def data(relative: str, refresh: bool = False) -> list[dict]:
         raise TcardError(f"cannot read {relative}: {exc}", 3) from exc
 
 
+def search(query: str, limit: int = 5, refresh: bool = False) -> list[str]:
+    """Page titles the wiki search returns for `query`, best hit first."""
+    url = (
+        f"{WIKI}/api.php?action=query&list=search&format=json&srlimit={limit}"
+        f"&srsearch={quote(query)}"
+    )
+    body = _get(url, refresh)
+    try:
+        data = json.loads(body.decode("utf-8", "replace"))
+    except json.JSONDecodeError:
+        return []
+    hits = data.get("query", {}).get("search", [])
+    return [str(hit.get("title", "")) for hit in hits if hit.get("title")]
+
+
 def wikitext(page: str, refresh: bool = False) -> str | None:
     """A Cyberpunk Wiki page as wikitext, or None when the page does not exist."""
     url = (

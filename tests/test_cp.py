@@ -265,7 +265,8 @@ def test_cyberware_prints_option_slots_and_falls_back_to_datafortress():
     record = {"name": "Neural Bridge", "type": "CYBERLIMB", "cost": 600}
     with mock.patch.object(cards.datafortress, "lookup",
                            return_value={"hc": "2", "surgery": "Major",
-                                         "effect": "Works with both hands."}):
+                                         "effect": "Works with both hands."}), \
+         mock.patch.object(cards, "_prose", lambda name: []):
         card = cards.cyberware(record)
     fields = dict(card.fields)
     assert fields["Humanity Cost"] == "2"
@@ -334,3 +335,47 @@ def test_cyberware_loader_adds_catalogue_only_items():
         merged = cp._cyberware()
     assert [row["name"] for row in merged] == ["Standard Hand", "Spyke Body Plating"]
     assert merged[1]["notes"] == "Grapple 1d3"
+
+
+def test_wiki_prose_expands_edition_and_rarity_templates():
+    markup = ("The Biomonitor is [[Cyberpunk 2020 Cyberware|Cyberware]] in {{CP|2020}}.\n"
+              "It adds {{R|TI|2}}-{{R|TV|16}}% to Health Item use.\n")
+    assert wiki.prose(markup) == [
+        "The Biomonitor is Cyberware in 2020. It adds 2-16% to Health Item use."]
+
+
+def test_wiki_closest_accepts_a_padded_title_and_rejects_a_shared_word():
+    assert wiki.closest("Militech UAW",
+                        ["Militech UAW Speargun", "Militech"]) == "Militech UAW Speargun"
+    assert wiki.closest("Techtronica Black-Zap",
+                        ["Techtronica Black-Zap Glove"]) == "Techtronica Black-Zap Glove"
+    assert wiki.closest("Militech Stun Knuks", ["Stun", "Stun Gun"]) is None
+    assert wiki.closest("Laser Sight", ["IEC Phase 4 Infrared Laser Sight"]) is None
+
+
+def test_weapon_prose_falls_back_to_the_closest_search_hit():
+    with mock.patch.object(cache, "wikitext", lambda name, refresh=False: None), \
+         mock.patch.object(cache, "search", lambda query, **_: ["Malorian Arms Sliver Gun"]), \
+         mock.patch.object(cache, "wikitext",
+                           lambda name, refresh=False:
+                           "A quiet pistol.\n" if name == "Malorian Arms Sliver Gun" else None):
+        card = cards.weapon({"name": "Malorian Sliver Gun", "type": "P"})
+    assert card.sections == [("", ["A quiet pistol."])]
+
+
+def test_cyberware_skips_a_page_about_the_2077_video_game():
+    page = "{{Infobox Cyberware|appears_games={{CP|2077}}}}\nThe implant heals you.\n"
+    with mock.patch.object(cache, "wikitext", lambda name, refresh=False: page), \
+         mock.patch.object(cache, "search", lambda query, **_: []), \
+         mock.patch.object(cards.datafortress, "lookup", lambda name: None):
+        card = cards.cyberware({"name": "Biomonitor", "type": "FASHIONWARE", "hc": "1"})
+    assert card.sections == []
+
+
+def test_datafortress_stats_line_after_stats_line_names_nothing():
+    from tcard.sources.cp import datafortress
+    markup = ("<p>Boomerang</p><p>N Returns when thrown 100 1 CP20</p>"
+              "<p>N Shoulder mounted. +3 3d6 800 2d6 CP20</p>")
+    items = datafortress.parse_stats(markup)
+    assert [item["name"] for item in items] == ["Boomerang"]
+    assert items[0]["effect"] == "Returns when thrown"

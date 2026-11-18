@@ -63,6 +63,32 @@ def _named(record: dict) -> str:
     return str(record.get("name") or "Untitled").strip()
 
 
+def _page(name: str) -> str:
+    """The wiki page for `name`, unless it is about the 2077 video game."""
+    text = cache.wikitext(name) or ""
+    return "" if "2077" in text and "2020" not in text else text
+
+
+def _prose(name: str) -> list[str]:
+    """The wiki's text for an item, following a search hit when its own page misses.
+
+    The wiki titles carry trademarks and manufacturer prefixes (`Militech UAW
+    Speargun` for `Militech UAW`), so a direct page fetch finds only some items.
+    Record names also carry qualifiers the wiki drops (`… (Underwater Assault
+    Weapon)`, `… , Semi-Auto`), so the plain name is searched too.
+    """
+    paragraphs = wiki.prose(_page(name))
+    if paragraphs:
+        return paragraphs
+    for query in dict.fromkeys((name, name.split("(")[0].split(",")[0].strip())):
+        if not query:
+            continue
+        title = wiki.closest(query, cache.search(query))
+        if title:
+            return wiki.prose(_page(title))
+    return []
+
+
 def weapon(record: dict) -> Card:
     fields: list[tuple[str, str]] = []
     _add(fields, "Category", str(record.get("category") or "").strip().title())
@@ -84,7 +110,7 @@ def weapon(record: dict) -> Card:
     _add(fields, "Minimum BOD", record.get("bod"))
     _add(fields, "Cost", _cost(record.get("cost")))
     subtitle = WEAPON_TYPES.get(str(record.get("type") or "").strip().upper(), "Weapon")
-    paragraphs = wiki.prose(cache.wikitext(_named(record)) or "")
+    paragraphs = _prose(_named(record))
     notes = str(record.get("notes") or "").strip()
     if notes:
         paragraphs = paragraphs + [notes]
@@ -107,6 +133,9 @@ def armor(record: dict) -> Card:
         if value:
             rows.append([LOCATIONS.get(key, key.title()), str(value)])
     sections = [("", [Table(rows, header=True)])] if len(rows) > 1 else []
+    paragraphs = _prose(_named(record))
+    if paragraphs:
+        sections.append(("", paragraphs))
     return Card(_named(record), "Armor", fields, sections)
 
 
@@ -131,7 +160,9 @@ def cyberware(record: dict) -> Card:
     notes = str(record.get("notes") or "").strip() or str(extra.get("effect") or "").strip()
     # Biosculpting is a kind of bioware, but it keeps its own type name.
     subtitle = str(record.get("type") or "Cyberware").strip().title()
-    return Card(_named(record), subtitle, fields, [("", [notes])] if notes else [])
+    body = [notes] if notes else []
+    body += _prose(_named(record))
+    return Card(_named(record), subtitle, fields, [("", body)] if body else [])
 
 
 def gear(record: dict) -> Card:
@@ -139,8 +170,9 @@ def gear(record: dict) -> Card:
     _add(fields, "Cost", _cost(record.get("cost")))
     _add(fields, "Weight", record.get("wt"))
     notes = str(record.get("notes") or "").strip()
+    paragraphs = [notes] if notes else _prose(_named(record))
     return Card(_named(record), str(record.get("category") or "Gear").title(), fields,
-                [("", [notes])] if notes else [])
+                [("", paragraphs)] if paragraphs else [])
 
 
 def role(record: dict) -> Card:
@@ -157,7 +189,8 @@ def role(record: dict) -> Card:
     extra = [_joined(skill) for skill in record.get("secondary") or []]
     _add(fields, "Secondary Skills", ", ".join(skill for skill in extra if skill))
     description = str(ability.get("description") or "").strip()
-    return Card(_named(record), "Role", fields, [("", [description])] if description else [])
+    paragraphs = [description] if description else _prose(_named(record))
+    return Card(_named(record), "Role", fields, [("", paragraphs)] if paragraphs else [])
 
 
 def _joined(value: object) -> str:
@@ -177,7 +210,8 @@ def skill(record: dict) -> Card:
         _add(fields, "Manoeuvres", ", ".join(parts))
     subtitle = "Special Ability" if record.get("sa") else "Skill"
     description = str(record.get("description") or "").strip()
-    return Card(_named(record), subtitle, fields, [("", [description])] if description else [])
+    paragraphs = [description] if description else _prose(_named(record))
+    return Card(_named(record), subtitle, fields, [("", paragraphs)] if paragraphs else [])
 
 
 def vehicle(record: dict) -> Card:
@@ -198,7 +232,8 @@ def vehicle(record: dict) -> Card:
     _add(fields, "Weapons", record.get("weapons"))
     _add(fields, "Cost", _cost(record.get("bookcost")))
     subtitle = str(record.get("type") or "Vehicle").title()
-    return Card(_named(record), subtitle, fields)
+    paragraphs = _prose(_named(record))
+    return Card(_named(record), subtitle, fields, [("", paragraphs)] if paragraphs else [])
 
 
 def program(record: dict) -> Card:

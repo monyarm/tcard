@@ -240,8 +240,11 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   `demolition`, `military_gear`, `transport`, `braindance`, ...).
 
   Weapon stat blocks have no prose in the data, so descriptions are pulled from
-  the Cyberpunk wiki (`cyberpunk.fandom.com`); weapons the wiki does not cover
-  print stats only. Cyberware is merged with two `datafortress2020.com`
+  the Cyberpunk wiki (`cyberpunk.fandom.com`); when the record's own name has no
+  page, the wiki search supplies the closest title (`Militech UAW` finds
+  `Militech UAW Speargun`), and a page about the 2077 video game is ignored.
+  Weapons the wiki does not cover print stats only. Cyberware is merged with
+  two `datafortress2020.com`
   pages: the bioware tables (`bio.htm`) and the illustrated cybernetics
   catalogue (`ultrachrome/Cyberware.html`), which together add 243 items the
   JSON lacks and fill missing Humanity Cost, surgery and effect text (expired

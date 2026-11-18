@@ -140,11 +140,8 @@ def feat(item: dict) -> Card:
     level = _level(system)
     category = str(system.get("category", "")).replace("-", " ").title()
     fields: list[tuple[str, str]] = []
-    prerequisites = [clean(value.get("value", "")) for value in
-                     _value(system.get("prerequisites"), "value") or []]
-    if isinstance(system.get("prerequisites"), dict):
-        prerequisites = [clean(value.get("value", "")) if isinstance(value, dict) else clean(value)
-                         for value in system["prerequisites"].get("value", [])]
+    prerequisites = [clean(value.get("value", "")) if isinstance(value, dict) else clean(value)
+                     for value in _value(system.get("prerequisites"), "value") or []]
     prerequisites = [value for value in prerequisites if value]
     if prerequisites:
         fields.append(("Prerequisites", ", ".join(prerequisites)))
