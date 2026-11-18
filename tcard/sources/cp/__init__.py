@@ -86,12 +86,18 @@ def _weapons(refresh: bool = False) -> list[dict]:
     return out
 
 
+def _shape(name: object) -> str:
+    """Loose key, so "High Five, AKA The Palm Bomb" matches "High Five/The Palm Bomb"."""
+    words = normalize(str(name or "")).replace("/", " ").replace(",", " ").split()
+    return " ".join(word for word in words if word not in ("aka", "the", "a", "an", "and"))
+
+
 def _cyberware(refresh: bool = False) -> list[dict]:
     """Cybersmily's list, plus the datafortress catalogue items it lacks."""
     rows = _list("data/cyberware")(refresh)
-    seen = {normalize(str(row.get("name", ""))) for row in rows}
+    seen = {_shape(row.get("name")) for row in rows}
     for item in datafortress.records(refresh):
-        key = normalize(item["name"])
+        key = _shape(item["name"])
         if key and key not in seen:
             seen.add(key)
             rows.append({"name": item["name"], "type": item.get("type", ""),
