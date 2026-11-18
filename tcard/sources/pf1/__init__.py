@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from ...names import normalize, split_path
 from ..base import Kind
-from . import cache, page, sitemap
+from . import cache, deities, page, sitemap
 
 SYSTEM_ID = "pf:1e"
 ALIASES = ("pf1",)
@@ -27,6 +27,19 @@ class SpellKind(PageKind):
 
     def card(self, record: dict):
         return page.to_card(record, spell=True)
+
+
+class DeityKind(Kind):
+    """Deities come from Archives of Nethys; d20pfsrd cannot host them."""
+
+    def __init__(self, kind_id: str) -> None:
+        self.id = kind_id
+
+    def records(self, refresh: bool = False) -> list[dict]:
+        return deities.records(refresh)
+
+    def card(self, record: dict):
+        return deities.to_card(record)
 
 
 class FamilyKind(PageKind):
@@ -93,5 +106,6 @@ KINDS: dict[str, Kind] = {
     "archetype": PageKind("archetype"),
     "prestige_class": PageKind("prestige_class"),
     "monster": PageKind("monster"),
+    "deity": DeityKind("deity"),
 }
 KINDS.update({kind_id: FamilyKind(kind_id) for kind_id in FAMILIES})
