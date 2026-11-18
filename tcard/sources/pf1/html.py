@@ -33,6 +33,7 @@ def labelled(fragment: str) -> list[tuple[str | None, str]]:
     d20pfsrd separates entries with <br />, "; " or just spaces, so the bold
     run itself is the reliable boundary.
     """
+    fragment = re.sub(r"<(b|strong)>\s*</\1>", "", fragment, flags=re.S)
     bolded = re.sub(r"<(b|strong)>(.*?)</\1>", lambda m: _MARK + text(m.group(2)) + _MARK, fragment, flags=re.S)
     chunks = text(bolded).split(_MARK)
     out: list[tuple[str | None, str]] = []

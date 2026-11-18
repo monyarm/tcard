@@ -18,7 +18,7 @@ PAGE = """<?xml version="1.0"?><urlset>
 <loc>https://www.d20pfsrd.com/equipment/weapons/longsword/</loc>
 <loc>https://www.d20pfsrd.com/magic-items/wondrous-items/bag-of-holding/</loc>
 <loc>https://www.d20pfsrd.com/races/core-races/dwarf/</loc>
-<loc>https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/assassin/</loc>
+<loc>https://www.d20pfsrd.com/classes/core-classes/rogue/archetypes/paizo-rogue-archetypes/assassin/</loc>
 <loc>https://www.d20pfsrd.com/classes/prestige-classes/apg/assassin/</loc>
 <loc>https://www.d20pfsrd.com/classes/core-classes/rogue/rogue-talents/bleeding-attack/</loc>
 <loc>https://www.d20pfsrd.com/extras/community-creations/house-rule/</loc>
@@ -67,7 +67,7 @@ def test_feat_and_trait_do_not_collide():
         feats = sitemap.records("feat")
         traits = sitemap.records("trait")
         assert [r["name"] for r in feats] == ["Power Attack Combat"]
-        assert [r["name"] for r in traits] == ["Power Attack Trait"]
+        assert [r["name"] for r in traits] == ["Power Attack"]
         assert feats[0]["url"] != traits[0]["url"]
 
     _with_cache(PAGE)(check)
@@ -80,7 +80,7 @@ def test_kind_filters():
         assert len(sitemap.records("race")) == 1
         assert len(sitemap.records("archetype")) == 1
         assert len(sitemap.records("prestige_class")) == 1
-        abilities = sitemap.records("class_ability")
+        abilities = sitemap.records("rogue_talent")
         assert [r["name"] for r in abilities] == ["Bleeding Attack"]
         assert abilities[0]["class"] == "rogue"
         assert abilities[0]["family"] == "rogue talents"

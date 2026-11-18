@@ -10,7 +10,10 @@ from . import cache, html
 TITLE = re.compile(r"<h1[^>]*>(.*?)</h1>", re.S)
 ARTICLE = re.compile(r"<article\b.*?</article>", re.S)
 # Site furniture that sits inside the article body.
-JUNK = re.compile(r"(?i)^(join our discord|support us|become a patron|follow us)")
+JUNK = re.compile(
+    r"(?i)^(join our discord|support us|become a patron|follow us|pathfinder .*copyright"
+    r"|open game license|compatibility with the pathfinder|authors?:)"
+)
 # d20pfsrd titles carry the feat/ability category in parentheses.
 CATEGORY = re.compile(
     r"\s*\((?:Combat|General|Metamagic|Teamwork|Critical|Style|Achievement|Monster|Item Creation|"
@@ -59,8 +62,10 @@ def parse(markup: str, name: str | None = None, spell: bool = False) -> Card:
 
         for label, value in html.labelled(inner):
             if label is None:
-                if started and value:
+                if started and value and not JUNK.match(value):
                     sections[-1][1].append(value)
+                continue
+            if not value:
                 continue
             if label == "School":
                 school = value

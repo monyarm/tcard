@@ -69,7 +69,24 @@ Flags: `--source CODE`, `--cols N`, `--brief`, `--all`, `--refresh`.
   uses 26 letter pages (~20 s once) to build the spell index. Other kinds use the
   site's 23 sitemap pages (~27k URLs, one download) filtered by path:
   `feat`, `trait`, `equipment`, `magic_item`, `race`, `archetype`,
-  `class_ability`, `prestige_class`, e.g. `tcard pf1 class_ability rogue:bleeding_attack`.
+  `prestige_class`, plus one kind per class feature family
+  (`rogue_talent`, `witch_hex`, `magus_arcana`, `alchemist_discovery`,
+  `rage_power`, `ki_power`, `arcane_school`, `arcanist_exploit`,
+  `ninja_trick`, `slayer_talent`, `bardic_masterpiece`, `wild_talent`,
+  `weapon_training`, `bloodline`, `mystery`, `curse`, `order`, `spirit`,
+  `domain`). Examples:
+
+  ```
+  tcard pf1 rogue_talent bleeding_attack
+  tcard pf1 rogue_talent rogue:bleeding_attack
+  tcard pf1 witch_hex city_sight
+  tcard pf1 trait magic:aeromantic_affinity
+  tcard pf1 trait racial:arcane_dabbler
+  tcard pf1 magic_item bag_of_holding
+  ```
+
+  Traits take `trait:<group>:<name>`; groups are the site's own
+  (`magic`, `racial`, `combat`, `social`, `religion`, `campaign`, ...).
   Pages are fetched on demand and cached in `~/.cache/tcard/pf1/`.
   3PP content is filtered by path heuristics, so a few community entries can
   still appear in `--all` listings.
