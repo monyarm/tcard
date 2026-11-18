@@ -19,7 +19,7 @@ JUNK = re.compile(
 # d20pfsrd titles carry the feat/ability category in parentheses.
 CATEGORY = re.compile(
     r"\s*\((?:Combat|General|Metamagic|Teamwork|Critical|Style|Achievement|Monster|Item Creation|"
-    r"Grit|Panache|Performance|Racial|Story|Mythic|Local|Magic|EX|UC|UM|OA|APG|ACG|ARG)\)\s*$",
+    r"Grit|Panache|Performance|Racial|Story|Mythic|Local|Magic|EX|SU|SP|UC|UM|OA|APG|ACG|ARG)\)\s*$",
     re.I,
 )
 
