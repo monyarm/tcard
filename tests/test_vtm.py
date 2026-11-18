@@ -257,7 +257,7 @@ def test_discipline_power_by_path():
     assert fields["Cost"] == "One Rouse Check"
     assert "Prerequisite" not in fields and "Amalgam" not in fields
     body = " ".join(card.sections[0][1])
-    assert body.startswith("Perceives information about the target.")
+    assert body == "Read a mind."
 
 
 def test_clan_card_and_bane_parts():
