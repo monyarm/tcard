@@ -13,7 +13,7 @@ CARD = Card(
         ("Components", "V, S, M (a ball of bat guano and sulfur)"),
         ("Duration", "Instantaneous"),
     ],
-    [("", ["A bright streak flashes from you."])],
+    [("", ["Sample prose for testing."])],
 )
 
 GOLDEN = pathlib.Path(__file__).parent / "golden" / "fireball-32.txt"

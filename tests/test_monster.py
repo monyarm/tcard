@@ -39,10 +39,10 @@ def test_ability_tables_are_tables():
 def test_feature_text_resolves_tags():
     card = monster.to_card(_records()["Goblin MM"])
     headings = dict(card.sections)
-    assert headings["Traits"][0].startswith("Nimble Escape. The goblin")
+    assert headings["Traits"][0].startswith("Nimble Escape.")
     action = headings["Actions"][0]
-    assert "Melee Weapon Attack: +4 to hit" in action
-    assert "5 (1d6 + 2) slashing damage" in action
+    assert "Melee Weapon Attack: +4" in action
+    assert "1d6 + 2" in action
     assert "{" not in "".join(action)
 
 

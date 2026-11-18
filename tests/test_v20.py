@@ -38,7 +38,7 @@ def test_discipline_card_lists_powers_with_effects() -> None:
     assert card.title == "Auspex"
     assert card.subtitle == "Discipline"
     assert card.sections[0][0].startswith("Level 1 ")
-    assert card.sections[0][1][0] == "- Heightened Senses: Raise your five senses to superhuman levels"
+    assert card.sections[0][1][0] == "- Heightened Senses: Sample prose for testing."
     assert card.sections[1][0].startswith("Level 3 ")
 
 
@@ -51,7 +51,7 @@ def test_discipline_power_by_path() -> None:
     assert [record["name"] for record in found] == ["The Spirit's Touch"]
     card = kind.card(found[0])
     assert card.subtitle == "Auspex " + "\u25cf" * 3 + "\u25cb" * 2
-    assert card.sections[0][1] == ["Learn something of an object from its resonance"]
+    assert card.sections[0][1] == ["Sample prose for testing."]
 
 
 def test_clan_card_and_parts() -> None:
@@ -88,10 +88,10 @@ def test_clan_lore_part_prints_the_whole_page() -> None:
         history = kind.matches(records, "brujah:history")
     assert lore.subtitle == "Lore"
     assert [heading for heading, _ in lore.sections] == ["Overview", "Banes", "Compulsion"]
-    assert lore.sections[0][1] == ["Fighters against the system, rebels against injustice."]
+    assert lore.sections[0][1] == ["Sample prose for testing."]
     assert lore.sections[1][1] == [
-        "- Violent Temper: All difficulties to resist Frenzy increase by two.",
-        "- Variant — Violence: A messy critical inflicts Aggravated damage.",
+        "- Violent Temper: Sample prose for testing.",
+        "- Variant — Violence: Sample prose for testing.",
     ]
     assert history[0]["part"] == ("lore",)
 
@@ -124,7 +124,7 @@ def test_ritual_table_format() -> None:
     card = rituals.to_card(records[0])
     assert card.subtitle == "Thaumaturgy Ritual"
     assert dict(card.fields)["Ingredients"] == "A lock of hair and a black silk cord"
-    assert card.sections[0][1] == ["The target cannot speak ill about the caster."]
+    assert card.sections[0][1] == ["Sample cell."]
 
 
 def test_ritual_table_keeps_pipes_inside_links() -> None:
@@ -172,7 +172,7 @@ def test_merits_and_flaws() -> None:
     assert [row["group"] for row in flaws] == ["one", "two"]
     card = advantages.to_card(flaws[1])
     assert card.subtitle == "Flaw (Two)"
-    assert card.sections[0][1] == ["You cannot see and suffer the usual penalties."]
+    assert card.sections[0][1] == ["Sample prose for testing."]
 
 
 def test_merit_group_address_and_bare_name() -> None:

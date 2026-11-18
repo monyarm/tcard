@@ -60,13 +60,13 @@
    {
     "name": "Amphibious",
     "entries": [
-     "The dragon can breathe air and water."
+     "Sample text for layout."
     ]
    },
    {
     "name": "Legendary Resistance (3/Day)",
     "entries": [
-     "If the dragon fails a saving throw, it can choose to succeed instead."
+     "Sample text for layout."
     ]
    }
   ],
@@ -74,37 +74,37 @@
    {
     "name": "Multiattack",
     "entries": [
-     "The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws."
+     "Sample text for layout."
     ]
    },
    {
     "name": "Bite",
     "entries": [
-     "{@atk mw} {@hit 11} to hit, reach 10 ft., one target. {@h}17 ({@damage 2d10 + 6}) piercing damage plus 4 ({@damage 1d8}) acid damage."
+     "Sample text for layout. {@atk mw} {@hit 11} {@h} {@damage 2d10 + 6} {@damage 1d8}"
     ]
    },
    {
     "name": "Claw",
     "entries": [
-     "{@atk mw} {@hit 11} to hit, reach 5 ft., one target. {@h}13 ({@damage 2d6 + 6}) slashing damage."
+     "Sample text for layout. {@atk mw} {@hit 11} {@h} {@damage 2d6 + 6}"
     ]
    },
    {
     "name": "Tail",
     "entries": [
-     "{@atk mw} {@hit 11} to hit, reach 15 ft., one target. {@h}15 ({@damage 2d8 + 6}) bludgeoning damage."
+     "Sample text for layout. {@atk mw} {@hit 11} {@h} {@damage 2d8 + 6}"
     ]
    },
    {
     "name": "Frightful Presence",
     "entries": [
-     "Each creature of the dragon's choice that is within 120 feet of the dragon and aware of it must succeed on a {@dc 16} Wisdom saving throw or become {@condition frightened} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours."
+     "Sample text for layout. {@dc 16} {@condition frightened}"
     ]
    },
    {
     "name": "Acid Breath {@recharge 5}",
     "entries": [
-     "The dragon exhales acid in a 60-foot line that is 5 feet wide. Each creature in that line must make a {@dc 18} Dexterity saving throw, taking 54 ({@damage 12d8}) acid damage on a failed save, or half as much damage on a successful one."
+     "Sample text for layout. {@dc 18} {@damage 12d8}"
     ]
    }
   ],
@@ -112,19 +112,19 @@
    {
     "name": "Detect",
     "entries": [
-     "The dragon makes a Wisdom ({@skill Perception}) check."
+     "Sample text for layout. {@skill Perception}"
     ]
    },
    {
     "name": "Tail Attack",
     "entries": [
-     "The dragon makes a tail attack."
+     "Sample text for layout."
     ]
    },
    {
     "name": "Wing Attack (Costs 2 Actions)",
     "entries": [
-     "The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a {@dc 19} Dexterity saving throw or take 13 ({@damage 2d6 + 6}) bludgeoning damage and be knocked {@condition prone}. The dragon can then fly up to half its flying speed."
+     "Sample text for layout. {@dc 19} {@damage 2d6 + 6} {@condition prone}"
     ]
    }
   ]
@@ -190,7 +190,7 @@
    {
     "name": "Legendary Resistance (3/Day)",
     "entries": [
-     "If the dragon fails a saving throw, it can choose to succeed instead."
+     "Sample text for layout."
     ]
    }
   ],
@@ -198,37 +198,37 @@
    {
     "name": "Multiattack",
     "entries": [
-     "The dragon can use its Frightful Presence. It then makes three attacks: one with its bite and two with its claws."
+     "Sample text for layout."
     ]
    },
    {
     "name": "Bite",
     "entries": [
-     "{@atk mw} {@hit 14} to hit, reach 10 ft., one target. {@h}19 ({@damage 2d10 + 8}) piercing damage plus 7 ({@damage 2d6}) fire damage."
+     "Sample text for layout. {@atk mw} {@hit 14} {@h} {@damage 2d10 + 8} {@damage 2d6}"
     ]
    },
    {
     "name": "Claw",
     "entries": [
-     "{@atk mw} {@hit 14} to hit, reach 5 ft., one target. {@h}15 ({@damage 2d6 + 8}) slashing damage."
+     "Sample text for layout. {@atk mw} {@hit 14} {@h} {@damage 2d6 + 8}"
     ]
    },
    {
     "name": "Tail",
     "entries": [
-     "{@atk mw} {@hit 14} to hit, reach 15 ft., one target. {@h}17 ({@damage 2d8 + 8}) bludgeoning damage."
+     "Sample text for layout. {@atk mw} {@hit 14} {@h} {@damage 2d8 + 8}"
     ]
    },
    {
     "name": "Frightful Presence",
     "entries": [
-     "Each creature of the dragon's choice that is within 120 feet of the dragon and aware of it must succeed on a {@dc 19} Wisdom saving throw or become {@condition frightened} for 1 minute. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the dragon's Frightful Presence for the next 24 hours."
+     "Sample text for layout. {@dc 19} {@condition frightened}"
     ]
    },
    {
     "name": "Fire Breath {@recharge 5}",
     "entries": [
-     "The dragon exhales fire in a 60-foot cone. Each creature in that area must make a {@dc 21} Dexterity saving throw, taking 63 ({@damage 18d6}) fire damage on a failed save, or half as much damage on a successful one."
+     "Sample text for layout. {@dc 21} {@damage 18d6}"
     ]
    }
   ],
@@ -236,19 +236,19 @@
    {
     "name": "Detect",
     "entries": [
-     "The dragon makes a Wisdom ({@skill Perception}) check."
+     "Sample text for layout. {@skill Perception}"
     ]
    },
    {
     "name": "Tail Attack",
     "entries": [
-     "The dragon makes a tail attack."
+     "Sample text for layout."
     ]
    },
    {
     "name": "Wing Attack (Costs 2 Actions)",
     "entries": [
-     "The dragon beats its wings. Each creature within 10 feet of the dragon must succeed on a {@dc 22} Dexterity saving throw or take 15 ({@damage 2d6 + 8}) bludgeoning damage and be knocked {@condition prone}. The dragon can then fly up to half its flying speed."
+     "Sample text for layout. {@dc 22} {@damage 2d6 + 8} {@condition prone}"
     ]
    }
   ]
@@ -307,7 +307,7 @@
    {
     "name": "Nimble Escape",
     "entries": [
-     "The goblin can take the {@action Disengage} or {@action Hide} action as a bonus action on each of its turns."
+     "Sample text for layout. {@action Disengage} {@action Hide}"
     ]
    }
   ],
@@ -315,13 +315,13 @@
    {
     "name": "Scimitar",
     "entries": [
-     "{@atk mw} {@hit 4} to hit, reach 5 ft., one target. {@h}5 ({@damage 1d6 + 2}) slashing damage."
+     "Sample text for layout. {@atk mw} {@hit 4} {@h} {@damage 1d6 + 2}"
     ]
    },
    {
     "name": "Shortbow",
     "entries": [
-     "{@atk rw} {@hit 4} to hit, range 80/320 ft., one target. {@h}5 ({@damage 1d6 + 2}) piercing damage."
+     "Sample text for layout. {@atk rw} {@hit 4} {@h} {@damage 1d6 + 2}"
     ]
    }
   ]
@@ -388,13 +388,13 @@
    {
     "name": "Amphibious",
     "entries": [
-     "The dragon can breathe air and water."
+     "Sample text for layout."
     ]
    },
    {
     "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
     "entries": [
-     "If the dragon fails a saving throw, it can choose to succeed instead."
+     "Sample text for layout."
     ]
    }
   ],
@@ -402,19 +402,19 @@
    {
     "name": "Multiattack",
     "entries": [
-     "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast {@spell Melf's Acid Arrow|XPHB} (level 3 version)."
+     "Sample text for layout. {@spell Melf's Acid Arrow|XPHB}"
     ]
    },
    {
     "name": "Rend",
     "entries": [
-     "{@atkr m} {@hit 11}, reach 10 ft. {@h}13 ({@damage 2d6 + 6}) Slashing damage plus 4 ({@damage 1d8}) Acid damage."
+     "Sample text for layout. {@atkr m} {@hit 11} {@h} {@damage 2d6 + 6} {@damage 1d8}"
     ]
    },
    {
     "name": "Acid Breath {@recharge 5}",
     "entries": [
-     "{@actSave dex} {@dc 18}, each creature in a 60-foot-long, 5-foot-wide {@variantrule Line [Area of Effect]|XPHB|Line}. {@actSaveFail} 54 ({@damage 12d8}) Acid damage. {@actSaveSuccess} Half damage."
+     "Sample text for layout. {@actSave dex} {@dc 18} {@variantrule Line [Area of Effect]|XPHB|Line} {@actSaveFail} {@damage 12d8} {@actSaveSuccess}"
     ]
    }
   ],
@@ -422,19 +422,19 @@
    {
     "name": "Cloud of Insects",
     "entries": [
-     "{@actSave dex} {@dc 17}, one creature the dragon can see within 120 feet. {@actSaveFail} 22 ({@damage 4d10}) Poison damage, and the target has {@variantrule Disadvantage|XPHB} on saving throws to maintain {@status Concentration|XPHB} until the end of its next turn. {@actSaveSuccessOrFail} The dragon can't take this action again until the start of its next turn."
+     "Sample text for layout. {@actSave dex} {@dc 17} {@actSaveFail} {@damage 4d10} {@variantrule Disadvantage|XPHB} {@status Concentration|XPHB} {@actSaveSuccessOrFail}"
     ]
    },
    {
     "name": "Frightful Presence",
     "entries": [
-     "The dragon uses Spellcasting to cast {@spell Fear|XPHB}. The dragon can't take this action again until the start of its next turn."
+     "Sample text for layout. {@spell Fear|XPHB}"
     ]
    },
    {
     "name": "Pounce",
     "entries": [
-     "The dragon can move up to half its {@variantrule Speed|XPHB}, and it makes one Rend attack."
+     "Sample text for layout. {@variantrule Speed|XPHB}"
     ]
    }
   ]
@@ -501,7 +501,7 @@
    {
     "name": "Legendary Resistance (3/Day, or 4/Day in Lair)",
     "entries": [
-     "If the dragon fails a saving throw, it can choose to succeed instead."
+     "Sample text for layout."
     ]
    }
   ],
@@ -509,19 +509,19 @@
    {
     "name": "Multiattack",
     "entries": [
-     "The dragon makes three Rend attacks. It can replace one attack with a use of Spellcasting to cast {@spell Scorching Ray|XPHB}."
+     "Sample text for layout. {@spell Scorching Ray|XPHB}"
     ]
    },
    {
     "name": "Rend",
     "entries": [
-     "{@atkr m} {@hit 14}, reach 10 ft. {@h}13 ({@damage 1d10 + 8}) Slashing damage plus 5 ({@damage 2d4}) Fire damage."
+     "Sample text for layout. {@atkr m} {@hit 14} {@h} {@damage 1d10 + 8} {@damage 2d4}"
     ]
    },
    {
     "name": "Fire Breath {@recharge 5}",
     "entries": [
-     "{@actSave dex} {@dc 21}, each creature in a 60-foot {@variantrule Cone [Area of Effect]|XPHB|Cone}. {@actSaveFail} 59 ({@damage 17d6}) Fire damage. {@actSaveSuccess} Half damage."
+     "Sample text for layout. {@actSave dex} {@dc 21} {@variantrule Cone [Area of Effect]|XPHB|Cone} {@actSaveFail} {@damage 17d6} {@actSaveSuccess}"
     ]
    }
   ],
@@ -529,19 +529,19 @@
    {
     "name": "Commanding Presence",
     "entries": [
-     "The dragon uses Spellcasting to cast {@spell Command|XPHB} (level 2 version). The dragon can't take this action again until the start of its next turn."
+     "Sample text for layout. {@spell Command|XPHB}"
     ]
    },
    {
     "name": "Fiery Rays",
     "entries": [
-     "The dragon uses Spellcasting to cast {@spell Scorching Ray|XPHB}. The dragon can't take this action again until the start of its next turn."
+     "Sample text for layout. {@spell Scorching Ray|XPHB}"
     ]
    },
    {
     "name": "Pounce",
     "entries": [
-     "The dragon moves up to half its {@variantrule Speed|XPHB}, and it makes one Rend attack."
+     "Sample text for layout. {@variantrule Speed|XPHB}"
     ]
    }
   ]

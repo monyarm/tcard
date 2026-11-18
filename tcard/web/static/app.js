@@ -12,6 +12,8 @@ const state = {
   cols: 32,
   brief: false,
   systems: [],
+  noPrinter: false,
+  viewOnly: false,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -106,7 +108,7 @@ function renderRows() {
       <span class="name">${escape(row.label)}</span>
       <span class="chips">${escape(chips(row))}</span></li>`;
   }).join("");
-  $("print-selected").disabled = state.selected.size === 0;
+  $("print-selected").disabled = state.selected.size === 0 || state.noPrinter;
   $("print-selected").textContent = state.selected.size
     ? `print ${state.selected.size}` : "print selected";
 }
@@ -157,7 +159,7 @@ async function preview(row) {
     $("card").textContent = payload.text;
     $("preview-size").textContent = `${payload.lines} lines`;
     $("preview").classList.toggle("too-wide", payload.text.split("\n").some((line) => line.length > state.cols));
-    $("print").disabled = false;
+    $("print").disabled = state.noPrinter;
     setStatus("ready");
   } catch (error) {
     $("card").textContent = error.message;
@@ -328,8 +330,24 @@ async function boot() {
     const health = await api("/api/health");
     state.cols = health.cols || 32;
     $("cols").value = state.cols;
-    setStatus(health.tp ? "" : "no tp on PATH", !health.tp);
+    state.noPrinter = !health.tp;
+    state.viewOnly = health.view_only;
+    if (state.noPrinter) {
+      const notice = $("notice");
+      notice.hidden = false;
+      notice.textContent = "No tp command on PATH: this page can preview cards "
+        + "but cannot print them. Only the tp script is supported today; "
+        + "generic thermal printer support is wanted, but it is not a priority.";
+      $("print").disabled = true;
+      $("print-selected").disabled = true;
+      setStatus("no tp on PATH", true);
+    } else {
+      setStatus("");
+    }
     if (health.view_only) {
+      const notice = $("notice");
+      notice.hidden = false;
+      notice.textContent = "This server is view-only; printing is disabled.";
       $("print").disabled = true;
       $("print-selected").disabled = true;
     }

@@ -1,0 +1,53 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - heading "tcard" [level=1] [ref=e3]
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - text: cols
+        - spinbutton "cols" [ref=e6]: "32"
+      - generic [ref=e7]:
+        - checkbox "brief" [ref=e8]
+        - text: brief
+      - button "refresh" [ref=e9] [cursor=pointer]
+      - generic [ref=e10]: loading spell…
+  - main [ref=e11]:
+    - navigation "systems" [ref=e12]:
+      - button "dnd:5e 21" [ref=e13] [cursor=pointer]
+      - button "pf:1e 31" [ref=e14] [cursor=pointer]
+      - button "pf:2e 13" [ref=e15] [cursor=pointer]
+      - button "vtm:v5 7" [ref=e16] [cursor=pointer]
+      - button "vtm:v20 7" [ref=e17] [cursor=pointer]
+      - button "cp:2020 32" [ref=e18] [cursor=pointer]
+    - region "filters" [ref=e19]:
+      - generic [ref=e20]:
+        - button "spell" [ref=e21] [cursor=pointer]
+        - button "item" [ref=e22] [cursor=pointer]
+        - button "background" [ref=e23] [cursor=pointer]
+        - button "class_ability" [ref=e24] [cursor=pointer]
+        - button "subclass" [ref=e25] [cursor=pointer]
+        - button "monster" [ref=e26] [cursor=pointer]
+        - button "species" [ref=e27] [cursor=pointer]
+        - button "variant_rule" [ref=e28] [cursor=pointer]
+        - button "invocation" [ref=e29] [cursor=pointer]
+        - button "metamagic" [ref=e30] [cursor=pointer]
+        - button "maneuver" [ref=e31] [cursor=pointer]
+        - button "fighting_style" [ref=e32] [cursor=pointer]
+        - button "pact_boon" [ref=e33] [cursor=pointer]
+        - button "infusion" [ref=e34] [cursor=pointer]
+        - button "rune" [ref=e35] [cursor=pointer]
+        - button "arcane_shot" [ref=e36] [cursor=pointer]
+        - button "elemental_discipline" [ref=e37] [cursor=pointer]
+        - button "renown_boon" [ref=e38] [cursor=pointer]
+        - button "feat" [ref=e39] [cursor=pointer]
+        - button "condition" [ref=e40] [cursor=pointer]
+        - button "action" [ref=e41] [cursor=pointer]
+      - searchbox "search names… ( / )" [ref=e42]: fireball
+      - button "clear filters" [ref=e43] [cursor=pointer]
+    - region "cards" [ref=e44]:
+      - button "print selected" [disabled] [ref=e46]
+      - list
+    - region "preview" [ref=e47]:
+      - generic [ref=e48]:
+        - generic [ref=e49]: pick a card
+        - button "print" [disabled] [ref=e50]
+      - paragraph [ref=e51]: "No tp command on PATH: this page can preview cards but cannot print them. Only the tp script is supported today; generic thermal printer support is wanted, but it is not a priority."

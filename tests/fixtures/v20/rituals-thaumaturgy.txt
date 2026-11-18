@@ -7,7 +7,7 @@ Below is the list of rituals.
 |-
 |'''Bind the Accusing Tongue'''
 {{ref|Bind_The_Accusing_Tongue}}
-|A lock of hair and a black silk cord||Wind the cord around the hair.||The target cannot speak ill about the caster. ||[[Clan Tremere]]
+|A lock of hair and a black silk cord||Wind the cord around the hair.|| Sample cell. ||[[Clan Tremere]]
 |-
 |'''Blood Contract'''
 |Two drops of vitae||Mix the vitae on a contract.||Both parties are bound to the agreement.||Clan Tremere

@@ -12,7 +12,7 @@
    "level": 3,
    "header": 1,
    "entries": [
-    "Starting at 3rd level, you are at your deadliest when you get the drop on your enemies. You have advantage on attack rolls against any creature that hasn't taken a turn in the combat yet. In addition, any hit you score against a creature that is {@status surprised} is a critical hit."
+    "Sample text for layout. {@status surprised}"
    ]
   },
   {
@@ -25,7 +25,7 @@
    "subclassSource": "XPHB",
    "level": 3,
    "entries": [
-    "You're adept at ambushing a target, granting you the following benefits.",
+    "Sample text for layout.",
     {
      "type": "entries",
      "entries": [
@@ -33,14 +33,14 @@
        "type": "entries",
        "name": "Initiative",
        "entries": [
-        "You have {@variantrule Advantage|XPHB} on {@variantrule Initiative|XPHB} rolls."
+        "Sample text for layout. {@variantrule Advantage|XPHB} {@variantrule Initiative|XPHB}"
        ]
       },
       {
        "type": "entries",
        "name": "Surprising Strikes",
        "entries": [
-        "During the first round of each combat, you have {@variantrule Advantage|XPHB} on attack rolls against any creature that hasn't taken a turn. If your Sneak Attack hits any target during that round, the target takes extra damage of the weapon's type equal to your Rogue level."
+        "Sample text for layout. {@variantrule Advantage|XPHB}"
        ]
       }
      ]

@@ -6,10 +6,10 @@
 |bearing = Faith
 |virtues = Conviction, Instinct
 }}
-The '''Path of Caine''' is a [[Path of Enlightenment]].
+Sample prose for testing.
 
 ==Overview==
-Followers of the Path of Caine seek to emulate the first murderer.
+Sample prose for testing.
 
 ==Ethics==
 * Know the nature of Caine.

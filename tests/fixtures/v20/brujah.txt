@@ -12,18 +12,18 @@
 * [[Anarch Movement]] ([[V5]])
 |disciplines = [[Celerity (VTM)|Celerity]], [[Potence]], [[Presence (VTM)|Presence]]
 }}
-The '''Brujah''' are one of the thirteen [[Clan (VTM)|clans]] of Kindred.
+Sample prose for testing.
 
 ==Overview==
-Fighters against the system, rebels against injustice.
+Sample prose for testing.
 
 ==Weaknesses==
 ====Banes====
-*'''Violent Temper''': All difficulties to resist Frenzy increase by two.
-*Variant — '''Violence''': A messy critical inflicts Aggravated damage.
+*'''Violent Temper''': Sample prose for testing.
+*Variant — '''Violence''': Sample prose for testing.
 
 ===Compulsion===
-'''Rebellion''': the vampire takes a stand against the status quo until they have gone against orders.
+'''Rebellion''': Sample prose for testing.
 
 ==Gallery==
 <gallery>

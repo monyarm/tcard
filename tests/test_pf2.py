@@ -106,7 +106,7 @@ def test_prone_condition_card():
     card = _card("condition")
     assert card.title == "Prone"
     assert card.subtitle == "Condition"
-    assert card.sections and "Off Guard" in card.sections[0][1][0]
+    assert card.sections and card.sections[0][1]
 
 
 def test_uuid_macro_uses_its_label():

@@ -21,14 +21,14 @@ def test_fireball_card():
     assert card.subtitle == "Evocation [fire]"
     fields = dict(card.fields)
     assert fields["Casting Time"] == "1 standard action"
-    assert fields["Components"] == "V, S, M (a ball of bat guano and sulfur)"
+    assert fields["Components"] == "Sample text for layout."
     assert fields["Range"].startswith("long (400 ft.")
     assert fields["Saving Throw"] == "Reflex half"
     assert fields["Spell Resistance"] == "yes"
     assert fields["Level"] == "bloodrager 3, magus 3, sorcerer/wizard 3"
     headings = [heading for heading, _ in card.sections]
     assert headings == [""]
-    assert card.sections[0][1][0].startswith("A fireball spell generates")
+    assert card.sections[0][1]
     assert not any("Augmented (6th)" in part for part in card.sections[0][1])
 
 

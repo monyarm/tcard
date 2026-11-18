@@ -115,7 +115,7 @@
       {
        "type": "item",
        "name": "Equipment:",
-       "entry": "Choose A or B: (A) {@item Calligrapher's Supplies|XPHB}, {@item Book|XPHB|Book (prayers)}, {@item Holy Symbol|XPHB}, {@item Parchment|XPHB} (10 sheets), {@item Robe|xphb}, 8 GP; or (B) 50 GP"
+       "entry": "Sample text for layout. {@item Calligrapher's Supplies|XPHB} {@item Book|XPHB|Book (prayers)} {@item Holy Symbol|XPHB} {@item Parchment|XPHB} {@item Robe|xphb}"
       }
      ]
     }
@@ -150,7 +150,7 @@
        "special": "insignia of rank"
       },
       {
-       "special": "trophy taken from a fallen enemy (a dagger, broken blade, or piece of a banner)"
+       "special": "Sample text for layout."
       },
       "common clothes|phb",
       {
@@ -184,12 +184,12 @@
       {
        "type": "item",
        "name": "Tool Proficiencies:",
-       "entry": "One type of {@filter gaming set|items|source=phb|miscellaneous=mundane|type=gaming set}, {@filter vehicles (land)|items|source=phb;dmg|miscellaneous=mundane|type=vehicle (land)}"
+       "entry": "Sample text for layout. {@filter gaming set|items|source=phb|miscellaneous=mundane|type=gaming set} {@filter vehicles (land)|items|source=phb;dmg|miscellaneous=mundane|type=vehicle (land)}"
       },
       {
        "type": "item",
        "name": "Equipment:",
-       "entry": "An insignia of rank, a trophy taken from a fallen enemy (a {@item dagger|phb}, broken blade, or piece of a banner), a bone {@item dice set|phb} or {@item playing card set|phb}, a set of {@item common clothes|phb}, and a belt {@item pouch|phb} containing 10 gp"
+       "entry": "Sample text for layout. {@item dagger|phb} {@item dice set|phb} {@item playing card set|phb} {@item common clothes|phb} {@item pouch|phb}"
       }
      ]
     },
@@ -197,7 +197,7 @@
      "type": "entries",
      "name": "Feature: Military Rank",
      "entries": [
-      "You have a military rank from your career as a soldier. Soldiers loyal to your former military organization still recognize your authority and influence, and they defer to you if they are of a lower rank. You can invoke your rank to exert influence over other soldiers and requisition simple equipment or horses for temporary use. You can also usually gain access to friendly military encampments and fortresses where your rank is recognized."
+      "Sample text for layout."
      ],
      "data": {
       "isFeature": true
@@ -207,7 +207,7 @@
      "type": "entries",
      "name": "Specialty",
      "entries": [
-      "During your time as a soldier, you had a specific role to play in your unit or army. Roll a d8 or choose from the options in the table below to determine your role:",
+      "Sample text for layout.",
       {
        "type": "table",
        "colLabels": [
@@ -259,7 +259,7 @@
      "type": "entries",
      "name": "Suggested Characteristics",
      "entries": [
-      "The horrors of war combined with the rigid discipline of military service leave their mark on all soldiers, shaping their ideals, creating strong bonds, and often leaving them scarred and vulnerable to fear, shame, and hatred.",
+      "Sample text for layout.",
       {
        "type": "table",
        "colLabels": [
@@ -277,7 +277,7 @@
         ],
         [
          "2",
-         "I'm haunted by memories of war. I can't get the images of violence out of my mind."
+         "Sample text for layout."
         ],
         [
          "3",
@@ -285,7 +285,7 @@
         ],
         [
          "4",
-         "I'm full of inspiring and cautionary tales from my military experience relevant to almost every combat situation."
+         "Sample text for layout."
         ],
         [
          "5",
@@ -301,7 +301,7 @@
         ],
         [
          "8",
-         "I face problems head-on. A simple, direct solution is the best path to success."
+         "Sample text for layout."
         ]
        ]
       },
@@ -318,15 +318,15 @@
        "rows": [
         [
          "1",
-         "Greater Good. Our lot is to lay down our lives in defense of others. (Good)"
+         "Sample text for layout."
         ],
         [
          "2",
-         "Responsibility. I do what I must and obey just authority. (Lawful)"
+         "Sample text for layout."
         ],
         [
          "3",
-         "Independence. When people follow orders blindly, they embrace a kind of tyranny. (Chaotic)"
+         "Sample text for layout."
         ],
         [
          "4",
@@ -334,11 +334,11 @@
         ],
         [
          "5",
-         "Live and Let Live. Ideals aren't worth killing over or going to war for. (Neutral)"
+         "Sample text for layout."
         ],
         [
          "6",
-         "Nation. My city, nation, or people are all that matter. (Any)"
+         "Sample text for layout."
         ]
        ]
       },
@@ -359,7 +359,7 @@
         ],
         [
          "2",
-         "Someone saved my life on the battlefield. To this day, I will never leave a friend behind."
+         "Sample text for layout."
         ],
         [
          "3",
@@ -367,7 +367,7 @@
         ],
         [
          "4",
-         "I'll never forget the crushing defeat my company suffered or the enemies who dealt it."
+         "Sample text for layout."
         ],
         [
          "5",
@@ -392,15 +392,15 @@
        "rows": [
         [
          "1",
-         "The monstrous enemy we faced in battle still leaves me quivering with fear."
+         "Sample text for layout."
         ],
         [
          "2",
-         "I have little respect for anyone who is not a proven warrior."
+         "Sample text for layout."
         ],
         [
          "3",
-         "I made a terrible mistake in battle that cost many lives\u2014and I would do anything to keep that mistake secret."
+         "Sample text for layout."
         ],
         [
          "4",

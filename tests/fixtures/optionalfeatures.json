@@ -19,7 +19,7 @@
     }
    ],
    "entries": [
-    "When you cast {@spell eldritch blast}, add your Charisma modifier to the damage it deals on a hit."
+    "Sample text for layout. {@spell eldritch blast}"
    ]
   },
   {
@@ -50,7 +50,7 @@
     }
    ],
    "entries": [
-    "Choose one of your known {@filter Warlock cantrips|spells|level=0|class=Warlock|damage type=acid;bludgeoning;cold;fire;force;lightning;necrotic;piercing;poison;psychic;radiant;slashing;thunder} that deals damage. You can add your Charisma modifier to that spell's damage rolls.",
+    "Sample text for layout. {@filter Warlock cantrips|spells|level=0|class=Warlock|damage type=acid;bludgeoning;cold;fire;force;lightning;necrotic;piercing;poison;psychic;radiant;slashing;thunder}",
     {
      "type": "entries",
      "entries": [
@@ -58,7 +58,7 @@
        "type": "entries",
        "name": "Repeatable",
        "entries": [
-        "You can gain this invocation more than once. Each time you do so, choose a different eligible cantrip."
+        "Sample text for layout."
        ]
       }
      ]
@@ -87,7 +87,7 @@
     "FS:R"
    ],
    "entries": [
-    "You gain a +2 bonus to attack rolls you make with ranged weapons."
+    "Sample text for layout."
    ]
   },
   {
@@ -106,7 +106,7 @@
     "amount": 2
    },
    "entries": [
-    "When you cast a spell that has a casting time of 1 action, you can spend 2 sorcery points to change the casting time to 1 bonus action for this casting."
+    "Sample text for layout."
    ]
   },
   {
@@ -122,7 +122,7 @@
     "amount": 2
    },
    "entries": [
-    "When you cast a spell that has a casting time of an action, you can spend 2 Sorcery Points to change the casting time to a {@variantrule Bonus Action|XPHB} for this casting. You can't modify a spell in this way if you've already cast a level 1+ spell on the current turn, nor can you cast a level 1+ spell on this turn after modifying a spell in this way."
+    "Sample text for layout. {@variantrule Bonus Action|XPHB}"
    ]
   },
   {
@@ -139,7 +139,7 @@
     "name": "Superiority Die"
    },
    "entries": [
-    "When you hit a creature with a weapon attack, you can expend one superiority die to attempt to knock the target down. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw. On a failed save, you knock the target {@condition prone}."
+    "Sample text for layout. {@condition prone}"
    ]
   },
   {
@@ -153,7 +153,7 @@
     "name": "Superiority Die"
    },
    "entries": [
-    "When you hit a creature with an attack roll using a weapon or an {@variantrule Unarmed Strike|XPHB}, you can expend one Superiority Die and add the die to the attack's damage roll. If the target is Large or smaller, it must succeed on a Strength saving throw or have the {@condition Prone|XPHB} condition."
+    "Sample text for layout. {@variantrule Unarmed Strike|XPHB} {@condition Prone|XPHB}"
    ]
   }
  ]

@@ -293,7 +293,8 @@ tunnel instead). `tailscale serve` needs root once:
 
 `--view-only` lets people browse without printing, `--key` fixes the key
 instead of generating one, and `--dry-run` renders without sending anything to
-the printer (useful for checking the UI itself).
+the printer (useful for checking the UI itself). If `tp` is not on `PATH` the
+print button is disabled and the page says so instead of failing on click.
 
 Config: `~/.config/tcard/config.toml`, optional.
 
@@ -303,6 +304,21 @@ kinds   = ["spell", "item", "class_ability"]   # inference order; empty = all ki
 prefer  = ["XPHB", "XDMG", "PHB", "DMG"]       # 2024 sources first
 cols    = 32
 ```
+
+## Status
+
+This started as a tool for my own table and is maintained the same way: I pick
+it up from time to time, not on a schedule. Pull requests and issues are
+welcome and I do read them, but this is not a priority project, so reviews and
+merges can take a while.
+
+The tool ships no game data. Every adapter fetches from the public sources
+described above at runtime and caches the responses under `~/.cache/tcard/`;
+the repository holds code, docs and synthetic test records. Game titles,
+trademarks and rules text belong to their respective owners.
+
+Only the `tp` thermal printer script is wired up today. Support for generic
+ESC/POS printers is wanted, but it is not a priority.
 
 ## Test
 
